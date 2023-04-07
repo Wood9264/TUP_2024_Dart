@@ -44,12 +44,22 @@ enum motor_ID
 	PITCH,
 };
 
+typedef struct
+{   
+	fp32 Cap_input_vol;
+	fp32 Cap_voltage;
+	fp32 Cap_current;
+	uint16_t Cap_power;
+} Chassis_Power_t;
+
 extern void CAN1_200_cmd_motor(int16_t can1_motor1, int16_t can1_motor2, int16_t can1_motor3, int16_t can1_motor4);
 extern void CAN1_1FF_cmd_motor(int16_t can1_motor5, int16_t can1_motor6, int16_t can1_motor7, int16_t can1_motor8);
 extern void CAN2_200_cmd_motor(int16_t can2_motor1, int16_t can2_motor2, int16_t can2_motor3, int16_t can2_motor4);
 extern void CAN2_1FF_cmd_motor(int16_t can2_motor5, int16_t can2_motor6, int16_t can2_motor7, int16_t can2_motor8);
 extern void CAN_cmd_chassis_reset_ID(void);
+extern void CAN_CMD_CAP(uint16_t motor1);
 extern const motor_t *get_motor_measure_class(uint16_t type);
+extern const Chassis_Power_t *get_cap_measure_point(void);
 #endif	
 extern void can_filter_init(void);	
 #ifdef __cplusplus

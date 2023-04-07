@@ -7,7 +7,7 @@
 #include "user_lib.h"
 #include "gimbal_task.h"
 #include "cmsis_os.h"
-
+#include "judge.h"
 
 #define CHASSIS_TASK_INIT_TIME 357 //任务开始空闲一段时间
 
@@ -57,10 +57,20 @@ typedef struct
   fp32 accel;
   fp32 speed;
   fp32 speed_set;
-  int16_t give_current;
   fp32 power;
+	fp32 current_set;
+	fp32 current;
+	fp32 current_scale;
+	int16_t give_current;
 }chassis_motor_t;
 
+
+typedef struct
+{
+  fp32 BusV;
+  fp32 Current;
+  fp32 Power;
+} ina226_t;
 
 class chassis_t
 {
@@ -72,6 +82,7 @@ class chassis_t
 	
 	PID_t chassis_motor_speed_pid[4];
   PID_t chassis_angle_pid;              //底盘跟随角度pid
+	PID_t chassis_current_pid[4]; 
 	
 	first_order_filter_type_t chassis_cmd_slow_set_vx;
   first_order_filter_type_t chassis_cmd_slow_set_vy;
@@ -99,6 +110,14 @@ class chassis_t
 	fp32 angle_set;
 	fp32 wheel_speed[4]; 
 	public:
+	fp32 chassis_real_power;
+	fp32 chassis_power;
+	fp32 cap_absorb;
+	int shift_flag;
+	fp32 chassis_power_buffer;
+	uint16_t chassis_max_power;
+	const ina226_t *Ina226_Chassis_Power;	
+	const Chassis_Power_t *chassis_cap_masure;
 	chassis_motor_t chassis_motor[4];
 	chassis_t();
 	void Get_info();

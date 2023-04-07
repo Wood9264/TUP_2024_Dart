@@ -34,7 +34,7 @@ void chassis_task(void const * pvParameters)
 		currentTime = xTaskGetTickCount();//当前系统时间
     chassis_move.Get_info();
 	  chassis_move.Control();
-//		CAN1_200_cmd_motor(1000,1000,1000,1000);
+    CAN_CMD_CAP(chassis_move.chassis_max_power*100);//超级电容输出功率
 		CAN1_200_cmd_motor(chassis_move.chassis_motor[0].give_current,chassis_move.chassis_motor[1].give_current,
 		                      chassis_move.chassis_motor[2].give_current,chassis_move.chassis_motor[3].give_current);
 	  vTaskDelayUntil(&currentTime, 2);
@@ -54,6 +54,12 @@ chassis_t::chassis_t()
   fp32 chassis_yaw_pid[3] = {CHASSIS_MOTOR_YAW_PID_KP,CHASSIS_MOTOR_YAW_PID_KI,CHASSIS_MOTOR_YAW_PID_KD};  
 	chassis_angle_pid.init(PID_POSITION,chassis_yaw_pid, MOTOR_YAW_PID_MAX_OUT, MOTOR_YAW_PID_MAX_IOUT);
 	
+	fp32 motor_current_pid[3] = {20.0f,0.0,0.0f};//{1.5f,0.0,0}
+	for(int i;i<=3;i++)
+	{
+	  chassis_current_pid[i].init(PID_POSITION,motor_current_pid,16384, 1000);
+	}
+		chassis_cap_masure = get_cap_measure_point();
 	fp32 motor_speed_pid[3] ={CHASSIS_MOTOR_SPEED_PID_KP, CHASSIS_MOTOR_SPEED_PID_KI, CHASSIS_MOTOR_SPEED_PID_KD};
 	for(int i=0;i<=3;i++)
   {
@@ -253,12 +259,20 @@ void chassis_t::chassis_control_loop()
     {
         chassis_motor_speed_pid[i].out=chassis_motor_speed_pid[i].calc( chassis_motor[i].speed,chassis_motor[i].speed_set);
     }
+		
     
 		//赋值电流值
     for (int i = 0; i <= 3; i++)
     {
          chassis_motor[i].give_current = (int16_t)( chassis_motor_speed_pid[i].out);
     }
+		
+//		chassis_power_limit();
+//				//赋值电流值
+//    for (int i = 0; i <= 3; i++)
+//    {
+//         chassis_motor[i].give_current = (int16_t)( chassis_current_pid[i].out);
+//    }
 }
 
 /**
@@ -284,10 +298,69 @@ void chassis_t::chassis_vector_to_mecanum_wheel_speed(const fp32 vx_set, const f
 	
 }
 
+void chassis_t::chassis_power_limit()
+{
+	fp32 total_current = 0.0f;
+	fp32 total_current_limit = 0.0f;
+	fp32 total_current_set;
+	fp32 sum_current;
 
-//void chassis_t::chassis_power_limit()
-//{
+	chassis_power =	JUDGE_usGetChassisPowerLimit();
+	if(chassis_power>120)
+	{
+	chassis_power=120;
+	}
+	else
+	{
+		chassis_power = JUDGE_usGetChassisPowerLimit();
+	}
+	if(IF_KEY_PRESSED_SHIFT)
+  {
+		chassis_power = 120;
+		shift_flag=1;
+  }
+	else
+	{
+		 shift_flag=0;
+	}
+	chassis_max_power =chassis_power;
+	chassis_real_power = chassis_cap_masure->Cap_power/100.0f;
+	chassis_power_buffer = JUDGE_fGetRemainEnergy();
+	total_current_limit = chassis_max_power/chassis_cap_masure->Cap_voltage*10000.0f;//最大总电流
+	total_current =chassis_cap_masure->Cap_current/100.0f+1;//总电流
 
-
-//}
+		for(uint8_t i = 0; i < 4; i++)
+		{
+				sum_current += fabs(chassis_motor_speed_pid[i].out); 
+		}
+		for(uint8_t i = 0; i < 4; i++)
+		{
+				chassis_motor[i].current_scale = chassis_motor_speed_pid[i].out/(sum_current+1);// 单个速度环输出/总速度环输出
+		}
+		for(uint8_t i = 0; i < 4; i++)
+		{
+			chassis_motor[i].current_set =chassis_motor_speed_pid[i].out;//单个电机电流设定值等于速度环输出
+		}
+		for(uint8_t i = 0; i < 4; i++)
+		{
+			chassis_motor[i].current = total_current*chassis_motor[i].current_scale;//单个电机电流实际值等于总电流*（单个速度环输出/总速度环输出）
+		}
+		
+		for(uint8_t i = 0; i < 4; i++)
+		{
+				total_current_set += chassis_motor[i].current_set;//总电流设定值等于各电流环输出之和
+		}
+		if(chassis_real_power > chassis_max_power&&(rc_ctrl.key.v & KEY_PRESSED_OFFSET_SHIFT) != 1)//电机实际功率大于裁判系统限制功率并且未开shift时
+		{
+			for(uint8_t i = 0; i < 4; i++)
+			{
+					chassis_motor[i].current_set = total_current_limit*chassis_motor[i].current_scale;//单个电机电流设定值等于最大总电流*各电机占比
+			}
+		}
+		
+		for(uint8_t i = 0; i < 4; i++)
+		{
+			 chassis_current_pid->calc(chassis_motor[i].current,chassis_motor[i].current_set);
+		}
+}
 

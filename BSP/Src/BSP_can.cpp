@@ -15,7 +15,17 @@ static CAN_TxHeaderTypeDef  CAN2_1FF_tx_message;
 static uint8_t              CAN2_1FF_send_data[8];
 static CAN_TxHeaderTypeDef  Reset_tx_message;
 static uint8_t              Reset_tx_send_data[8];
+static CAN_TxHeaderTypeDef  chassis_tx_message;
+static uint8_t              chassis_can_send_data[8];
 
+Chassis_Power_t		cap_measure;
+			#define	get_cap_measure(ptr, data)                \
+{    uint16_t *buf =    (uint16_t*) data;               \
+		(ptr)->Cap_input_vol = ((fp32)buf[0]/100.f);        \
+		(ptr)->Cap_voltage = ((fp32)buf[1]/100.f);     			\
+		(ptr)->Cap_current = ((fp32)buf[2]/100.f); 					\
+		(ptr)->Cap_power = ((fp32)buf[3]/100.f); 						\
+}
 
 void can_filter_init(void)
 {
@@ -89,7 +99,11 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 				get_motor_measure(YAW,rx_data1);
 				break;
 			}
-
+       case 0x211:
+			{
+			get_cap_measure(&cap_measure , rx_data1);
+					break;
+			}
 			default:
 			{
 				break;
@@ -241,12 +255,28 @@ void CAN2_1FF_cmd_motor(int16_t can2_motor5, int16_t can2_motor6, int16_t can2_m
     HAL_CAN_AddTxMessage(&GIMBAL_CAN, &CAN2_1FF_tx_message, CAN2_1FF_send_data, &send_mail_box);
 }
 
+void CAN_CMD_CAP(uint16_t motor1)
+{
+	  uint32_t send_mail_box;
+    chassis_tx_message.StdId = 0x210;
+    chassis_tx_message.IDE = CAN_ID_STD;
+    chassis_tx_message.RTR = CAN_RTR_DATA;
+    chassis_tx_message.DLC = 0x08;
+    chassis_can_send_data[0] = motor1 >> 8;
+    chassis_can_send_data[1] = motor1;
+    
+		HAL_CAN_AddTxMessage(&hcan1, &chassis_tx_message, chassis_can_send_data, &send_mail_box);
+} 
 //返回对应电机地址
 const motor_t *get_motor_measure_class(uint16_t type)
 {
 	return &motor[type];
 }
 
+const Chassis_Power_t *get_cap_measure_point(void)
+{
+    return &cap_measure;
+}
 /**
   * @brief          发送ID为0x700的CAN包,它会设置3508电机进入快速设置ID
   * @param[in]      none
