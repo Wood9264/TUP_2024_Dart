@@ -1,0 +1,32 @@
+Load "hero_test_1\\hero_test_1.axf" 
+* JLink Info: Device "UNSPECIFIED" selected (0 KB flash, 0 KB RAM).
+Set JLink Project File to "e:\×ÀÃæ\tup_test2.0\MDK-ARM\JLinkSettings.ini"* JLink Info: Device "UNSPECIFIED" selected (0 KB flash, 0 KB RAM).
+
+JLink info:
+------------
+DLL: V4.92 , compiled Sep 30 2014 09:33:42
+Firmware: J-Link V9 compiled May  7 2021 16:26:12
+Hardware: V9.60
+S/N : 69651728 
+Feature(s) : RDI, GDB, FlashDL, FlashBP, JFlash 
+
+* JLink Info: Found SWD-DP with ID 0x2BA01477
+* JLink Info: Found Cortex-M4 r0p1, Little endian.
+* JLink Info: FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+ROMTableAddr = 0xE00FF003
+
+Target info:
+------------
+Device: STM32F407IGHx
+VTarget = 3.361V
+State of Pins: TCK: 0, TDI: 0, TDO: 0, TMS: 1, TRES: 1, TRST: 0
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+
+Full Chip Erase Done.Programming Done.Verify OK.**JLink Warning: Mis-aligned memory write: Address: 0x20000000, NumBytes: 2, Alignment: 2 (Halfword-aligned)
+Application running ...
+Flash Load finished at 20:57:13
