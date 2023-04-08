@@ -1,14 +1,21 @@
+/*
+ *
+ * pm01_api.h
+ *
+ * Created on: 2021年07月08日
+ *     Author: hepeng
+ *
+ * Copyright (c) 2021, 柳州启明电气科技有限公司 All rights reserved. 
+ *
+ */
+ 
 #ifndef __PM01_H
 #define __PM01_H
 
+#include "can.h"
+#include "stdint.h"
 
-#include "judge.h"
-#include "chassis_task.h"
-#ifdef __cplusplus
-extern "C"{
-#endif
-	
-#ifdef __cplusplus
+
 typedef union 
 {
 
@@ -41,26 +48,23 @@ typedef struct mb_reg_type{
    int16_t  p_in;        /*!< 8104H 输入功率       */
    int16_t  v_out;       /*!< 8105H 输出电压       */
    int16_t  i_out;       /*!< 8106H 输出电流       */
-   int16_t  p_out;       /*!< 8107H 输出功率       */ 
+   int16_t  p_out;       /*!< 8107H 输出功率       */
    int16_t  temp;        /*!< 8108H 温度           */
    uint16_t total_time;  /*!< 8109H 累计时间       */
    uint16_t run_time;    /*!< 810AH 运行时间       */
 	
 }pm01_od_t;
-
-
-#endif
 extern void pm01_cmd_send         ( uint16_t new_cmd, uint8_t save_flg );
 extern void pm01_voltage_set      ( uint16_t new_voltage, uint8_t save_flg );
 extern void pm01_current_set      ( uint16_t new_voltage, uint8_t save_flg );
 extern void pm01_power_set        ( uint16_t new_power, uint8_t save_flg );
 extern void pm01_access_poll      ( void );
 extern void pm01_response_handle  ( CAN_RxHeaderTypeDef *can_rx_header, uint8_t *can_rx_data );
+	
+#endif
 
-extern volatile pm01_od_t pm01_od;
-#ifdef __cplusplus
-}	
-#endif
-#endif
+/*
+ *  [] END OF FILE 
+ */
 
 

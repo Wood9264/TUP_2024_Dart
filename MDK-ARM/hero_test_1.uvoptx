@@ -763,12 +763,12 @@
     <File>
       <GroupNumber>5</GroupNumber>
       <FileNumber>32</FileNumber>
-      <FileType>8</FileType>
+      <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Hardware\Src\pm01.cpp</PathWithFileName>
-      <FilenameWithoutPath>pm01.cpp</FilenameWithoutPath>
+      <PathWithFileName>..\Hardware\Src\pm01.c</PathWithFileName>
+      <FilenameWithoutPath>pm01.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

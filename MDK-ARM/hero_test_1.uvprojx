@@ -1258,9 +1258,9 @@
               <FilePath>..\Hardware\Src\ina226.c</FilePath>
             </File>
             <File>
-              <FileName>pm01.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\Hardware\Src\pm01.cpp</FilePath>
+              <FileName>pm01.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\Src\pm01.c</FilePath>
             </File>
           </Files>
         </Group>

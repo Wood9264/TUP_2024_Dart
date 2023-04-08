@@ -1,23 +1,5 @@
-/*
- ***********************************************************************************
- *
- * @file     pm01_api.c
- * @brief    PM01超级电容控制器控制程序API
- * @author   hepeng(1130001324@qq.com)
- *
- * Copyright (c) 2017-2021, 柳州启明电气科技有限公司 All rights reserved. 
- * 
- ***********************************************************************************
- * History:
- * 2021-07-08    hepeng   发布v1.0
- ***********************************************************************************
- */
-
-/* Includes ------------------------------------------------------------------*/
-#include "pm01_api.h"
+#include "pm01.h"
 #include "judge.h"
-
-
 volatile pm01_od_t pm01_od;
 
 volatile uint16_t  pm01_access_id;    /* 正在访问的标识符     */
@@ -144,8 +126,8 @@ void pm01_access_poll(void)
 	static uint32_t  m_timeout = 0;      /* 超时    */
 	
 	static uint16_t  i = 0;
-	uint16_t chassis_limit_power;
-	chassis_limit_power = JUDGE_usGetChassisPowerLimit();
+//	uint16_t chassis_limit_power;
+//	chassis_limit_power = JUDGE_usGetChassisPowerLimit();
 //	g_power_set = chassis_limit_power*1000;
 //	g_iout_set = g_power_set/24*1000;
 	CAN_TxHeaderTypeDef  power_tx_message;

@@ -4,11 +4,12 @@
 #include "struct_typedef.h"
 #include "motor.h"
 #include "detect_task.h"
-
+//#include "pm01.h"
 #define CHASSIS_CAN hcan1
 #define GIMBAL_CAN hcan2
 #ifdef __cplusplus
 extern "C"{
+
 #endif
 
 #ifdef __cplusplus
@@ -60,6 +61,7 @@ extern void CAN_cmd_chassis_reset_ID(void);
 extern void CAN_CMD_CAP(uint16_t motor1);
 extern const motor_t *get_motor_measure_class(uint16_t type);
 extern const Chassis_Power_t *get_cap_measure_point(void);
+
 #endif	
 extern void can_filter_init(void);	
 #ifdef __cplusplus

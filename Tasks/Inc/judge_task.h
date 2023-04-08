@@ -4,13 +4,13 @@
 
 #include "bsp_usart.h"
 #include "judge.h"
-#include "chassis_task.h"
+
 #define REF_PROTOCOL_FRAME_MAX_SIZE         128
 #ifdef __cplusplus
 extern "C" {
 #endif
 #ifdef __cplusplus
-	
+#include "chassis_task.h"	
 typedef  struct
 {
   uint8_t SOF;
@@ -29,6 +29,7 @@ typedef enum
   STEP_DATA_CRC16  = 5,
 } unpack_step_e;
 
+
 	typedef struct
 {
   frame_header_struct_t *p_header;
@@ -41,7 +42,6 @@ typedef enum
 #define JUDGE_BUFFER_LEN          200
 #define	USART_RX_BUF_LENGHT 		512
 #define REFEREE_FIFO_BUF_LENGTH 1024
-
 extern void Cap_Update_Task(void const * argumt);
 #endif
 extern void Judge_Task(void const * argumt);

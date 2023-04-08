@@ -2,6 +2,9 @@
 #include "struct_typedef.h"
 #include "main.h"
 #include "cmsis_os.h"
+extern "C"{
+#include "pm01.h"
+}
 extern CAN_HandleTypeDef hcan1;
 extern CAN_HandleTypeDef hcan2;
 
@@ -17,6 +20,8 @@ static CAN_TxHeaderTypeDef  Reset_tx_message;
 static uint8_t              Reset_tx_send_data[8];
 static CAN_TxHeaderTypeDef  chassis_tx_message;
 static uint8_t              chassis_can_send_data[8];
+
+
 
 Chassis_Power_t		cap_measure;
 			#define	get_cap_measure(ptr, data)                \
@@ -103,6 +108,18 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 			{
 			get_cap_measure(&cap_measure , rx_data1);
 					break;
+			}
+			case 0x600:
+			case 0x601:
+			case 0x602:
+			case 0x603:
+			case 0x610:
+			case 0x611:
+			case 0x612:
+			case 0x613:
+			{
+			pm01_response_handle(&rx_header, rx_data1);
+			break;
 			}
 			default:
 			{

@@ -8,6 +8,8 @@
 #include "gimbal_task.h"
 #include "cmsis_os.h"
 #include "judge.h"
+#include "Bsp_can.h"
+#include "judge_task.h"
 
 #define CHASSIS_TASK_INIT_TIME 357 //任务开始空闲一段时间
 
@@ -116,7 +118,7 @@ class chassis_t
 	int shift_flag;
 	fp32 chassis_power_buffer;
 	uint16_t chassis_max_power;
-	const ina226_t *Ina226_Chassis_Power;	
+  ina226_t ina226_data;	
 	const Chassis_Power_t *chassis_cap_masure;
 	chassis_motor_t chassis_motor[4];
 	chassis_t();

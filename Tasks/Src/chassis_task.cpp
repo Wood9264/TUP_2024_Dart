@@ -1,11 +1,13 @@
 #include "chassis_task.h"
 #include "struct_typedef.h"
-#include "Bsp_can.h"
 #include "user_lib.h"
 #include "arm_math.h"
-#include "gimbal_task.h"
 #include "task.h"
-
+#include "i2c.h"
+extern "C"{
+#include "pm01.h"
+#include "ina226.h"
+}
 chassis_t chassis_move;
 
 /**
@@ -59,13 +61,15 @@ chassis_t::chassis_t()
 	{
 	  chassis_current_pid[i].init(PID_POSITION,motor_current_pid,16384, 1000);
 	}
-		chassis_cap_masure = get_cap_measure_point();
+	chassis_cap_masure = get_cap_measure_point();
 	fp32 motor_speed_pid[3] ={CHASSIS_MOTOR_SPEED_PID_KP, CHASSIS_MOTOR_SPEED_PID_KI, CHASSIS_MOTOR_SPEED_PID_KD};
 	for(int i=0;i<=3;i++)
   {
 		chassis_motor[i].chassis_motor_measure=get_motor_measure_class(i);
 	  chassis_motor_speed_pid[i].init(PID_POSITION,motor_speed_pid,M3508_MOTOR_SPEED_PID_MAX_OUT, M3508_MOTOR_SPEED_PID_MAX_IOUT);
 	}
+	INA226_setConfig(&hi2c2,INA226_ADDRESS, 0x4527 );
+	INA226_setCalibrationReg(&hi2c2, INA226_ADDRESS, INA226_CALIB_VAL);
 	//设置vxvy最大最小速度
 	vx_max_speed = NORMAL_MAX_CHASSIS_SPEED_X;
 	vx_min_speed = -NORMAL_MAX_CHASSIS_SPEED_X;
@@ -85,6 +89,9 @@ void chassis_t::Get_info()
     chassis_mode=syspoint()->sys_mode;
 	 //获取云台电机数据指针
 	  chassis_yaw_motor = gimbal_point()->Yaw_motor;
+		ina226_data.BusV = INA226_getBusV(&hi2c2,INA226_ADDRESS);
+		ina226_data.Current = INA226_getCurrent(&hi2c2,INA226_ADDRESS);
+		ina226_data.Power = INA226_getPower(&hi2c2,INA226_ADDRESS);
 	  //获取电机速度，将电机的反馈的速度换算成底盘的速度
 	   for ( int i = 0; i <= 3; i++)
     {
@@ -326,8 +333,13 @@ void chassis_t::chassis_power_limit()
 	chassis_max_power =chassis_power;
 	chassis_real_power = chassis_cap_masure->Cap_power/100.0f;
 	chassis_power_buffer = JUDGE_fGetRemainEnergy();
-	total_current_limit = chassis_max_power/chassis_cap_masure->Cap_voltage*10000.0f;//最大总电流
-	total_current =chassis_cap_masure->Cap_current/100.0f+1;//总电流
+	
+	total_current_limit = (chassis_power/ina226_data.BusV)*10000;
+			
+	total_current =ina226_data.Current/100.0f+1;
+			
+//	total_current_limit = chassis_max_power/chassis_cap_masure->Cap_voltage*10000.0f;//最大总电流
+//	total_current =chassis_cap_masure->Cap_current/100.0f+1;//总电流
 
 		for(uint8_t i = 0; i < 4; i++)
 		{

@@ -6,22 +6,30 @@
 #include "i2c.h"
 #include "stm32f4xx_hal.h"
 #include "struct_typedef.h"
+extern "C"{
+#include "pm01.h"
+#include "ina226.h"
+}
 extern DMA_HandleTypeDef hdma_usart1_rx;
 
 /*裁判系统发过来的数据暂存在这里*/
 uint8_t Judge_Buffer[JUDGE_BUFFER_LEN] = {0};
 uint8_t usart1_rx_flag;
-
+ina226_t ina226_data;
 void Judge_Task(void const * argumt)
 {
 	  usart1_init();
+	  
 		vTaskDelay(20);
-	  uint32_t currentTime;
+//	  uint32_t currentTime;
 		while(1)
 		{
-		currentTime = xTaskGetTickCount();//当前系统时间			
+//		currentTime = xTaskGetTickCount();//当前系统时间			
 		Judge_Read_Data(Judge_Buffer);		//读取裁判系统数据	
-		vTaskDelayUntil(&currentTime, 50);
+
+		osDelay(10);
+		pm01_access_poll();	
+//		vTaskDelayUntil(&currentTime, 50);
 		}
 }
 
@@ -47,3 +55,5 @@ void USART1_IRQHandler(void)
 }
 
 }
+
+
