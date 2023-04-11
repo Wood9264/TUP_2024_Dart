@@ -30,6 +30,8 @@ void chassis_task(void const * pvParameters)
 	 //空闲一段时间
   vTaskDelay(CHASSIS_TASK_INIT_TIME);
 	uint32_t currentTime;
+		INA226_setConfig(&hi2c2,INA226_ADDRESS, 0x4527 );
+	INA226_setCalibrationReg(&hi2c2, INA226_ADDRESS, INA226_CALIB_VAL);
 	while(1)
 	{
 		
@@ -56,20 +58,17 @@ chassis_t::chassis_t()
   fp32 chassis_yaw_pid[3] = {CHASSIS_MOTOR_YAW_PID_KP,CHASSIS_MOTOR_YAW_PID_KI,CHASSIS_MOTOR_YAW_PID_KD};  
 	chassis_angle_pid.init(PID_POSITION,chassis_yaw_pid, MOTOR_YAW_PID_MAX_OUT, MOTOR_YAW_PID_MAX_IOUT);
 	
-	fp32 motor_current_pid[3] = {20.0f,0.0,0.0f};//{1.5f,0.0,0}
-	for(int i;i<=3;i++)
-	{
-	  chassis_current_pid[i].init(PID_POSITION,motor_current_pid,16384, 1000);
-	}
+	fp32 motor_current_pid[3] = {10.0f,0.0,0.0f};//{1.5f,0.0,0}
+
 	chassis_cap_masure = get_cap_measure_point();
 	fp32 motor_speed_pid[3] ={CHASSIS_MOTOR_SPEED_PID_KP, CHASSIS_MOTOR_SPEED_PID_KI, CHASSIS_MOTOR_SPEED_PID_KD};
 	for(int i=0;i<=3;i++)
   {
 		chassis_motor[i].chassis_motor_measure=get_motor_measure_class(i);
 	  chassis_motor_speed_pid[i].init(PID_POSITION,motor_speed_pid,M3508_MOTOR_SPEED_PID_MAX_OUT, M3508_MOTOR_SPEED_PID_MAX_IOUT);
+		chassis_current_pid[i].init(PID_POSITION,motor_current_pid,16384, 1000);
 	}
-	INA226_setConfig(&hi2c2,INA226_ADDRESS, 0x4527 );
-	INA226_setCalibrationReg(&hi2c2, INA226_ADDRESS, INA226_CALIB_VAL);
+
 	//设置vxvy最大最小速度
 	vx_max_speed = NORMAL_MAX_CHASSIS_SPEED_X;
 	vx_min_speed = -NORMAL_MAX_CHASSIS_SPEED_X;
@@ -268,18 +267,14 @@ void chassis_t::chassis_control_loop()
     }
 		
     
-		//赋值电流值
-    for (int i = 0; i <= 3; i++)
-    {
-         chassis_motor[i].give_current = (int16_t)( chassis_motor_speed_pid[i].out);
-    }
-		
-//		chassis_power_limit();
-//				//赋值电流值
+//		//赋值电流值
 //    for (int i = 0; i <= 3; i++)
 //    {
-//         chassis_motor[i].give_current = (int16_t)( chassis_current_pid[i].out);
+//         chassis_motor[i].give_current = (int16_t)( chassis_motor_speed_pid[i].out);
 //    }
+		
+		chassis_power_limit();
+
 }
 
 /**
@@ -334,35 +329,22 @@ void chassis_t::chassis_power_limit()
 	chassis_real_power = chassis_cap_masure->Cap_power/100.0f;
 	chassis_power_buffer = JUDGE_fGetRemainEnergy();
 	
-	total_current_limit = (chassis_power/ina226_data.BusV)*10000;
+//	total_current_limit = (chassis_power/ina226_data.BusV)*10000;
+//			
+//	total_current =ina226_data.Current/100.0f+1;
 			
-	total_current =ina226_data.Current/100.0f+1;
-			
-//	total_current_limit = chassis_max_power/chassis_cap_masure->Cap_voltage*10000.0f;//最大总电流
-//	total_current =chassis_cap_masure->Cap_current/100.0f+1;//总电流
+	total_current_limit = chassis_max_power/chassis_cap_masure->Cap_voltage*10000.0f;//最大总电流
+	total_current =chassis_cap_masure->Cap_current/100.0f+1;//总电流
 
 		for(uint8_t i = 0; i < 4; i++)
 		{
-				sum_current += fabs(chassis_motor_speed_pid[i].out); 
+				sum_current += fabs(chassis_motor_speed_pid[i].out);
+	      chassis_motor[i].current_scale = chassis_motor_speed_pid[i].out/(sum_current+1);// 单个速度环输出/总速度环输出			
+			  chassis_motor[i].current_set =chassis_motor_speed_pid[i].out;//单个电机电流设定值等于速度环输出
+		  	chassis_motor[i].current = total_current*chassis_motor[i].current_scale;//单个电机电流实际值等于总电流*（单个速度环输出/总速度环输出）
 		}
-		for(uint8_t i = 0; i < 4; i++)
-		{
-				chassis_motor[i].current_scale = chassis_motor_speed_pid[i].out/(sum_current+1);// 单个速度环输出/总速度环输出
-		}
-		for(uint8_t i = 0; i < 4; i++)
-		{
-			chassis_motor[i].current_set =chassis_motor_speed_pid[i].out;//单个电机电流设定值等于速度环输出
-		}
-		for(uint8_t i = 0; i < 4; i++)
-		{
-			chassis_motor[i].current = total_current*chassis_motor[i].current_scale;//单个电机电流实际值等于总电流*（单个速度环输出/总速度环输出）
-		}
-		
-		for(uint8_t i = 0; i < 4; i++)
-		{
-				total_current_set += chassis_motor[i].current_set;//总电流设定值等于各电流环输出之和
-		}
-		if(chassis_real_power > chassis_max_power&&(rc_ctrl.key.v & KEY_PRESSED_OFFSET_SHIFT) != 1)//电机实际功率大于裁判系统限制功率并且未开shift时
+
+				if(chassis_real_power > chassis_max_power&&(rc_ctrl.key.v & KEY_PRESSED_OFFSET_SHIFT) != 1)//电机实际功率大于裁判系统限制功率并且未开shift时
 		{
 			for(uint8_t i = 0; i < 4; i++)
 			{
@@ -372,7 +354,13 @@ void chassis_t::chassis_power_limit()
 		
 		for(uint8_t i = 0; i < 4; i++)
 		{
-			 chassis_current_pid->calc(chassis_motor[i].current,chassis_motor[i].current_set);
+				total_current_set += chassis_motor[i].current_set;//总电流设定值等于各电流环输出之和
+		}
+
+		
+		for(uint8_t i = 0; i < 4; i++)
+		{
+			chassis_motor[i].give_current=chassis_current_pid[i].calc(chassis_motor[i].current,chassis_motor[i].current_set);
 		}
 }
 
