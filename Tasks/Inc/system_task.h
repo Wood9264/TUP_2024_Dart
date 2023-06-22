@@ -32,8 +32,8 @@
 
 #define CHASSIS_WZ_RE_SEN      0.7f
 //遥控器摇杆（max 660）转化成车体yaw pitch速度（m/s）的比例
-#define YAW_RC_SEN    -0.000005f
-#define PITCH_RC_SEN  -0.00000222f //0.005
+#define YAW_RC_SEN    -0.00001f
+#define PITCH_RC_SEN  -0.00000422f //0.005
 
 //YAW左右转控制按钮
 #define GIMBAL_LEFT_KEY KEY_PRESSED_OFFSET_Q
@@ -48,12 +48,14 @@
 //遥控器输入死区，因为遥控器存在差异，摇杆在中间，其值不一定为零
 #define RC_DEADBAND   0
 //摇杆死区（底盘）
-#define CHASSIS_RC_DEADLINE 10
+#define CHASSIS_RC_DEADLINE 50
 
 //底盘运动过程最大前进速度
-#define NORMAL_MAX_CHASSIS_SPEED_X 4.0f
+#define NORMAL_MAX_CHASSIS_SPEED_X 5.0f
 //底盘运动过程最大平移速度
 #define NORMAL_MAX_CHASSIS_SPEED_Y 3.0f
+
+#define HEAT_ERROR 30    //热量限制
 
 #ifdef __cplusplus
 extern "C"{
@@ -71,6 +73,8 @@ enum system_mode_t
 	AUTO,
 	CALI,
   DBUS_MISSING_CONTROL,
+	SPIN_AUTO,
+	GO_HEAD,
 };	
 
 enum shoot_mode_t
@@ -84,6 +88,7 @@ class system_t
 {	
 	public:
 		const RC_ctrl_t *system_rc_ctrl;
+
 	  system_mode_t sys_mode;
     system_mode_t last_sys_mode;
 	  shoot_mode_t revolver_mode;
@@ -97,11 +102,17 @@ class system_t
     bool_t vision_flag;
 		bool_t vision_last_flag;
 		bool_t vision_auto_flag;
+		bool_t head_flag;
+		bool_t head_last_flag;
+		bool_t head_go_flag;
 	  bool  init_state;
 	
-    first_order_filter_type_t chassis_cmd_slow_set_vx;  //use first order filter to slow set-point.使用一阶低通滤波减缓设定值
-    first_order_filter_type_t chassis_cmd_slow_set_vy;  //use first order filter to slow set-point.使用一阶低通滤波减缓设定值
-	  fp32 vx_max_speed;  //max forward speed, unit m/s.前进方向最大速度 单位m/s
+//    first_order_filter_type_t chassis_cmd_slow_set_vx;  //use first order filter to slow set-point.使用一阶低通滤波减缓设定值
+//    first_order_filter_type_t chassis_cmd_slow_set_vy;  //use first order filter to slow set-point.使用一阶低通滤波减缓设定值
+//	  
+    fp32 chassis_vx_set_temp;
+		fp32 chassis_vy_set_temp;
+		fp32 vx_max_speed;  //max forward speed, unit m/s.前进方向最大速度 单位m/s
     fp32 vx_min_speed;  //max backward speed, unit m/s.后退方向最大速度 单位m/s
     fp32 vy_max_speed;  //max letf speed, unit m/s.左方向最大速度 单位m/s
     fp32 vy_min_speed;  //max right speed, unit m/s.右方向最大速度 单位m/s
@@ -113,9 +124,11 @@ class system_t
 		void Set_control();
 		
 		void Rc_vision();
+		void Rc_head();
 		int  Gimbal_mode_change_transit();
 	  void Gimbal_value_calc();
 	  void Chassis_value_calc();
+		void Key_set();
 };	
 
 
@@ -128,10 +141,17 @@ extern system_t *syspoint(void);
 #define FIRC_SPEED_PID_MAX_OUT 16384.0f
 #define FIRC_SPEED_PID_MAX_IOUT 5000.0f
 
+//射速环测试
+#define SPEED_PID_KP 15 
+#define SPEED_PID_KI  0
+#define SPEED_PID_KD  1
+#define SPEED_PID_MAX_OUT 30
+#define SPEED_PID_MAX_IOUT 10
+
 //摩擦轮转数设定
-#define FRICTION_L1_SPEED 4800
-#define FRICTION_L2_SPEED 5300
-#define FRICTION_L3_SPEED 7700
+#define FRICTION_L1_SPEED 4600    //15
+#define FRICTION_L2_SPEED 4800		//18
+#define FRICTION_L3_SPEED 7200		//30
 
 
 
@@ -178,6 +198,7 @@ class Friction_wheel_Mode_set
 		void Temp_Fix_30S();
 		void Temp_Fix_18S();
 		void Temp_Fix_15S();
+		void Temp_fix_save();
 		Firc3508_Motor_set Firc_L;
 		Firc3508_Motor_set Firc_R;
 		uint16_t speedlimit;
@@ -186,6 +207,7 @@ class Friction_wheel_Mode_set
 		int fix_times;
 		fp32 fixed;
 		int16_t v_fic_set;
+		fp32 firc_mode;
 };
 	
 	
@@ -215,6 +237,7 @@ class Dial_mode_set
 	public:
 		void Dial_mode_init();
 		void Dial_behaviour_set();
+		void real_firc_info_update();
 		const RC_ctrl_t *Dial_RC;               //拨盘使用的遥控器指针
 		uint8_t	Revolver_Switch;
 		uint8_t Revolver_last_Switch;
@@ -235,9 +258,15 @@ class Dial_mode_set
 		int16_t unfinish_time;
 		bool_t if_stucked;
 		bool_t stuck_mode;
+
+fp32 bullet_last_speed;
+fp32 bullet_speed;
 		
 };
 	
+extern fp32 x_coordinate,y_coordinate;  
+extern fp32 pre_x_coordinate,pre_y_coordinate;
+extern fp32 follow_radius,pre_radius; 
 #endif
 extern void system_task(void const * argument);
 //extern void system_t_task_init();

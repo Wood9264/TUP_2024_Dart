@@ -56,8 +56,12 @@ typedef struct
 	float    INS_gyro_send[3];
 	float    INS_accel_send[3];
 	float    revolver_speed;
-	float    yaw_relative_angle;
-	
+  float    firc_error;
+//
+	//float    temp;
+  //float    firc_speed;
+
+
 	uint16_t   Vision_empty_time;		//预留
 	
 	/* 尾 */
@@ -104,7 +108,15 @@ typedef __packed struct
 	uint8_t   is_switched;
 	uint8_t   is_findtarget;
 	uint8_t   is_spinning;
-	uint8_t   is_middle;
+	uint8_t   is_predictl;
+  uint8_t   is_shooting;//取决于视觉那边是否加入自动开火标志位
+	float     x_info;  //三轴数据
+	float     y_info;
+	float     z_info;
+	float     predict_x_info;  //预测三轴数据
+	float     predict_y_info;
+	float     predict_z_info;
+//	uint8_t   is_middle;
 	
 	
 	/* 尾 */
@@ -160,8 +172,8 @@ class vision_info_t
 	  extVisionRecvDataSed_t   RxPacketSed;
 	  extVisionRecvDataThi_t   RxPacketThi;
 	
-    extVisionSendDataFir_t   TxPacketFir;
-	  extVisionSendDataSed_t   TxPacketSed;
+    extVisionSendDataFir_t   TxPacketFir;  //陀螺仪，弹速，yaw
+	  extVisionSendDataSed_t   TxPacketSed;	 //机器人位置（哨兵）
     extVisionSendDataThi_t   TxPacketThi;
 	
 	  extVisionSendhand_t TxHandFir;
@@ -180,6 +192,8 @@ class vision_info_t
 	  float Vision_Error_Angle_Yaw(float *error);
 	  float Vision_Error_Angle_Pitch(float *error);
 	  void Vision_Get_Distance(float *distance);
+		void Vision_Get_coordinate_system(float *x_axis,float *y_axis,float *z_axis);
+	  void Vision_Get_predict_coordinate(float *predict_x,float *predict_y,float *predict_z);
 };	
 	
 vision_info_t* vision_info_point(void);	

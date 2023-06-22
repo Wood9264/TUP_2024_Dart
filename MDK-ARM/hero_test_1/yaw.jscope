@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<JScopeProject>
+    <FileVersion major="1" minor="1" />
+    <Project>
+        <Configuration>
+            <JLink>
+                <Options Connection="1" IsRTTSession="0" IsRTTWithTimeStamp="1" SamplingPeriod="100" SerialNo="0" JTAG_IRPre="-1" JTAG_DRPre="-1" IP="" TargetDevice="STM32F407IG" TargetInterface="SWD" InterfaceSpeed="4000" />
+            </JLink>
+            <ScriptFile Name="E:\RM_git\infantry_2023 - ¸Ä²¦ÅÌ\MDK-ARM\hero_test_1\yaw.jscope\unspecified" />
+            <ElfFile Name="E:\RM_git\infantry_2023\MDK-ARM\hero_test_1\hero_test_1.axf" />
+            <DataFile Name="" />
+            <RawFile Name="" />
+            <Scope>
+                <Options TimeResolutionUs="200000" />
+            </Scope>
+        </Configuration>
+        <Windows>
+            <Graph Show="1" />
+            <Watch Show="1" />
+        </Windows>
+        <SelectedSymbols>
+            <Symbol>
+                <Options Name="max_relative_angle" Address="0x20003C88" Type="float" TypeID="1" Size="4" GraphColorRed="255" GraphColorGreen="215" GraphColorBlue="0" YMinSampled="1" YMaxSampled="1" YAvgSampled="1" Offset="4" ShowInGraph="0" ACCoupling="0" YOffset="200" IsAutoConfig="1" YResolution="1" MaxValue="2" File="..\Tasks\Src\chassis_task.cpp" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="min_relative_angle" Address="0x20003C8C" Type="float" TypeID="1" Size="4" GraphColorRed="0" GraphColorGreen="255" GraphColorBlue="0" YMinSampled="-1" YMaxSampled="-1" YAvgSampled="0" Offset="8" ShowInGraph="0" ACCoupling="0" YOffset="270" IsAutoConfig="1" YResolution="1" MaxValue="2" File="..\Tasks\Src\chassis_task.cpp" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="relative_angle" Address="0x20003C90" Type="float" TypeID="1" Size="4" GraphColorRed="102" GraphColorGreen="102" GraphColorBlue="178" YMinSampled="-3" YMaxSampled="3" YAvgSampled="0" Offset="12" ShowInGraph="1" ACCoupling="0" YOffset="700" IsAutoConfig="0" YResolution="1" MaxValue="10" File="..\Tasks\Src\chassis_task.cpp" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="relative_angle_set" Address="0x20003C94" Type="float" TypeID="1" Size="4" GraphColorRed="160" GraphColorGreen="32" GraphColorBlue="240" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="16" ShowInGraph="1" ACCoupling="0" YOffset="200" IsAutoConfig="1" YResolution="1" MaxValue="2" File="..\Tasks\Src\chassis_task.cpp" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="absolute_angle" Address="0x20003C98" Type="float" TypeID="1" Size="4" GraphColorRed="255" GraphColorGreen="0" GraphColorBlue="0" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="20" ShowInGraph="0" ACCoupling="0" YOffset="200" IsAutoConfig="1" YResolution="1" MaxValue="2" File="..\Tasks\Src\chassis_task.cpp" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="absolute_angle_set" Address="0x20003C9C" Type="float" TypeID="1" Size="4" GraphColorRed="0" GraphColorGreen="191" GraphColorBlue="255" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="24" ShowInGraph="0" ACCoupling="0" YOffset="230" IsAutoConfig="1" YResolution="1" MaxValue="2" File="..\Tasks\Src\chassis_task.cpp" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="spin_mode" Address="0x20000408" Type="int" TypeID="12" Size="4" GraphColorRed="0" GraphColorGreen="100" GraphColorBlue="0" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="28" ShowInGraph="0" ACCoupling="0" YOffset="330" IsAutoConfig="1" YResolution="1" MaxValue="1" File="..\Tasks\Src\system_task.cpp" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="global_spin" Address="0x20004ACC" Type="int" TypeID="12" Size="4" GraphColorRed="205" GraphColorGreen="133" GraphColorBlue="63" YMinSampled="0" YMaxSampled="1" YAvgSampled="0" Offset="32" ShowInGraph="1" ACCoupling="0" YOffset="700" IsAutoConfig="1" YResolution="1" MaxValue="6" File="..\Tasks\Src\ui_task.cpp" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="given_current" Address="0x20003CAC" Type="short" TypeID="11" Size="2" GraphColorRed="255" GraphColorGreen="215" GraphColorBlue="0" YMinSampled="-10773" YMaxSampled="15131" YAvgSampled="0" Offset="36" ShowInGraph="1" ACCoupling="0" YOffset="200" IsAutoConfig="1" YResolution="10000" MaxValue="20000" File="..\Tasks\Src\chassis_task.cpp" Scope="0" DrawStyle="0" />
+            </Symbol>
+        </SelectedSymbols>
+    </Project>
+</JScopeProject>

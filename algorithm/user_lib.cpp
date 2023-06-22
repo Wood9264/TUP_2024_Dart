@@ -197,16 +197,11 @@ fp32 theta_format(fp32 Ang)
   */
 float RAMP_float( float final, float now, float ramp )
 {
-	  float buffer = 0;
-	  
-	
+	  fp32 buffer = 0;
+
 	  buffer = final - now;
-	
-		if (buffer == 0)
-		{
-				now = now;
-		}
-		else if(buffer>0)
+
+		if(buffer>0)
 		{       
 			if (buffer > ramp)
 				{  

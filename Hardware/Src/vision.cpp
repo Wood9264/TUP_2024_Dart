@@ -2,7 +2,7 @@
 #include "cmsis_os.h"
 #include "usbd_cdc_if.h"
 #include "cstring"
-
+#include "judge.h"
 
 
 vision_info_t vision_info;
@@ -12,6 +12,14 @@ vision_info_t* vision_info_point(void)
 {
     return &vision_info;
 }
+
+
+extern float Firc_L_firc3508_motor_speed,Firc_R_firc3508_motor_speed;
+extern float Firc_L_tempreate,Firc_R_tempreate,gloab_bullet_speed;
+
+extern float per_fir_delay;
+bool vision_update_flag;
+
 void Vision_Read_Data(uint8_t *ReadFromUsart)
 {
 	//判断帧头数据是否为0xA5
@@ -50,6 +58,7 @@ void Vision_Read_Data(uint8_t *ReadFromUsart)
 				vision_info.Sed_State.rx_time_prev = vision_info.Sed_State.rx_time_now;
 				vision_info.Vision_empty_time=20;
 				vision_info.Sed_State.rx_data_update = true;//标记视觉数据更新了
+				
 			}
 		}
 	
@@ -104,8 +113,12 @@ void vision_info_t::Vision_Send_Fir_Data( uint8_t CmdID )
 	TxPacketFir.INS_accel_send[0] = INS_accel[0];
 	TxPacketFir.INS_accel_send[1] = INS_accel[1];
 	TxPacketFir.INS_accel_send[2] = INS_accel[2];
-	TxPacketFir.revolver_speed =gimbal_point()->Pitch_motor.relative_angle;
-  TxPacketFir.yaw_relative_angle=gimbal_point()->Yaw_motor.relative_angle;
+	TxPacketFir.revolver_speed =JUDGE_usGetSpeedHeat();//射速
+	TxPacketFir.firc_error=per_fir_delay;//打弹延迟
+  //TxPacketFir.Color=BLUE;
+  //TxPacketFir.Color=RED;
+
+
 
 	memcpy( vision_sendfir_pack + 3, &TxPacketFir, VISION_LEN_DATA);
 	
@@ -221,10 +234,23 @@ float vision_info_t::Vision_Error_Angle_Pitch(float *error)
   * @retval void
   * @attention  
   */
+
 void vision_info_t::Vision_Get_Distance(float *distance)
 {
 	*distance =RxPacketFir.distance;
 
 }
 
+void vision_info_t::Vision_Get_coordinate_system(float *x_axis,float *y_axis,float *z_axis)
+{
+	*x_axis = RxPacketFir.x_info;
+	*y_axis = RxPacketFir.y_info;
+	*z_axis = RxPacketFir.z_info;
+}
 
+void vision_info_t::Vision_Get_predict_coordinate(float *predict_x,float *predict_y,float *predict_z)
+{
+	*predict_x = RxPacketFir.predict_x_info;
+	*predict_y = RxPacketFir.predict_y_info;
+	*predict_z = RxPacketFir.predict_z_info;
+}

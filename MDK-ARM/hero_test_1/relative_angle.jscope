@@ -6,11 +6,11 @@
             <JLink>
                 <Options Connection="1" IsRTTSession="0" IsRTTWithTimeStamp="1" SamplingPeriod="100" SerialNo="0" JTAG_IRPre="-1" JTAG_DRPre="-1" IP="" TargetDevice="STM32F407IG" TargetInterface="SWD" InterfaceSpeed="4000" />
             </JLink>
-            <ElfFile Name="E:\×ÀÃæ\tup_test3.0\MDK-ARM\hero_test_1\hero_test_1.axf" />
+            <ElfFile Name="E:\RM_git\infantry_2023_least - ui\infantry_2023\MDK-ARM\hero_test_1\hero_test_1.axf" />
             <DataFile Name="" />
             <RawFile Name="" />
             <Scope>
-                <Options TimeResolutionUs="2000000" />
+                <Options TimeResolutionUs="2000" />
             </Scope>
             <Trigger>
                 <Options Level="0.000000" Symbol="absolute_angle" On="0" Auto="0" Rise="1" Fall="0" />
@@ -22,16 +22,40 @@
         </Windows>
         <SelectedSymbols>
             <Symbol>
-                <Options Name="absolute_angle" Address="0x20003A90" Type="float" TypeID="1" Size="4" GraphColorRed="205" GraphColorGreen="133" GraphColorBlue="63" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="4" ShowInGraph="1" ACCoupling="0" YOffset="510" IsAutoConfig="1" YResolution="1" MaxValue="5" File="..\Tasks\Src\chassis_task.cpp" Scope="0" DrawStyle="0" />
+                <Options Name="absolute_angle" Address="0x20003C30" Type="float" TypeID="1" Size="4" GraphColorRed="205" GraphColorGreen="133" GraphColorBlue="63" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="4" ShowInGraph="1" ACCoupling="0" YOffset="510" IsAutoConfig="1" YResolution="1" MaxValue="5" File="..\Tasks\Src\chassis_task.cpp" Scope="0" DrawStyle="0" />
             </Symbol>
             <Symbol>
-                <Options Name="absolute_angle_set" Address="0x20003A94" Type="float" TypeID="1" Size="4" GraphColorRed="255" GraphColorGreen="215" GraphColorBlue="0" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="8" ShowInGraph="1" ACCoupling="0" YOffset="510" IsAutoConfig="0" YResolution="1" MaxValue="2" File="..\Tasks\Src\chassis_task.cpp" Scope="0" DrawStyle="0" />
+                <Options Name="absolute_angle_set" Address="0x20003C34" Type="float" TypeID="1" Size="4" GraphColorRed="255" GraphColorGreen="215" GraphColorBlue="0" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="8" ShowInGraph="1" ACCoupling="0" YOffset="510" IsAutoConfig="0" YResolution="1" MaxValue="2" File="..\Tasks\Src\chassis_task.cpp" Scope="0" DrawStyle="2" />
             </Symbol>
             <Symbol>
-                <Options Name="absolute_angle" Address="0x200036B0" Type="float" TypeID="1" Size="4" GraphColorRed="0" GraphColorGreen="255" GraphColorBlue="0" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="12" ShowInGraph="1" ACCoupling="0" YOffset="200" IsAutoConfig="0" YResolution="1" MaxValue="2" File="..\Tasks\Src\gimbal_task.cpp" Scope="0" DrawStyle="0" />
+                <Options Name="absolute_angle" Address="0x20003C30" Type="float" TypeID="1" Size="4" GraphColorRed="0" GraphColorGreen="255" GraphColorBlue="0" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="12" ShowInGraph="1" ACCoupling="0" YOffset="510" IsAutoConfig="0" YResolution="1" MaxValue="2" File="..\Tasks\Src\chassis_task.cpp" Scope="0" DrawStyle="0" />
             </Symbol>
             <Symbol>
-                <Options Name="absolute_angle_set" Address="0x200036B4" Type="float" TypeID="1" Size="4" GraphColorRed="102" GraphColorGreen="102" GraphColorBlue="178" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="16" ShowInGraph="1" ACCoupling="0" YOffset="200" IsAutoConfig="1" YResolution="1" MaxValue="2" File="..\Tasks\Src\gimbal_task.cpp" Scope="0" DrawStyle="0" />
+                <Options Name="absolute_angle_set" Address="0x20003C34" Type="float" TypeID="1" Size="4" GraphColorRed="102" GraphColorGreen="102" GraphColorBlue="178" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="16" ShowInGraph="1" ACCoupling="0" YOffset="520" IsAutoConfig="1" YResolution="1" MaxValue="5" File="..\Tasks\Src\chassis_task.cpp" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="given_current" Address="0x20003C44" Type="short" TypeID="11" Size="2" GraphColorRed="255" GraphColorGreen="0" GraphColorBlue="0" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="20" ShowInGraph="0" ACCoupling="0" YOffset="200" IsAutoConfig="1" YResolution="20000" MaxValue="40000" File="..\Tasks\Src\chassis_task.cpp" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="Firc_L_firc3508_motor_speed" Address="0x200004B0" Type="float" TypeID="1" Size="4" GraphColorRed="0" GraphColorGreen="191" GraphColorBlue="255" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="22" ShowInGraph="0" ACCoupling="0" YOffset="200" IsAutoConfig="1" YResolution="1" MaxValue="1" File="..\Tasks\Src\revolver_task.cpp" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="Firc_L_tempreate" Address="0x200004B8" Type="float" TypeID="1" Size="4" GraphColorRed="0" GraphColorGreen="100" GraphColorBlue="0" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="26" ShowInGraph="0" ACCoupling="0" YOffset="200" IsAutoConfig="1" YResolution="1" MaxValue="1" File="..\Tasks\Src\revolver_task.cpp" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="Firc_R_firc3508_motor_speed" Address="0x200004B4" Type="float" TypeID="1" Size="4" GraphColorRed="205" GraphColorGreen="133" GraphColorBlue="63" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="30" ShowInGraph="0" ACCoupling="0" YOffset="200" IsAutoConfig="1" YResolution="1" MaxValue="1" File="..\Tasks\Src\revolver_task.cpp" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="Firc_R_tempreate" Address="0x200004BC" Type="float" TypeID="1" Size="4" GraphColorRed="255" GraphColorGreen="215" GraphColorBlue="0" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="34" ShowInGraph="0" ACCoupling="0" YOffset="200" IsAutoConfig="1" YResolution="1" MaxValue="1" File="..\Tasks\Src\revolver_task.cpp" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="gloab_bullet_speed" Address="0x200004C0" Type="float" TypeID="1" Size="4" GraphColorRed="0" GraphColorGreen="255" GraphColorBlue="0" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="38" ShowInGraph="0" ACCoupling="0" YOffset="200" IsAutoConfig="1" YResolution="1" MaxValue="1" File="..\Tasks\Src\revolver_task.cpp" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="Firc_R_give_current" Address="0x20004F84" Type="float" TypeID="1" Size="4" GraphColorRed="102" GraphColorGreen="102" GraphColorBlue="178" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="42" ShowInGraph="0" ACCoupling="0" YOffset="200" IsAutoConfig="1" YResolution="1" MaxValue="1" File="..\Tasks\Src\revolver_task.cpp" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="Firc_L_give_current" Address="0x20004F88" Type="float" TypeID="1" Size="4" GraphColorRed="160" GraphColorGreen="32" GraphColorBlue="240" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="46" ShowInGraph="0" ACCoupling="0" YOffset="200" IsAutoConfig="1" YResolution="1" MaxValue="1" File="..\Tasks\Src\revolver_task.cpp" Scope="0" DrawStyle="0" />
             </Symbol>
         </SelectedSymbols>
     </Project>

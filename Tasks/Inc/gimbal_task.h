@@ -11,6 +11,7 @@
 #include "kalman.h"
 #include "filter.h"
 #include "communicate.h"
+#include "user_lib.h"
 
 
 //任务初始化 空闲一段时间
@@ -20,9 +21,9 @@
 
 
 //掉头180 按键
-#define TURN_KEYBOARD KEY_PRESSED_OFFSET_G
+#define TURN_KEYBOARD KEY_PRESSED_OFFSET_Z&&KEY_PRESSED_OFFSET_CTRL
 //掉头云台速度
-#define TURN_SPEED    0.04f
+#define TURN_SPEED    0.01f
 
 //电机码盘值最大以及中值
 #define HALF_ECD_RANGE  4096
@@ -73,6 +74,7 @@ class gimbal_motor_t
     fp32 current_set;
     int16_t given_current;
 	
+		fp32 yaw_error;
 		void Absolute_angle_limit(fp32 add);
 		void Absolute_angle_nolimit(fp32 add);
 		void Relative_anlge_limit(fp32 add);

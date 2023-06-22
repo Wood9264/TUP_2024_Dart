@@ -120,8 +120,13 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
-          <Name>
-</Name>        </SetRegEntry>
+          <Name>d</Name>
+        </SetRegEntry>
+        <SetRegEntry>
+          <Number>0</Number>
+          <Key>CMSIS_AGDI</Key>
+          <Name>-X"ATK CMSIS-DAP-Debugger" -UATK-05022018 -O206 -S8 -C0 -P00 -N00("") -D00(00000000) -L00(0) -TO18 -TC10000000 -TP20 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO15 -FD20000000 -FC1000 -FN1 -FF0STM32F4xx_1024.FLM -FS08000000 -FL0100000 -FP0($$Device:STM32F407IGHx$CMSIS\Flash\STM32F4xx_1024.FLM)</Name>
+        </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
           <Key>ARMRTXEVENTFLAGS</Key>
@@ -140,7 +145,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>JL2CM3</Key>
-          <Name>-U25952326 -O78 -S2 -ZTIFSpeedSel5000 -A0 -C0 -JU1 -JI127.0.0.1 -JP0 -RST0 -N00("ARM CoreSight SW-DP") -D00(2BA01477) -L00(0) -TO18 -TC10000000 -TP21 -TDS8001 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -TB1 -TFE0 -FO15 -FD20000000 -FC1000 -FN1 -FF0STM32F4xx_1024.FLM -FS08000000 -FL0100000 -FP0($$Device:STM32F407IGHx$CMSIS\Flash\STM32F4xx_1024.FLM)</Name>
+          <Name>-U150711026 -O78 -S2 -ZTIFSpeedSel5000 -A0 -C0 -JU1 -JI127.0.0.1 -JP0 -RST0 -N00("ARM CoreSight SW-DP") -D00(2BA01477) -L00(0) -TO18 -TC10000000 -TP21 -TDS8001 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -TB1 -TFE0 -FO15 -FD20000000 -FC1000 -FN1 -FF0STM32F4xx_1024.FLM -FS08000000 -FL0100000 -FP0($$Device:STM32F407IGHx$CMSIS\Flash\STM32F4xx_1024.FLM)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -188,42 +193,42 @@
         <Ww>
           <count>6</count>
           <WinNumber>1</WinNumber>
-          <ItemText>gimbal_INT_gyro_point</ItemText>
+          <ItemText>INS_gyro</ItemText>
         </Ww>
         <Ww>
           <count>7</count>
           <WinNumber>1</WinNumber>
-          <ItemText>INS_gyro</ItemText>
+          <ItemText>chassis_move,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>8</count>
           <WinNumber>1</WinNumber>
-          <ItemText>INS_angle</ItemText>
+          <ItemText>Robot_status,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>9</count>
           <WinNumber>1</WinNumber>
-          <ItemText>chassis_move,0x0A</ItemText>
+          <ItemText>Judge_Buffer,0x10</ItemText>
         </Ww>
         <Ww>
           <count>10</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Robot_status,0x0A</ItemText>
+          <ItemText>revolver,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>11</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Judge_Buffer,0x10</ItemText>
+          <ItemText>error_list</ItemText>
         </Ww>
         <Ww>
           <count>12</count>
           <WinNumber>1</WinNumber>
-          <ItemText>revolver,0x0A</ItemText>
+          <ItemText>vision_info,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>13</count>
           <WinNumber>1</WinNumber>
-          <ItemText>error_list</ItemText>
+          <ItemText>Game_status</ItemText>
         </Ww>
         <Ww>
           <count>14</count>
@@ -233,87 +238,62 @@
         <Ww>
           <count>15</count>
           <WinNumber>1</WinNumber>
-          <ItemText>mode_change_type</ItemText>
+          <ItemText>cap_measure,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>16</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Game_status</ItemText>
+          <ItemText>global_flag,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>17</count>
           <WinNumber>1</WinNumber>
-          <ItemText>rc_action_flag</ItemText>
+          <ItemText>Robot_hurt</ItemText>
         </Ww>
         <Ww>
           <count>18</count>
           <WinNumber>1</WinNumber>
-          <ItemText>error,0x0A</ItemText>
+          <ItemText>Vision_process</ItemText>
         </Ww>
         <Ww>
           <count>19</count>
           <WinNumber>1</WinNumber>
-          <ItemText>time-currentTime,0x0A</ItemText>
+          <ItemText>Vision_data</ItemText>
         </Ww>
         <Ww>
           <count>20</count>
           <WinNumber>1</WinNumber>
-          <ItemText>currentTime,0x0A</ItemText>
+          <ItemText>Shoot_data,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>21</count>
           <WinNumber>1</WinNumber>
-          <ItemText>time,0x0A</ItemText>
+          <ItemText>Referee_info_t</ItemText>
         </Ww>
         <Ww>
           <count>22</count>
           <WinNumber>1</WinNumber>
-          <ItemText>RXlength</ItemText>
+          <ItemText>REF</ItemText>
         </Ww>
         <Ww>
           <count>23</count>
           <WinNumber>1</WinNumber>
-          <ItemText>\\hero_test_1\../Tasks/Src/gimbal_task.cpp\gimbal.Pitch_motor.absolute_angle_set</ItemText>
+          <ItemText>chassis_power_buffer</ItemText>
         </Ww>
         <Ww>
           <count>24</count>
           <WinNumber>1</WinNumber>
-          <ItemText>mouse_yaw</ItemText>
+          <ItemText>vision_info</ItemText>
         </Ww>
         <Ww>
           <count>25</count>
           <WinNumber>1</WinNumber>
-          <ItemText>mouse_pitch</ItemText>
+          <ItemText>cap_v_out</ItemText>
         </Ww>
         <Ww>
           <count>26</count>
           <WinNumber>1</WinNumber>
-          <ItemText>vision_info,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>27</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>cap_measure</ItemText>
-        </Ww>
-        <Ww>
-          <count>28</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>total_current</ItemText>
-        </Ww>
-        <Ww>
-          <count>29</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>\\hero_test_1\../Tasks/Src/chassis_task.cpp\chassis_move.chassis_motor_speed_pid</ItemText>
-        </Ww>
-        <Ww>
-          <count>30</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>sum_current</ItemText>
-        </Ww>
-        <Ww>
-          <count>31</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>\\hero_test_1\../Tasks/Src/chassis_task.cpp\chassis_move.chassis_current_pid[1].own_max_iout</ItemText>
+          <ItemText>vision_auto_flag</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
@@ -326,6 +306,61 @@
           <count>1</count>
           <WinNumber>2</WinNumber>
           <ItemText>Vision_data,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>2</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>start_firc,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>3</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>Dial_set</ItemText>
+        </Ww>
+        <Ww>
+          <count>4</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>revolver,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>5</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>per_fir_delay,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>6</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>per_fir_delay</ItemText>
+        </Ww>
+        <Ww>
+          <count>7</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>start_firc</ItemText>
+        </Ww>
+        <Ww>
+          <count>8</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>bullet_speed</ItemText>
+        </Ww>
+        <Ww>
+          <count>9</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>bullet_last_speed</ItemText>
+        </Ww>
+        <Ww>
+          <count>10</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>Shoot_data,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>11</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>sys</ItemText>
+        </Ww>
+        <Ww>
+          <count>12</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>REF</ItemText>
         </Ww>
       </WatchWindow2>
       <Tracepoint>
@@ -414,7 +449,7 @@
 
   <Group>
     <GroupName>Application/User/Core</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -806,7 +841,7 @@
 
   <Group>
     <GroupName>BSP</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -957,8 +992,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Tasks\Src\monitor_task.cpp</PathWithFileName>
-      <FilenameWithoutPath>monitor_task.cpp</FilenameWithoutPath>
+      <PathWithFileName>..\Tasks\Src\gimbal_task.cpp</PathWithFileName>
+      <FilenameWithoutPath>gimbal_task.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -969,8 +1004,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Tasks\Src\gimbal_task.cpp</PathWithFileName>
-      <FilenameWithoutPath>gimbal_task.cpp</FilenameWithoutPath>
+      <PathWithFileName>..\Tasks\Src\monitor_task.cpp</PathWithFileName>
+      <FilenameWithoutPath>monitor_task.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

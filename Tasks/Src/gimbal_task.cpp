@@ -1,9 +1,11 @@
 #include "gimbal_task.h"
 #include "cmsis_os.h"
 #include "task.h"
-
-gimbal_control_t gimbal;		
+#include "revolver_task.h"
+gimbal_control_t gimbal;	
+	
 	uint32_t currentTime;
+
 /**
   * @brief          取云台指针
   * @param[in]      null
@@ -13,7 +15,10 @@ gimbal_control_t *gimbal_point(void)
 {
 	return &gimbal;
 }
+/*********************************************/
+extern bool auto_firc_flag_angle;
 
+/*********************************************/
 /**
   * @brief          云台主任务
   * @param[in]      null
@@ -30,8 +35,9 @@ void gimbal_task(void const *pvParameters)
 		gimbal.Get_info();
 		gimbal.Control();
 
-		CAN2_1FF_cmd_motor(0,gimbal.Pitch_motor.given_current,0,0);
-		CAN1_1FF_cmd_motor(0,gimbal.Yaw_motor.given_current,0,0);
+		CAN2_1FF_cmd_motor(0,0,gimbal.Pitch_motor.given_current,0);
+		CAN1_1FF_cmd_motor(gimbal.Yaw_motor.given_current,0,0,0);
+		//vTaskDelay(2);
 		osDelay(2);
 
 	}
@@ -50,29 +56,27 @@ gimbal_control_t::gimbal_control_t()
 	//陀螺仪数据指针获取
 	gimbal_INT_angle_point = get_INS_angle_point();
 	gimbal_INT_gyro_point = get_gyro_data_point();
+
 	//LADRC_FDW初始化
-	Pitch_motor.LADRC_FDW.init(30, 0.0030, 85,30000,80,0);
-  //Yaw_motor.LADRC_FDW.init(25, 0.003, 85, 30000,80,1);
-	//Yaw_motor.LADRC_FDW.init(30, 0.004, 150, 30000,90,1);
-  Yaw_motor.LADRC_FDW.init(25, 0.005, 85, 30000,70,0);
-	
+	Pitch_motor.LADRC_FDW.init(45, 0.005, 280,30000,80,0);
+  Yaw_motor.LADRC_FDW.init(20, 0.002, 155, 30000,70,0);
+////自瞄LADRC_FDW初始化
+//	Pitch_motor.AUTO_LADRC_FDW.init(10, 0.03, 75,30000,80,0.4);
+//	Yaw_motor.AUTO_LADRC_FDW.init(10, 0.08, 75, 30000,90,0);
+
 //自瞄LADRC_FDW初始化
-	Pitch_motor.AUTO_LADRC_FDW.init(15, 0.0023, 80,30000,80,0.2);
-	Yaw_motor.AUTO_LADRC_FDW.init(17, 0.003, 100, 30000,90,0.4);
-	
-//		LADRC_FDW_init(&gimbal_mode_change->gimbal_pitch_motor.Gimbal_ladrc_fdw,25, 0.010, 120,30000,30,0);   //120
-////		    LADRC_FDW_init(&gimbal_mode_change->gimbal_yaw_motor.Gimbal_ladrc_fdw,25, 0.004, 90, 30000,30,0);//30, 0.0050, 180, 30000,90,1);  //120
-//         LADRC_FDW_init(&gimbal_mode_change->gimbal_yaw_motor.Gimbal_ladrc_fdw,30, 0.004, 150, 30000,90,0);//30, 0.0050, 180, 30000,90,1);  //120
+	Pitch_motor.AUTO_LADRC_FDW.init(20, 0.0023,90,30000,80,0.45);
+	Yaw_motor.AUTO_LADRC_FDW.init(15, 0.0025,85, 30000,90,0.3);
 
 	//PITCH轴最大最小相对角度设置
-	Pitch_motor.max_relative_angle =0.4290f;
-	Pitch_motor.min_relative_angle = -0.74f;
+	Pitch_motor.max_relative_angle =0.3f;
+	Pitch_motor.min_relative_angle = -0.52f;
 	//YAW轴最大最小相对角度设置
 	Yaw_motor.max_relative_angle =  Motor_Ecd_to_Rad*2048.0f;
 	Yaw_motor.min_relative_angle = Motor_Ecd_to_Rad*-2048.0f;
 	//电机中值
-	Yaw_motor.offset_ecd =2000;
-	Pitch_motor.offset_ecd = 4213;
+	Yaw_motor.offset_ecd =1213;
+	Pitch_motor.offset_ecd = 4100;
 	//Yaw轴角度设置
 	Yaw_motor.relative_angle_set = 0;
 	//Pitch轴角度设置
@@ -110,11 +114,10 @@ void gimbal_control_t::Get_info()
 	
 	Pitch_motor.motor_gyro = -*(gimbal_INT_gyro_point + INS_GYRO_Y_ADDRESS_OFFSET);
 	
-//	Yaw_motor.motor_gyro =arm_cos_f32(Pitch_motor.absolute_angle) * (*(gimbal_INT_gyro_point + INS_GYRO_Z_ADDRESS_OFFSET))
-//													+arm_sin_f32(Pitch_motor.absolute_angle) * (*(gimbal_INT_gyro_point + INS_GYRO_X_ADDRESS_OFFSET));
 	Yaw_motor.motor_gyro = arm_cos_f32(Pitch_motor.relative_angle) * (*(gimbal_INT_gyro_point + INS_GYRO_Z_ADDRESS_OFFSET))
 													-arm_sin_f32(Roll_motor.absolute_angle) * (*(gimbal_INT_gyro_point + INS_GYRO_X_ADDRESS_OFFSET));
 
+	Yaw_motor.yaw_error=Yaw_motor.absolute_angle_set-Yaw_motor.absolute_angle;
 }
 
 
@@ -162,7 +165,7 @@ void gimbal_control_t::Control()
 	{
 		Spin_control();
 	}
-	else if(syspoint()->sys_mode == AUTO)
+	else if(syspoint()->sys_mode == AUTO||syspoint()->sys_mode == SPIN_AUTO)
 	{
 		Auto_control();
 	}
@@ -226,6 +229,7 @@ void gimbal_control_t::Absolute_angle_control()
   syspoint()->Gimbal_value_calc();
 	add_yaw= syspoint()->rc_add_yaw;
 	add_pit= syspoint()->rc_add_pit;
+
 	Keyboard_angle_set();
 	
 	Yaw_motor.Absolute_angle_limit(add_yaw);
@@ -245,7 +249,7 @@ void gimbal_control_t::Spin_control()
   syspoint()->Gimbal_value_calc();
 	add_yaw= syspoint()->rc_add_yaw;
 	add_pit= syspoint()->rc_add_pit;
-	
+
 	Yaw_motor.Absolute_angle_nolimit(add_yaw);
 	Pitch_motor.Absolute_angle_limit(add_pit);
 	
@@ -264,7 +268,6 @@ void gimbal_control_t::Auto_control()
 	Yaw_motor.Absolute_auto_adrc_control();
 	Pitch_motor.Absolute_auto_adrc_control();
 }
-
 
 
 
@@ -295,19 +298,65 @@ void gimbal_control_t::Gimbal_auto_angle_get()
 
 //获取视觉数据
 	  if(vision_info_point()->RxPacketFir.is_findtarget==1)
-		{
+		{ 
 			Yaw_motor.absolute_angle_set =  Vision_process_point()->data_kal.YawTarget_KF;
 			Pitch_motor.absolute_angle_set =  Vision_process_point()->data_kal.PitchTarget_KF;
-		}
-//else{
-//			Yaw_motor.absolute_angle_set = Yaw_motor.absolute_angle;
-//			Pitch_motor.absolute_angle_set = Pitch_motor.absolute_angle;
-//		}
+			
+			if(isnan(Pitch_motor.absolute_angle_set))
+			{
+					Pitch_motor.absolute_angle_set=Pitch_motor.absolute_angle;
+			}
+			if(isnan(Yaw_motor.absolute_angle_set))
+			{
+					Yaw_motor.absolute_angle_set=Yaw_motor.absolute_angle;
+			}
+			
+					
 
+		}
+    else
+    {
+			Yaw_motor.absolute_angle_set = Yaw_motor.absolute_angle;
+			Pitch_motor.absolute_angle_set = Pitch_motor.absolute_angle;
+		}
+
+
+//开火限制
+if(vision_info_point()->RxPacketFir.is_spinning==1)
+{
+		if(vision_info_point()->RxPacketFir.distance>3.0)
+		{
+			if(fabs(Yaw_motor.absolute_angle-Yaw_motor.absolute_angle_set)<0.01)
+			{
+					if(fabs(Pitch_motor.absolute_angle-Pitch_motor.absolute_angle_set)<0.01)
+					{
+						auto_firc_flag_angle=1;
+					}
+					else{auto_firc_flag_angle=0;}
+			}
+			else{auto_firc_flag_angle=0;}
+		}else
+		{	
+			if(fabs(Yaw_motor.absolute_angle-Yaw_motor.absolute_angle_set)<0.02)
+			{
+					if(fabs(Pitch_motor.absolute_angle-Pitch_motor.absolute_angle_set)<0.02)
+					{
+						auto_firc_flag_angle=1;
+					}
+					else{auto_firc_flag_angle=0;}
+			}
+			else{auto_firc_flag_angle=0;}
+		}
+}
+else
+{
+		auto_firc_flag_angle=1;
+}
+ 
 }
 
 /**
-  * @brief          不同按键对应角度控制
+  * @brief          一键调头
   * @param[in]      null
   */
 void gimbal_control_t::Keyboard_angle_set()
@@ -315,8 +364,11 @@ void gimbal_control_t::Keyboard_angle_set()
 	 static uint16_t last_turn_keyboard = 0;
    static uint8_t gimbal_turn_flag = 0;
    static fp32 gimbal_end_angle = 0.0f;
+	 int rc_keyCZ_time;
+	 int turn_mode;
 
-   if ((syspoint()->system_rc_ctrl->key.v & TURN_KEYBOARD) && !(last_turn_keyboard & TURN_KEYBOARD))
+
+	 if((IF_KEY_PRESSED_CTRL&&IF_KEY_PRESSED_Z)||(rc_ctrl.rc.ch[4]<=-200&&(abs(rc_ctrl.rc.ch[0])>=10||abs(rc_ctrl.rc.ch[1]>=10)))||(rc_ctrl.mouse.z<-2))//
    {
      if (gimbal_turn_flag == 0)
      {
@@ -330,14 +382,7 @@ void gimbal_control_t::Keyboard_angle_set()
     if (gimbal_turn_flag)
     {
       //不断控制到掉头的目标值，正转，反装是随机
-      if (rad_format(gimbal_end_angle - Yaw_motor.absolute_angle) > 0.0f)
-      {
-        add_yaw += TURN_SPEED;
-      }
-      else
-      {
-        add_yaw -= TURN_SPEED;
-      }
+				Yaw_motor.absolute_angle_set=RAMP_float(gimbal_end_angle,Yaw_motor.absolute_angle,0.45);
     }
     //到达pi （180°）后停止
     if (gimbal_turn_flag && fabs(rad_format(gimbal_end_angle - Yaw_motor.absolute_angle)) < 0.01f)

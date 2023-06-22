@@ -69,7 +69,6 @@ osThreadId monitor_handle;
 osThreadId ui_handle;
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
-osThreadId TASK_LEDHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -77,7 +76,6 @@ osThreadId TASK_LEDHandle;
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void const * argument);
-
 
 extern void MX_USB_DEVICE_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -132,10 +130,10 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
 
-	osThreadDef(monitor, monitor_task, osPriorityNormal, 0, 256);
+	osThreadDef(monitor, monitor_task, osPriorityNormal, 0, 128);
   monitor_handle = osThreadCreate(osThread(monitor), NULL);
 	
-	osThreadDef(RevolverTask, revolver_task, osPriorityAboveNormal, 0, 512);
+	osThreadDef(RevolverTask, revolver_task, osPriorityAboveNormal, 0, 512);//
   revolverTaskHandle = osThreadCreate(osThread(RevolverTask), NULL);
 
 	osThreadDef(ChassisTask, chassis_task, osPriorityAboveNormal, 0, 512);
@@ -159,7 +157,7 @@ void MX_FREERTOS_Init(void) {
 	osThreadDef(communicateTask, communi_task, osPriorityHigh, 0, 128);
   communiTask_handel = osThreadCreate(osThread(communicateTask), NULL);
 	
-	osThreadDef(DETECT, detect_task, osPriorityNormal, 0, 256);
+	osThreadDef(DETECT, detect_task, osPriorityNormal, 0, 128);
 	detect_handle = osThreadCreate(osThread(DETECT), NULL);
  
   osThreadDef(ui, ui_task, osPriorityNormal, 0, 256);
@@ -188,24 +186,6 @@ void StartDefaultTask(void const * argument)
     osDelay(1);
   }
   /* USER CODE END StartDefaultTask */
-}
-
-/* USER CODE BEGIN Header_LED_WINK */
-/**
-* @brief Function implementing the TASK_LED thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_LED_WINK */
-void LED_WINK(void const * argument)
-{
-  /* USER CODE BEGIN LED_WINK */
-//  /* Infinite loop */
-//  for(;;)
-//  {
-//    osDelay(1);
-//  }
-  /* USER CODE END LED_WINK */
 }
 
 /* Private application code --------------------------------------------------*/

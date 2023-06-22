@@ -52,6 +52,8 @@ uint16_t ShootNum_42mm;//统计发弹量,0x0003触发一次则认为发射了一颗
 bool Hurt_Data_Update = FALSE;//装甲板伤害数据是否更新,每受一次伤害置TRUE,然后立即置FALSE,给底盘闪避用
 
 
+
+
 /**
   * @brief  读取裁判数据,loop中循环调用此函数来读取数据
   * @param  缓存数据
@@ -412,7 +414,7 @@ uint16_t JUDGE_usGetRemoteHeat_id1_42mm(void)
   * @brief  读取射速
   * @param  void
   * @retval 17mm
-  * @attention  实时热量
+  * @attention  实时速度
   */
 float JUDGE_usGetSpeedHeat(void)
 {
@@ -834,7 +836,7 @@ uint8_t  Judge_armor_id(void)
 /**
   * @brief  装甲板受伤模式
   * @param  void
-  * @retval   
+  * @retval     
   * @attention  
 		bit 4-7： 血量变化类型
 			0x0 装甲伤害扣血；
@@ -942,37 +944,37 @@ static void  Draw_char()
 }
 /*******************************结束绘制字符串******************************/
 
-void  Client_graphic_Init()
-{
-	if(state_first_graphic>=7)
-	{
-		state_first_graphic = 0;
-	}
-		//帧头
-		tx_client_char.txFrameHeader.SOF = JUDGE_FRAME_HEADER;
-		tx_client_char.txFrameHeader.DataLength = sizeof(ext_student_interactive_header_data_t) + sizeof(ext_client_string_t);
-		tx_client_char.txFrameHeader.Seq = 0;//包序号
-		memcpy(CliendTxBuffer,&tx_client_char.txFrameHeader,sizeof(xFrameHeader));
-		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//头校验
-	
-		//命令码
-		tx_client_char.CmdID = ID_robot_interactive_header_data;
-		
-		//数据段头结构
-		tx_client_char.dataFrameHeader.data_cmd_id = INTERACT_ID_draw_char_graphic;
-		tx_client_char.dataFrameHeader.send_ID     = REF.GameRobotStat.robot_id;
-		tx_client_char.dataFrameHeader.receiver_ID = REF.self_client;
-		
-		//数据段
-		Draw_char();
-		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&tx_client_char.CmdID, LEN_CMD_ID+tx_client_char.txFrameHeader.DataLength);//加上命令码长度2
-		
-		//帧尾
-		append_CRC16_check_sum(CliendTxBuffer,sizeof(tx_client_char));
-		
-    HAL_UART_Transmit(&huart1,CliendTxBuffer,sizeof(tx_client_char),200);
-    
-}
+//void  Client_graphic_Init()
+//{
+//	if(state_first_graphic>=7)
+//	{
+//		state_first_graphic = 0;
+//	}
+//		//帧头
+//		tx_client_char.txFrameHeader.SOF = JUDGE_FRAME_HEADER;
+//		tx_client_char.txFrameHeader.DataLength = sizeof(ext_student_interactive_header_data_t) + sizeof(ext_client_string_t);
+//		tx_client_char.txFrameHeader.Seq = 0;//包序号
+//		memcpy(CliendTxBuffer,&tx_client_char.txFrameHeader,sizeof(xFrameHeader));
+//		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//头校验
+//	
+//		//命令码
+//		tx_client_char.CmdID = ID_robot_interactive_header_data;
+//		
+//		//数据段头结构
+//		tx_client_char.dataFrameHeader.data_cmd_id = INTERACT_ID_draw_char_graphic;
+//		tx_client_char.dataFrameHeader.send_ID     = REF.GameRobotStat.robot_id;
+//		tx_client_char.dataFrameHeader.receiver_ID = REF.self_client;
+//		
+//		//数据段
+//		Draw_char();
+//		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&tx_client_char.CmdID, LEN_CMD_ID+tx_client_char.txFrameHeader.DataLength);//加上命令码长度2
+//		
+//		//帧尾
+//		append_CRC16_check_sum(CliendTxBuffer,sizeof(tx_client_char));
+//		
+//    HAL_UART_Transmit(&huart1,CliendTxBuffer,sizeof(tx_client_char),200);
+//    
+//}
 
 //************************************绘制象形*******************************/
 ext_graphic_seven_data_t tx_client_graphic_figure;
@@ -1127,33 +1129,33 @@ static void Draw_Figure_bool()
   
 }
 
-void  Client_graphic_Info_update()//七个图像一起更新
-{
-		//帧头
-		tx_client_graphic_figure.txFrameHeader.SOF = JUDGE_FRAME_HEADER;
-		tx_client_graphic_figure.txFrameHeader.DataLength = sizeof(ext_student_interactive_header_data_t) + sizeof(graphic_data_struct_t)*7;
-		tx_client_graphic_figure.txFrameHeader.Seq = 0;//包序号
-		memcpy(CliendTxBuffer,&tx_client_graphic_figure.txFrameHeader,sizeof(xFrameHeader));
-		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//头校验
+//void  Client_graphic_Info_update()//七个图像一起更新
+//{
+//		//帧头
+//		tx_client_graphic_figure.txFrameHeader.SOF = JUDGE_FRAME_HEADER;
+//		tx_client_graphic_figure.txFrameHeader.DataLength = sizeof(ext_student_interactive_header_data_t) + sizeof(graphic_data_struct_t)*7;
+//		tx_client_graphic_figure.txFrameHeader.Seq = 0;//包序号
+//		memcpy(CliendTxBuffer,&tx_client_graphic_figure.txFrameHeader,sizeof(xFrameHeader));
+//		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//头校验
 
-		//命令码
-		tx_client_graphic_figure.CmdID = ID_robot_interactive_header_data;
+//		//命令码
+//		tx_client_graphic_figure.CmdID = ID_robot_interactive_header_data;
 
-		//数据段头结构
-		tx_client_graphic_figure.dataFrameHeader.data_cmd_id = INTERACT_ID_draw_seven_graphic;
-		tx_client_graphic_figure.dataFrameHeader.send_ID     = REF.GameRobotStat.robot_id;
-		tx_client_graphic_figure.dataFrameHeader.receiver_ID = REF.self_client;
-	
-		//数据段
-		Draw_Figure_bool();
-		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&tx_client_graphic_figure.CmdID, LEN_CMD_ID+tx_client_graphic_figure.txFrameHeader.DataLength);//加上命令码长度2
+//		//数据段头结构
+//		tx_client_graphic_figure.dataFrameHeader.data_cmd_id = INTERACT_ID_draw_seven_graphic;
+//		tx_client_graphic_figure.dataFrameHeader.send_ID     = REF.GameRobotStat.robot_id;
+//		tx_client_graphic_figure.dataFrameHeader.receiver_ID = REF.self_client;
+//	
+//		//数据段
+//		Draw_Figure_bool();
+//		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&tx_client_graphic_figure.CmdID, LEN_CMD_ID+tx_client_graphic_figure.txFrameHeader.DataLength);//加上命令码长度2
 
-		//帧尾
-		append_CRC16_check_sum(CliendTxBuffer,sizeof(tx_client_graphic_figure));
-		
-    HAL_UART_Transmit(&huart1,CliendTxBuffer,sizeof(tx_client_graphic_figure),200);
+//		//帧尾
+//		append_CRC16_check_sum(CliendTxBuffer,sizeof(tx_client_graphic_figure));
+//		
+//    HAL_UART_Transmit(&huart1,CliendTxBuffer,sizeof(tx_client_graphic_figure),200);
 
-}
+//}
 
 ext_graphic_two_data_t tx_aim_figure;//第三层放准心
 int update_aim_flag;//1-add,3删除
@@ -1295,7 +1297,11 @@ void Float_Graphic(Float_data_struct_t* graphic,//最终要发出去的数组的数据段内容
 	graphic->width        = width;
 	graphic->start_x      = start_x;
 	graphic->start_y      = start_y;	
-	graphic->number       = number;
+	int32_t IntData = number * 1000;
+	graphic->radius          = (IntData & 0x000003ff) >>  0;
+	graphic->end_x           = (IntData & 0x001ffc00) >> 10;
+	graphic->end_y           = (IntData & 0xffe00000) >> 21;
+
 }
 static void gimbal_angle_float(float gimble_pitch,float gimble_yaw)//当前云台角度
 {
@@ -1455,15 +1461,16 @@ ext_graphic_seven_data_t high_aim_figure;//操作手准心之上,不更新
 ext_graphic_seven_data_t low_aim_shortfigure_1;//准心下的第一个短线
 ext_graphic_seven_data_t low_aim_shortfigure_2;
 ext_graphic_seven_data_t  low_aim_shortfigure_3;//五个短线两个纵线
+ext_graphic_seven_data_t  vision_range_data;
 ext_graphic_five_data_t  low_aim_longfigure;//准心下的长横线
 //!!!!!!!!!!!!!!!!!!全局变量
 uint32_t division_value = 10;
 //division_value分度值,line_length短线长度的一半
 static void aim_1(uint32_t division_value,uint32_t line_length)//准心上半部分的宽度"AH"--aim_high
 {
-	Figure_Graphic(&high_aim_figure.clientData[1],"AH2",ADD,LINE,1,GREEN,0,0,2,  598,8, 0,795,281);
+	Figure_Graphic(&high_aim_figure.clientData[1],"AH2",ADD,LINE,1,GREEN,0,0,2,  498,8, 0,795,381);
 
-	Figure_Graphic(&high_aim_figure.clientData[4],"AH5",ADD,LINE,1,GREEN,0,0,2,  1309,11,0,  1115,283);
+	Figure_Graphic(&high_aim_figure.clientData[4],"AH5",ADD,LINE,1,GREEN,0,0,2,  1409,11,0,  1115,383);
 }
 void _high_aim_()
 {
@@ -1494,13 +1501,7 @@ void _high_aim_()
 
 static void aim_lowshort_2(uint32_t division_value,uint32_t line_length)//准心上半部分的宽度"AL"--aim_low
 {
-	Figure_Graphic(&low_aim_shortfigure_1.clientData[0],"AL1",ADD,LINE,3,YELLOW,0,0,1,  960-line_length,540-30                 ,0,  960+line_length,540-30);//graphic_Remove
-	Figure_Graphic(&low_aim_shortfigure_1.clientData[1],"AL2",ADD,LINE,3,YELLOW,0,0,1,  960-line_length,540-30-division_value  ,0,  960+line_length,540-30-division_value  );
-	Figure_Graphic(&low_aim_shortfigure_1.clientData[2],"AL3",ADD,LINE,3,YELLOW,0,0,1,  960-line_length,540-30-division_value*2,0,  960+line_length,540-30-division_value*2);
-	Figure_Graphic(&low_aim_shortfigure_1.clientData[3],"AL4",ADD,LINE,3,YELLOW,0,0,1,  960-line_length,540-30-division_value*4,0,  960+line_length,540-30-division_value*4);
-	Figure_Graphic(&low_aim_shortfigure_1.clientData[4],"AL5",ADD,LINE,3,YELLOW,0,0,1,  960-line_length,540-30-division_value*5,0,  960+line_length,540-30-division_value*5);
-	Figure_Graphic(&low_aim_shortfigure_1.clientData[5],"AL6",ADD,LINE,3,YELLOW,0,0,1,  960-line_length,540-30-division_value*6,0,  960+line_length,540-30-division_value*6);
-	Figure_Graphic(&low_aim_shortfigure_1.clientData[6],"AL7",ADD,LINE,3,YELLOW,0,0,1,  960-line_length,540-30-division_value*8,0,  960+line_length,540-30-division_value*8);
+	Figure_Graphic(&low_aim_shortfigure_1.clientData[0],"AL1",ADD,LINE,3,YELLOW,0,0,1,  950,540-170,0,  950,540-10);//graphic_Remove
 }
 void _lowshort_aim_2()
 {
@@ -1530,13 +1531,13 @@ void _lowshort_aim_2()
 }
 static void aim_lowshort_3(uint32_t division_value,uint32_t line_length)//准心上半部分的宽度"AM"--aim_low_middle
 {
-	Figure_Graphic(&low_aim_shortfigure_2.clientData[0],"AM1",ADD,LINE,3,YELLOW,0,0,1,  960-line_length,540-30-division_value*9 ,0,  960+line_length,540-30-division_value*9 );//graphic_Remove
-	Figure_Graphic(&low_aim_shortfigure_2.clientData[1],"AM2",ADD,LINE,3,YELLOW,0,0,1,  960-line_length,540-30-division_value*10,0,  960+line_length,540-30-division_value*10);
-	Figure_Graphic(&low_aim_shortfigure_2.clientData[2],"AM3",ADD,LINE,3,YELLOW,0,0,1,  960-line_length,540-30-division_value*12,0,  960+line_length,540-30-division_value*12);
-	Figure_Graphic(&low_aim_shortfigure_2.clientData[3],"AM4",ADD,LINE,3,YELLOW,0,0,1,  960-line_length,540-30-division_value*13,0,  960+line_length,540-30-division_value*13);
-	Figure_Graphic(&low_aim_shortfigure_2.clientData[4],"AM5",ADD,LINE,3,YELLOW,0,0,1,  960-line_length,540-30-division_value*14,0,  960+line_length,540-30-division_value*14);
-	Figure_Graphic(&low_aim_shortfigure_2.clientData[5],"AM6",ADD,LINE,3,YELLOW,0,0,1,  960-line_length,540-30-division_value*16,0,  960+line_length,540-30-division_value*16);
-	Figure_Graphic(&low_aim_shortfigure_2.clientData[6],"AM7",ADD,LINE,3,YELLOW,0,0,1,  960-line_length,540-30-division_value*17,0,  960+line_length,540-30-division_value*17);
+	Figure_Graphic(&low_aim_shortfigure_2.clientData[0],"AM1",ADD,LINE,3,YELLOW,0,0,1,  950-line_length,540+60-division_value*9 ,0,  950+line_length,540+60-division_value*9 );//graphic_Remove	Figure_Graphic(&low_aim_shortfigure_2.clientData[1],"AM2",ADD,LINE,3,YELLOW,0,0,1,  960-line_length,540+30-division_value*10,0,  960+line_length,540+30-division_value*10);
+	Figure_Graphic(&low_aim_shortfigure_2.clientData[1],"AM2",ADD,LINE,3,YELLOW,0,0,1,  950-line_length,540+60-division_value*10,0,  950+line_length,540+60-division_value*10);
+  Figure_Graphic(&low_aim_shortfigure_2.clientData[2],"AM3",ADD,LINE,3,YELLOW,0,0,1,  950-line_length,540+60-division_value*12,0,  950+line_length,540+60-division_value*12);
+	Figure_Graphic(&low_aim_shortfigure_2.clientData[3],"AM4",ADD,LINE,3,YELLOW,0,0,1,  950-line_length,540+60-division_value*13,0,  950+line_length,540+60-division_value*13);
+	Figure_Graphic(&low_aim_shortfigure_2.clientData[4],"AM5",ADD,LINE,3,YELLOW,0,0,1,  950-line_length,540+60-division_value*14,0,  950+line_length,540+60-division_value*14);
+	Figure_Graphic(&low_aim_shortfigure_2.clientData[5],"AM6",ADD,LINE,3,YELLOW,0,0,1,  950-line_length,540+60-division_value*20,0,  950+line_length,540+60-division_value*20);
+	Figure_Graphic(&low_aim_shortfigure_2.clientData[6],"AM7",ADD,LINE,3,YELLOW,0,0,1,  950-line_length,540+60-division_value*21,0,  950+line_length,540+60-division_value*21);
 }
 void _lowshort_aim_3()
 {
@@ -1556,7 +1557,7 @@ void _lowshort_aim_3()
 		low_aim_shortfigure_2.dataFrameHeader.receiver_ID = REF.self_client;
 	
 		//数据段
-		aim_lowshort_3(division_value,10);
+		aim_lowshort_3(division_value,20);
 		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&low_aim_shortfigure_2.CmdID, LEN_CMD_ID+low_aim_shortfigure_2.txFrameHeader.DataLength);//加上命令码长度2
 
 		//帧尾
@@ -1564,47 +1565,53 @@ void _lowshort_aim_3()
 		
 		HAL_UART_Transmit(&huart1,CliendTxBuffer,sizeof(low_aim_shortfigure_2),200);
 }
-//stem--茎
-static void aim_lowshort_stem(uint32_t division_value,uint32_t line_length)//准心上半部分的宽度"AM"--aim_low_bottom,"AS"--aim_stem
+//视觉瞄准范围
+static void vision_range_1(uint32_t division_value,uint32_t line_length)//准心上半部分的宽度"AM"--aim_low_bottom,"AS"--aim_stem
 { 
-	Figure_Graphic(&low_aim_shortfigure_3.clientData[0],"AB1",ADD,LINE,3,YELLOW,0,0,1,   960-line_length,540-30-division_value*18,0,   960+line_length,540-30-division_value*18);//graphic_Remove
-	Figure_Graphic(&low_aim_shortfigure_3.clientData[1],"AB2",ADD,LINE,3,YELLOW,0,0,1,   960-line_length,540-30-division_value*20,0,   960+line_length,540-30-division_value*20);
-	Figure_Graphic(&low_aim_shortfigure_3.clientData[2],"AB3",ADD,LINE,3,YELLOW,0,0,1,   960-line_length,540-30-division_value*21,0,   960+line_length,540-30-division_value*21);
-	Figure_Graphic(&low_aim_shortfigure_3.clientData[3],"AB4",ADD,LINE,3,YELLOW,0,0,1,   960-line_length,540-30-division_value*22,0,   960+line_length,540-30-division_value*22);
-	Figure_Graphic(&low_aim_shortfigure_3.clientData[4],"AB5",ADD,LINE,3,YELLOW,0,0,1,960-line_length-10,540-30-division_value*23,0,960+line_length+10,540-30-division_value*23);
-	
-	Figure_Graphic(&low_aim_shortfigure_3.clientData[5],"AS1",ADD,LINE,3,YELLOW,0,0,1,   960,            540+30+division_value*6 ,0,   960,            540+30);
-	Figure_Graphic(&low_aim_shortfigure_3.clientData[6],"AS2",ADD,LINE,3,YELLOW,0,0,1,   960,            540-30-division_value*23,0,   960,            540-30);
+	int start_x,start_y,length,height;
+  start_x=620;
+	start_y=800;
+	length=680;
+	height=520;
+	Figure_Graphic(&vision_range_data.clientData[0],"AB1",ADD,LINE,3,YELLOW,0,0,1,   start_x,start_y,0,start_x+length,start_y);//graphic_Remove
+	Figure_Graphic(&vision_range_data.clientData[1],"AB2",ADD,LINE,3,YELLOW,0,0,1,   start_x+length,start_y,0,start_x+length,start_y-height);
+	Figure_Graphic(&vision_range_data.clientData[2],"AB3",ADD,LINE,3,YELLOW,0,0,1,   start_x+length,start_y-height,0,start_x,start_y-height);
+	Figure_Graphic(&vision_range_data.clientData[3],"AB4",ADD,LINE,3,YELLOW,0,0,1,   start_x,start_y-height,0,start_x,start_y);
 
 }
-void _lowshortstem_aim_4()
+void vision_range()
 {
 		//帧头
-		low_aim_shortfigure_3.txFrameHeader.SOF = JUDGE_FRAME_HEADER;
-		low_aim_shortfigure_3.txFrameHeader.DataLength = sizeof(ext_student_interactive_header_data_t) + sizeof(graphic_data_struct_t)*7;
-		low_aim_shortfigure_3.txFrameHeader.Seq = 0;//包序号
-		memcpy(CliendTxBuffer,&low_aim_shortfigure_3.txFrameHeader,sizeof(xFrameHeader));
+		vision_range_data.txFrameHeader.SOF = JUDGE_FRAME_HEADER;
+		vision_range_data.txFrameHeader.DataLength = sizeof(ext_student_interactive_header_data_t) + sizeof(graphic_data_struct_t)*7;
+		vision_range_data.txFrameHeader.Seq = 0;//包序号
+		memcpy(CliendTxBuffer,&vision_range_data.txFrameHeader,sizeof(xFrameHeader));
 		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//头校验
 
 		//命令码
-		low_aim_shortfigure_3.CmdID = ID_robot_interactive_header_data;
+		vision_range_data.CmdID = ID_robot_interactive_header_data;
 
 		//数据段头结构
-		low_aim_shortfigure_3.dataFrameHeader.data_cmd_id = INTERACT_ID_draw_seven_graphic;
-		low_aim_shortfigure_3.dataFrameHeader.send_ID     = REF.GameRobotStat.robot_id;
-		low_aim_shortfigure_3.dataFrameHeader.receiver_ID = REF.self_client;
+		vision_range_data.dataFrameHeader.data_cmd_id = INTERACT_ID_draw_seven_graphic;
+		vision_range_data.dataFrameHeader.send_ID     = REF.GameRobotStat.robot_id;
+		vision_range_data.dataFrameHeader.receiver_ID = REF.self_client;
 	
 		//数据段
-		aim_lowshort_stem(division_value,10);
-		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&low_aim_shortfigure_3.CmdID, LEN_CMD_ID+low_aim_shortfigure_3.txFrameHeader.DataLength);//加上命令码长度2
+		vision_range_1(division_value,10);
+		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&vision_range_data.CmdID, LEN_CMD_ID+vision_range_data.txFrameHeader.DataLength);//加上命令码长度2
 
 		//帧尾
-		append_CRC16_check_sum(CliendTxBuffer,sizeof(low_aim_shortfigure_3));
+		append_CRC16_check_sum(CliendTxBuffer,sizeof(vision_range_data));
 		
-		HAL_UART_Transmit(&huart1,CliendTxBuffer,sizeof(low_aim_shortfigure_3),200);
+		HAL_UART_Transmit(&huart1,CliendTxBuffer,sizeof(vision_range_data),200);
 
 }
-//图层四
+
+
+
+
+
+
 static void aim_lowlong(uint32_t division_value,uint32_t line_length)//准心上半部分的宽度"AM"--aim_low_Long,"AS"--aim_stem
 { 
 	Figure_Graphic(&low_aim_longfigure.clientData[0],"AL1",ADD,LINE,4,YELLOW,0,0,1,960-line_length-30,540-30-division_value*19,0,960+line_length+30,540-30-division_value*19);//graphic_Remove
@@ -1641,3 +1648,68 @@ void _lowlong_aim_()
 		HAL_UART_Transmit(&huart1,CliendTxBuffer,sizeof(low_aim_longfigure),200);
 }
 
+
+
+
+
+/**************************************************************************/
+void  Client_graphic_Init()
+{
+	if(state_first_graphic>=7)
+	{
+		state_first_graphic = 0;
+	}
+		//帧头
+		tx_client_char.txFrameHeader.SOF = JUDGE_FRAME_HEADER;
+		tx_client_char.txFrameHeader.DataLength = sizeof(ext_student_interactive_header_data_t) + sizeof(ext_client_string_t);
+		tx_client_char.txFrameHeader.Seq = 0;//包序号
+		memcpy(CliendTxBuffer,&tx_client_char.txFrameHeader,sizeof(xFrameHeader));
+		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//头校验
+	
+		//命令码
+		tx_client_char.CmdID = ID_robot_interactive_header_data;
+		
+		//数据段头结构
+		tx_client_char.dataFrameHeader.data_cmd_id = INTERACT_ID_draw_char_graphic;
+		tx_client_char.dataFrameHeader.send_ID     = REF.GameRobotStat.robot_id;
+		tx_client_char.dataFrameHeader.receiver_ID = REF.self_client;
+		
+		//数据段
+		Draw_char();
+		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&tx_client_char.CmdID, LEN_CMD_ID+tx_client_char.txFrameHeader.DataLength);//加上命令码长度2
+		
+		//帧尾
+		append_CRC16_check_sum(CliendTxBuffer,sizeof(tx_client_char));
+		
+    HAL_UART_Transmit(&huart1,CliendTxBuffer,sizeof(tx_client_char),200);
+    
+}
+
+
+void  Client_graphic_Info_update()//七个图像一起更新
+{
+		//帧头
+		tx_client_graphic_figure.txFrameHeader.SOF = JUDGE_FRAME_HEADER;
+		tx_client_graphic_figure.txFrameHeader.DataLength = sizeof(ext_student_interactive_header_data_t) + sizeof(graphic_data_struct_t)*7;
+		tx_client_graphic_figure.txFrameHeader.Seq = 0;//包序号
+		memcpy(CliendTxBuffer,&tx_client_graphic_figure.txFrameHeader,sizeof(xFrameHeader));
+		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//头校验
+
+		//命令码
+		tx_client_graphic_figure.CmdID = ID_robot_interactive_header_data;
+
+		//数据段头结构
+		tx_client_graphic_figure.dataFrameHeader.data_cmd_id = INTERACT_ID_draw_seven_graphic;
+		tx_client_graphic_figure.dataFrameHeader.send_ID     = REF.GameRobotStat.robot_id;
+		tx_client_graphic_figure.dataFrameHeader.receiver_ID = REF.self_client;
+	
+		//数据段
+		Draw_Figure_bool();
+		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&tx_client_graphic_figure.CmdID, LEN_CMD_ID+tx_client_graphic_figure.txFrameHeader.DataLength);//加上命令码长度2
+
+		//帧尾
+		append_CRC16_check_sum(CliendTxBuffer,sizeof(tx_client_graphic_figure));
+		
+    HAL_UART_Transmit(&huart1,CliendTxBuffer,sizeof(tx_client_graphic_figure),200);
+
+}

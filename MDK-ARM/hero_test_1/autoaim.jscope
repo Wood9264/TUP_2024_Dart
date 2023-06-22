@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<JScopeProject>
+    <FileVersion major="1" minor="1" />
+    <Project>
+        <Configuration>
+            <JLink>
+                <Options Connection="1" IsRTTSession="0" IsRTTWithTimeStamp="1" SamplingPeriod="100" SerialNo="0" JTAG_IRPre="-1" JTAG_DRPre="-1" IP="" TargetDevice="STM32F407IG" TargetInterface="SWD" InterfaceSpeed="4000" />
+            </JLink>
+            <ScriptFile Name="E:\RM_git\infantry_2023 - ¸Ä²¦ÅÌ\MDK-ARM\hero_test_1\autoaim.jscope\unspecified" />
+            <ElfFile Name="E:\RM_git\infantry_2023 - ¸Ä²¦ÅÌ\MDK-ARM\hero_test_1\hero_test_1.axf" />
+            <DataFile Name="" />
+            <RawFile Name="" />
+            <Scope>
+                <Options TimeResolutionUs="500000" />
+            </Scope>
+        </Configuration>
+        <Windows>
+            <Graph Show="1" />
+            <Watch Show="1" />
+        </Windows>
+        <SelectedSymbols>
+            <Symbol>
+                <Options Name="yaw_error" Address="0x20003CD8" Type="float" TypeID="1" Size="4" GraphColorRed="255" GraphColorGreen="215" GraphColorBlue="0" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="4" ShowInGraph="0" ACCoupling="0" YOffset="200" IsAutoConfig="1" YResolution="5" MaxValue="10" File="..\Tasks\Src\chassis_task.cpp" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="absolute_angle" Address="0x20003CC0" Type="float" TypeID="1" Size="4" GraphColorRed="0" GraphColorGreen="255" GraphColorBlue="0" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="8" ShowInGraph="0" ACCoupling="0" YOffset="200" IsAutoConfig="1" YResolution="5" MaxValue="10" File="..\Tasks\Src\chassis_task.cpp" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="absolute_angle_set" Address="0x20003CC4" Type="float" TypeID="1" Size="4" GraphColorRed="102" GraphColorGreen="102" GraphColorBlue="178" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="12" ShowInGraph="0" ACCoupling="0" YOffset="200" IsAutoConfig="1" YResolution="1" MaxValue="2" File="..\Tasks\Src\chassis_task.cpp" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="given_current" Address="0x200037DC" Type="short" TypeID="11" Size="2" GraphColorRed="160" GraphColorGreen="32" GraphColorBlue="240" YMinSampled="-6333" YMaxSampled="4246" YAvgSampled="-42" Offset="16" ShowInGraph="0" ACCoupling="0" YOffset="200" IsAutoConfig="1" YResolution="20000" MaxValue="40000" File="..\Tasks\Src\gimbal_task.cpp" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="per_fir_delay" Address="0x20000520" Type="int" TypeID="12" Size="4" GraphColorRed="255" GraphColorGreen="0" GraphColorBlue="0" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="18" ShowInGraph="0" ACCoupling="0" YOffset="200" IsAutoConfig="1" YResolution="2000000000" MaxValue="-2147483648" File="..\Tasks\Src\revolver_task.cpp" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="real_shoot" Address="0x20000518" Type="bool" TypeID="10" Size="1" GraphColorRed="0" GraphColorGreen="191" GraphColorBlue="255" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="22" ShowInGraph="0" ACCoupling="0" YOffset="200" IsAutoConfig="1" YResolution="100" MaxValue="200" File="..\Tasks\Src\revolver_task.cpp" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="start_firc" Address="0x20000519" Type="bool" TypeID="10" Size="1" GraphColorRed="0" GraphColorGreen="100" GraphColorBlue="0" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="23" ShowInGraph="0" ACCoupling="0" YOffset="200" IsAutoConfig="1" YResolution="100" MaxValue="200" File="..\Tasks\Src\revolver_task.cpp" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="chassis_vx_set_temp" Address="0x20004554" Type="float" TypeID="1" Size="4" GraphColorRed="205" GraphColorGreen="133" GraphColorBlue="63" YMinSampled="-1" YMaxSampled="1" YAvgSampled="0" Offset="24" ShowInGraph="1" ACCoupling="0" YOffset="200" IsAutoConfig="1" YResolution="1" MaxValue="2" File="..\Tasks\Src\system_task.cpp" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="chassis_vy_set_temp" Address="0x20004558" Type="float" TypeID="1" Size="4" GraphColorRed="255" GraphColorGreen="215" GraphColorBlue="0" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="28" ShowInGraph="1" ACCoupling="0" YOffset="200" IsAutoConfig="1" YResolution="1" MaxValue="2" File="..\Tasks\Src\system_task.cpp" Scope="0" DrawStyle="0" />
+            </Symbol>
+        </SelectedSymbols>
+    </Project>
+</JScopeProject>

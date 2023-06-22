@@ -520,7 +520,9 @@ typedef __packed struct
 	uint32_t width:10;       
 	uint32_t start_x:11;    
 	uint32_t start_y:11;     
-  float number;       
+  uint32_t radius:10;
+	uint32_t end_x:11;
+	uint32_t end_y:11; 
 } Float_data_struct_t;
 
 /*绘制整型数*/
@@ -542,16 +544,20 @@ typedef __packed struct
 /*  以上为数据段结构体
     以下为完整数据包（帧头+命令码+数据段头结构+数据段+帧尾）
 */
+//车间通信
+typedef __packed struct
+{
+	float bullet;
+} robot_interactive_data_t;
 
 //接收机器人交互信息 
 typedef __packed struct
 {
-//	xFrameHeader   					txFrameHeader;//帧头
-//	uint16_t								CmdID;//命令码
-//	ext_student_interactive_header_data_t   dataFrameHeader;//数据段头结构
-//	robot_interactive_data_t  interactData;//数据段
-//	uint16_t		 						FrameTail;//帧尾
-	uint8_t data[10];
+	xFrameHeader   					txFrameHeader;//帧头
+	uint16_t								CmdID;//命令码
+	ext_student_interactive_header_data_t   dataFrameHeader;//数据段头结构
+	robot_interactive_data_t  interactData;//数据段
+	uint16_t		 						FrameTail;//帧尾
 }ext_CommunatianData_t;
 
 //发送机器人交互信息
@@ -856,7 +862,7 @@ typedef struct judge_info_struct {
 	uint8_t Judge_hurt_mode(void);//伤害类型
 	void JUDGE_Show_Graph(void); //上传客户端图形
 
-
+  extern Referee_info_t 	REF;
 	void Client_graphic_Init(void);
 	void Client_graphic_Info_update(void);
 	//英雄
@@ -864,6 +870,7 @@ typedef struct judge_info_struct {
 	void _high_aim_(void);
 	void _lowshort_aim_2(void);
 	void _lowshort_aim_3(void);
+	void vision_range(void);
 	void _lowshortstem_aim_4(void);
 	void _lowlong_aim_(void);
 
@@ -872,6 +879,60 @@ typedef struct judge_info_struct {
 	void Client_gimbal_angle_update(void);//吊射角度
 	void Client_bullet_int_update(void);//弹丸信息
 
+void Char_Graphic(ext_client_string_t* graphic,//最终要发出去的数组中的数据段内容
+									const char* name,
+									uint32_t operate_tpye,
+									
+									uint32_t layer,
+									uint32_t color,
+									uint32_t size,
+									uint32_t length,
+									uint32_t width,
+									uint32_t start_x,
+									uint32_t start_y,
+									
+									const char *character);
+									
+void Figure_Graphic(graphic_data_struct_t* graphic,//最终要发出去的数组的数据段内容
+									const char* name,
+									uint32_t operate_tpye,
+									uint32_t graphic_tpye,//绘制什么图像
+									uint32_t layer,
+									uint32_t color,
+									uint32_t start_angle,
+									uint32_t end_angle,
+									uint32_t width,
+									uint32_t start_x,
+									uint32_t start_y,
+									uint32_t radius,
+									uint32_t end_x,
+									uint32_t end_y);
+
+void Float_Graphic(Float_data_struct_t* graphic,//最终要发出去的数组的数据段内容
+									const char* name,
+									uint32_t operate_tpye,
+									uint32_t graphic_tpye,//绘制什么图像
+									uint32_t layer,
+									uint32_t color,
+									uint32_t size,
+									uint32_t decimal,
+									uint32_t width,
+									uint32_t start_x,
+									uint32_t start_y,
+									float number);
+
+void Int_Graphic(Int_data_struct_t* graphic,//最终要发出去的数组的数据段内容
+									const char* name,
+									uint32_t operate_tpye,
+									uint32_t graphic_tpye,//绘制什么图像
+									uint32_t layer,
+									uint32_t color,
+									uint32_t size,
+									uint32_t zero,
+									uint32_t width,
+									uint32_t start_x,
+									uint32_t start_y,
+									int number);						
 
 #endif
 

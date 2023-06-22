@@ -1,4 +1,4 @@
---cpu=Cortex-M4.fp.sp
+--cpu=Cortex-M4.fp
 "hero_test_1\startup_stm32f407xx.o"
 "hero_test_1\main.o"
 "hero_test_1\gpio.o"
@@ -40,8 +40,8 @@
 "hero_test_1\bsp_usart.o"
 "hero_test_1\bsp_led.o"
 "hero_test_1\ins_task.o"
-"hero_test_1\monitor_task.o"
 "hero_test_1\gimbal_task.o"
+"hero_test_1\monitor_task.o"
 "hero_test_1\chassis_task.o"
 "hero_test_1\calibrate_task.o"
 "hero_test_1\detect_task.o"

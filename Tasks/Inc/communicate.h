@@ -5,6 +5,7 @@
 #include "vision.h"
 #include "gimbal_task.h"
 
+
 #ifdef __cplusplus
 extern "C"{
 #endif
@@ -45,8 +46,16 @@ class Vision_process_t
     float lastupdate_cloud_yaw;
 	  float lastupdate_cloud_pitch; /*前两帧的数据*/
 	
+	  //UI葡萄射手
+		fp32 fx,fy;  //相机焦距参数
+	  fp32 cx,cy;  //相机光心——图像中心坐标（960，540）
+	  fp32 x_value,y_value,z_value;
+	  fp32 predict_x_value,predict_y_value,predict_z_value;
+		fp32 f;
+		uint16_t vision_mode;
 	  Vision_process_t();
     
+		void Ui_follow_calc();
 	  void Transmit_info();
 	  void Get_info();
 	  void Pridict_info();

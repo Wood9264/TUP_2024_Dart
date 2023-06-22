@@ -7,7 +7,7 @@
 #include "stm32f4xx_hal.h"
 #include "struct_typedef.h"
 extern "C"{
-#include "pm01.h"
+//#include "pm01.h"
 #include "ina226.h"
 }
 extern DMA_HandleTypeDef hdma_usart1_rx;
@@ -27,8 +27,8 @@ void Judge_Task(void const * argumt)
 //		currentTime = xTaskGetTickCount();//当前系统时间			
 		Judge_Read_Data(Judge_Buffer);		//读取裁判系统数据	
 
-		osDelay(10);
-		pm01_access_poll();	
+		osDelay(2);
+		//pm01_access_poll();	
 //		vTaskDelayUntil(&currentTime, 50);
 		}
 }

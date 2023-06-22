@@ -19,7 +19,7 @@ enum CAN1_msg_ID
 	CAN1_3508_LB_ID = 0x202,
 	CAN1_3508_LF_ID = 0x203,
 	CAN1_3508_RF_ID = 0x204,
-	CAN1_YAW_MOTOR_ID = 0x206,
+	CAN1_YAW_MOTOR_ID = 0x205,
 	
 };
 
@@ -28,7 +28,7 @@ enum CAN2_msg_ID
 	CAN2_FireL_Motor_ID = 0x201,
 	CAN2_FireR_Motor_ID = 0x202,
 	CAN2_TRIGGER_MOTOR_ID = 0X203,
-	CAN2_PITCH_Motor_ID = 0x206,
+	CAN2_PITCH_Motor_ID = 0x207,
 };
 
 //可在此处加入所需电机编号

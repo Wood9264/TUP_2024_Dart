@@ -7,6 +7,9 @@
 #define YES TRUE
 #define NO  FALSE
 
+#define X_C_O 220
+#define Y_C_O 540
+#define Y_C_error 40
 #ifdef __cplusplus
 extern "C"{
 #endif
@@ -71,7 +74,7 @@ typedef struct
 	int global_fix;
 }	global_flag_t;
 
-
+extern global_flag_t global_flag;
 
 
 
@@ -82,7 +85,7 @@ void Startjudge_task(void);
 
 
 #endif
-extern void ui_task(void *argumt);
+extern void ui_task(void const *pvParameters);
 #ifdef __cplusplus
 }	
 #endif
