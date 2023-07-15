@@ -226,7 +226,7 @@ void gimbal_control_t::Init_control()
   */
 void gimbal_control_t::Absolute_angle_control()
 {
-  syspoint()->Gimbal_value_calc();
+  // syspoint()->Gimbal_value_calc();
 	add_yaw= syspoint()->rc_add_yaw;
 	add_pit= syspoint()->rc_add_pit;
 
@@ -246,7 +246,7 @@ void gimbal_control_t::Absolute_angle_control()
   */
 void gimbal_control_t::Spin_control()
 {
-  syspoint()->Gimbal_value_calc();
+  // syspoint()->Gimbal_value_calc();
 	add_yaw= syspoint()->rc_add_yaw;
 	add_pit= syspoint()->rc_add_pit;
 

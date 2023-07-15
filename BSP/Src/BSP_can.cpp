@@ -78,7 +78,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 		}
 		case CAN1_3508_FL_ID:
 		{
-			get_motor_measure(SLIPPER_MOTOR, rx_data1);
+			get_motor_measure(FL, rx_data1);
 			break;
 		}
 		}

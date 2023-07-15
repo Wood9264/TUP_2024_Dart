@@ -15,7 +15,7 @@
 #define SLIPPER_POSITION_PID_KP 0.025f // 0.040f //0.00080f//0.00072f//0.025
 #define SLIPPER_POSITION_PID_KI 0
 #define SLIPPER_POSITION_PID_KD 0.080f		// 0.060f//0.000001f//0.08
-#define SLIPPER_POSITION_PID_MAX_OUT 60.0f // 45.0f
+#define SLIPPER_POSITION_PID_MAX_OUT 2.0f // 45.0f
 #define SLIPPER_POSITION_PID_MAX_IOUT 10.0f
 
 //摩擦轮速度环PID
@@ -27,7 +27,7 @@
 
 #define BASE_SPEED 6000 //四个摩擦轮的基础转速
 
-#define ONE_DART_ECD (8192 * 19 * 2) //每发飞镖的滑块电机编码值增加量（待定）
+#define ONE_DART_ECD (8192 * 36 * 1) //每发飞镖的滑块电机编码值增加量（待定）
 #define MAX_DART_NUM 2 //发射架可装填的最大飞镖数量
 
 #define RC_TO_SLIPPER_SEPPD_SET (5.0f / 660) //遥控器通道到滑块速度设定值的比例
@@ -35,12 +35,12 @@
 
 #define Motor_RMP_TO_SPEED 0.00290888208665721596153948461415f
 
-#define POSITION_LIMIT_BUFFER_DISTANCE (8192 * 19 / 19) //滑块接近限位开始减速缓冲时与限位的距离
-#define ANGLE_LOOP_SWITCH_DISTANCE (8192 * 10 / 360.0f) //速度环切换到角度环时，设定编码值与实际编码值的距离
+#define POSITION_LIMIT_BUFFER_DISTANCE (8192 * 36 / 36) //滑块接近限位开始减速缓冲时与限位的距离
+#define ANGLE_LOOP_SWITCH_DISTANCE (8192) //速度环切换到角度环时，设定编码值与实际编码值的距离
 
 #define CALIBRATE_DOWN_SPEED (-3) //校准时滑块下移的速度
-#define CALIBRATE_UP_SPEED 2 //校准时滑块上移的速度
-#define SLIPPER_SHOOTING_SPEED 5 //发射时滑块上移的速度
+#define CALIBRATE_UP_SPEED 3 //校准时滑块上移的速度
+#define SLIPPER_SHOOTING_SPEED 8 //发射时滑块上移的速度
 #define SLIPPER_BACK_SPEED -5 //滑块自动返回零点时的速度
 
 #define REVOLVER_TASK_INIT_TIME 200
@@ -69,11 +69,11 @@ class fric_motor_t
 		fp32 motor_speed;
 		fp32 speed_set;
 		int64_t accumulate_ecd;
-		uint16_t bullet_num;
+		uint16_t bullet_num;	//已经打出的飞镖数量
 		uint16_t bullet_num_set;
 
 		fp32 ecd_set;
-		fp32 slipper_position_ecd[MAX_DART_NUM + 1]; //飞镖发射时滑块停留的位置
+		fp32 slipper_position_ecd[MAX_DART_NUM + 1]; //飞镖发射时滑块每次停留的位置
 		
 		PID_t speed_pid;
 		PID_t position_pid;
@@ -82,7 +82,7 @@ class fric_motor_t
 
 		bool_t has_calibrated;
 		bool_t bottom_tick;
-		bool_t if_shoot_begin;
+		bool_t if_shoot_begin;	//开始发射标志位
 		bool_t should_lock;
 
 		void SLIPPER_control();
@@ -113,6 +113,7 @@ class fric_motor_t
 		void SHOOT_control();
 		void READY_control();
 		void SHOOTING_control();
+		void fric_speed_buzzer();
 	};
 
 	

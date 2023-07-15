@@ -27,14 +27,20 @@ Project File Date:  07/15/2023
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'd:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'hero_test_1'
+compiling BSP_can.cpp...
+..\BSP\Src\BSP_can.cpp(19): warning:  #177-D: variable "chassis_tx_message"  was declared but never referenced
+  static CAN_TxHeaderTypeDef chassis_tx_message;
+..\BSP\Src\BSP_can.cpp(20): warning:  #177-D: variable "chassis_can_send_data"  was declared but never referenced
+  static uint8_t chassis_can_send_data[8];
+..\BSP\Src\BSP_can.cpp: 2 warnings, 0 errors
 compiling revolver_task.cpp...
-..\Tasks\Src\revolver_task.cpp(168): warning:  #177-D: variable "angle_out"  was declared but never referenced
+..\Tasks\Src\revolver_task.cpp(182): warning:  #177-D: variable "angle_out"  was declared but never referenced
   	static fp32 angle_out = 0;
 ..\Tasks\Src\revolver_task.cpp: 1 warning, 0 errors
 linking...
-Program Size: Code=75404 RO-data=4584 RW-data=1296 ZI-data=34096  
+Program Size: Code=75656 RO-data=4584 RW-data=1296 ZI-data=34096  
 FromELF: creating hex file...
-"hero_test_1\hero_test_1.axf" - 0 Error(s), 1 Warning(s).
+"hero_test_1\hero_test_1.axf" - 0 Error(s), 3 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -57,7 +63,7 @@ Package Vendor: Keil
 <h2>Collection of Component Files used:</h2>
 
    * Component: ARM::CMSIS:CORE:5.6.0
-Build Time Elapsed:  00:00:03
+Build Time Elapsed:  00:00:04
 </pre>
 </body>
 </html>

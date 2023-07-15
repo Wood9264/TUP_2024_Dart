@@ -91,7 +91,7 @@ extern "C"
 		adjust_mode_e adjust_mode;
 		shoot_mode_e shoot_mode;
 		shoot_mode_e last_shoot_mode;
-
+		/*下面的东西都没用*/
 
 
 
