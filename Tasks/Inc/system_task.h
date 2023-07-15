@@ -6,8 +6,8 @@
 #include "ladrc_feedforward.h"
 #include "user_lib.h"
 #include "vision.h"
-//yaw,pitch控制通道以及状态开关通道
-#define YAW_CHANNEL   2
+// yaw,pitch控制通道以及状态开关通道
+#define YAW_CHANNEL 2
 #define PITCH_CHANNEL 3
 #define GIMBAL_MODE_CHANNEL 0
 #define REVOLVER_MODE_CHANNEL 1
@@ -19,23 +19,22 @@
 #define GIMBAL_CALC 0
 #define CHASSIS_CALC 1
 
-#define YAW_MOUSE_SEN   0.00005f
+#define YAW_MOUSE_SEN 0.00005f
 #define PITCH_MOUSE_SEN 0.00005f
 
 //遥控器前后左右摇杆（max 660）转化成车体前后速度（m/s）的比例
 #define CHASSIS_VX_RC_SEN 0.005f
 #define CHASSIS_VY_RC_SEN 0.005f
 
-#define CHASSIS_VX_RE_SEN 0.65f 
-#define CHASSIS_VY_RE_SEN 0.65f 
+#define CHASSIS_VX_RE_SEN 0.65f
+#define CHASSIS_VY_RE_SEN 0.65f
 
-
-#define CHASSIS_WZ_RE_SEN      0.7f
+#define CHASSIS_WZ_RE_SEN 0.7f
 //遥控器摇杆（max 660）转化成车体yaw pitch速度（m/s）的比例
-#define YAW_RC_SEN    -0.00001f
-#define PITCH_RC_SEN  -0.00000422f //0.005
+#define YAW_RC_SEN -0.00001f
+#define PITCH_RC_SEN -0.00000422f // 0.005
 
-//YAW左右转控制按钮
+// YAW左右转控制按钮
 #define GIMBAL_LEFT_KEY KEY_PRESSED_OFFSET_Q
 #define GIMBAL_RIGHT_KEY KEY_PRESSED_OFFSET_E
 
@@ -46,7 +45,7 @@
 #define CHASSIS_RIGHT_KEY KEY_PRESSED_OFFSET_D
 
 //遥控器输入死区，因为遥控器存在差异，摇杆在中间，其值不一定为零
-#define RC_DEADBAND   0
+#define RC_DEADBAND 0
 //摇杆死区（底盘）
 #define CHASSIS_RC_DEADLINE 50
 
@@ -55,146 +54,136 @@
 //底盘运动过程最大平移速度
 #define NORMAL_MAX_CHASSIS_SPEED_Y 3.0f
 
-#define HEAT_ERROR 30    //热量限制
+#define HEAT_ERROR 30 //热量限制
 
 #ifdef __cplusplus
-extern "C"{
+extern "C"
+{
 #endif
-	
+
 #ifdef __cplusplus
-enum system_mode_t
-{
-	ZERO_FORCE = 0,
-  INIT,
-	SPIN,
-	ABSOLUTE_ANGLE,
-	RELATIVE_ANGLE,
-	NO_FOLLOW_YAW,
-	AUTO,
-	CALI,
-  DBUS_MISSING_CONTROL,
-	SPIN_AUTO,
-	GO_HEAD,
-};	
+	enum system_mode_e
+	{
+		ZERO_FORCE,
+		ADJUST,
+		SHOOT,
+	};
 
-enum shoot_mode_t
-{
-	Close = 0,
-	Open_Fir,
-	One_shoot,
-};
+	enum adjust_mode_e
+	{
+		SLIPPER,
+		CALIBRATE,
+	};
 
-class system_t
-{	
+	enum shoot_mode_e
+	{
+		READY,
+		SHOOTING,
+	};
+
+	class system_t
+	{
 	public:
 		const RC_ctrl_t *system_rc_ctrl;
 
-	  system_mode_t sys_mode;
-    system_mode_t last_sys_mode;
-	  shoot_mode_t revolver_mode;
-	  
-	  lpf_type_def yaw_lpf;
-	  lpf_type_def pitch_lpf;
-	
-	  fp32 rc_add_yaw;
-	  fp32 rc_add_pit;
-	  uint8_t mode_change_type;
-    bool_t vision_flag;
+		system_mode_e sys_mode;
+		system_mode_e last_sys_mode;
+		adjust_mode_e adjust_mode;
+		shoot_mode_e shoot_mode;
+		shoot_mode_e last_shoot_mode;
+
+
+
+
+
+		lpf_type_def yaw_lpf;
+		lpf_type_def pitch_lpf;
+
+		fp32 rc_add_yaw;
+		fp32 rc_add_pit;
+		uint8_t mode_change_type;
+		bool_t vision_flag;
 		bool_t vision_last_flag;
 		bool_t vision_auto_flag;
 		bool_t head_flag;
 		bool_t head_last_flag;
 		bool_t head_go_flag;
-	  bool  init_state;
-	
-//    first_order_filter_type_t chassis_cmd_slow_set_vx;  //use first order filter to slow set-point.使用一阶低通滤波减缓设定值
-//    first_order_filter_type_t chassis_cmd_slow_set_vy;  //use first order filter to slow set-point.使用一阶低通滤波减缓设定值
-//	  
-    fp32 chassis_vx_set_temp;
+		bool init_state;
+
+		//    first_order_filter_type_t chassis_cmd_slow_set_vx;  //use first order filter to slow set-point.使用一阶低通滤波减缓设定值
+		//    first_order_filter_type_t chassis_cmd_slow_set_vy;  //use first order filter to slow set-point.使用一阶低通滤波减缓设定值
+		//
+		fp32 chassis_vx_set_temp;
 		fp32 chassis_vy_set_temp;
-		fp32 vx_max_speed;  //max forward speed, unit m/s.前进方向最大速度 单位m/s
-    fp32 vx_min_speed;  //max backward speed, unit m/s.后退方向最大速度 单位m/s
-    fp32 vy_max_speed;  //max letf speed, unit m/s.左方向最大速度 单位m/s
-    fp32 vy_min_speed;  //max right speed, unit m/s.右方向最大速度 单位m/s
-	  
-	  system_t();
-		
-	  void Mode_set();
-    void Transit();
+		fp32 vx_max_speed; // max forward speed, unit m/s.前进方向最大速度 单位m/s
+		fp32 vx_min_speed; // max backward speed, unit m/s.后退方向最大速度 单位m/s
+		fp32 vy_max_speed; // max letf speed, unit m/s.左方向最大速度 单位m/s
+		fp32 vy_min_speed; // max right speed, unit m/s.右方向最大速度 单位m/s
+
+		system_t();
+
+		void mode_set();
+		void Transit();
 		void Set_control();
-		
+
 		void Rc_vision();
 		void Rc_head();
-		int  Gimbal_mode_change_transit();
-	  void Gimbal_value_calc();
-	  void Chassis_value_calc();
+		int Gimbal_mode_change_transit();
+		void Gimbal_value_calc();
+		void Chassis_value_calc();
 		void Key_set();
-};	
+	};
 
-
-extern system_t *syspoint(void);	
-
-//摩擦轮速度环PID设置
-#define FIRC_SPEED_PID_KP 15.50f//15.50f
-#define FIRC_SPEED_PID_KI 0.000f
-#define FIRC_SPEED_PID_KD 5.50f//1.50f
-#define FIRC_SPEED_PID_MAX_OUT 16384.0f
-#define FIRC_SPEED_PID_MAX_IOUT 5000.0f
+	extern system_t *syspoint(void);
 
 //射速环测试
-#define SPEED_PID_KP 15 
-#define SPEED_PID_KI  0
-#define SPEED_PID_KD  1
+#define SPEED_PID_KP 15
+#define SPEED_PID_KI 0
+#define SPEED_PID_KD 1
 #define SPEED_PID_MAX_OUT 30
 #define SPEED_PID_MAX_IOUT 10
 
 //摩擦轮转数设定
-#define FRICTION_L1_SPEED 4600    //15
-#define FRICTION_L2_SPEED 4800		//18
-#define FRICTION_L3_SPEED 7200		//30
+#define FRICTION_L1_SPEED 4600 // 15
+#define FRICTION_L2_SPEED 4800 // 18
+#define FRICTION_L3_SPEED 7200 // 30
 
-
-
-#define REVOL_STEP0    0		
-#define REVOL_STEP1    1		
-#define REVOL_STEP2    2		
-
+#define REVOL_STEP0 0
+#define REVOL_STEP1 1
+#define REVOL_STEP2 2
 
 #define RevChannel 1
 
-#define  	AN_BULLET         36864//38000//33903.370320855614973262032085562	//36864//33903.370320855614973262032085562		//单个子弹电机位置增加值
+#define AN_BULLET 36864 // 38000//33903.370320855614973262032085562	//36864//33903.370320855614973262032085562		//单个子弹电机位置增加值
 
+	typedef enum
+	{
+		shoot_unready = 0,
+		shoot_ready = 1,
+	} Key_ShootFlag;
 
-typedef enum
-{
-	shoot_unready  = 0,
-	shoot_ready = 1,
-}Key_ShootFlag;
+	typedef enum
+	{
+		FRICTION_WHEEL_OFF,
+		FRICTION_WHEEL_ON,
+	} Friction_Wheel_Mode;
 
-typedef enum
-{
-	FRICTION_WHEEL_OFF,
-	FRICTION_WHEEL_ON,
-}Friction_Wheel_Mode;
+	typedef struct
+	{
+		fp32 speed_set;
+		fp32 speed_ramp_set;
+	} Firc3508_Motor_set;
 
-typedef struct
-{
-  fp32 speed_set;
-	fp32 speed_ramp_set;
-} Firc3508_Motor_set;
-
-
-
-class Friction_wheel_Mode_set
-{
+	class Friction_wheel_Mode_set
+	{
 	public:
-		Friction_Wheel_Mode  friction_wheel_mode;
+		Friction_Wheel_Mode friction_wheel_mode;
 		void Friction_Wheel_behaviour_init();
-		const RC_ctrl_t *Friction_wheel_RC;               //摩擦轮使用的遥控器指针
-		void Friction_wheel_mode_set();										//摩擦轮模式设置
+		const RC_ctrl_t *Friction_wheel_RC; //摩擦轮使用的遥控器指针
+		void Friction_wheel_mode_set();		//摩擦轮模式设置
 		void Friction_wheel_mode_off_set();
 		void Friction_wheel_mode_on_set();
-		void User_fix();																	//转速手动补偿
+		void User_fix(); //转速手动补偿
 		void Temp_Fix_30S();
 		void Temp_Fix_18S();
 		void Temp_Fix_15S();
@@ -208,49 +197,44 @@ class Friction_wheel_Mode_set
 		fp32 fixed;
 		int16_t v_fic_set;
 		fp32 firc_mode;
-};
-	
-	
+	};
 
-typedef enum
-{
-	shoot_unfinish  = 0,
-	shoot_finish = 1,
-}Shoot_IFfinish;
-typedef enum
-{
-	stuck_unfinish  = 0,
-	stuck_finish = 1,
-}Stuck_IFfinish;
-typedef enum
-{
-	REVOL_POSI_MODE  = 0,
-	REVOL_SPEED_MODE = 1,
-	REVOL_REVERSAL_MODE =2,
-}eRevolverCtrlMode;
+	typedef enum
+	{
+		shoot_unfinish = 0,
+		shoot_finish = 1,
+	} Shoot_IFfinish;
+	typedef enum
+	{
+		stuck_unfinish = 0,
+		stuck_finish = 1,
+	} Stuck_IFfinish;
+	typedef enum
+	{
+		REVOL_POSI_MODE = 0,
+		REVOL_SPEED_MODE = 1,
+		REVOL_REVERSAL_MODE = 2,
+	} eRevolverCtrlMode;
 
-
-
-
-class Dial_mode_set
-{
+	class Dial_mode_set
+	{
 	public:
 		void Dial_mode_init();
 		void Dial_behaviour_set();
 		void real_firc_info_update();
-		const RC_ctrl_t *Dial_RC;               //拨盘使用的遥控器指针
-		uint8_t	Revolver_Switch;
+		const RC_ctrl_t *Dial_RC; //拨盘使用的遥控器指针
+		uint8_t Revolver_Switch;
 		uint8_t Revolver_last_Switch;
 		int16_t speed_time;
 		Key_ShootFlag key_ShootFlag;
 		Shoot_IFfinish ifshoot_finsh;
 		Stuck_IFfinish ifstuck_finish;
-	  eRevolverCtrlMode Revolver_mode;
+		eRevolverCtrlMode Revolver_mode;
 		eRevolverCtrlMode last_Revolver_mode;
-		
+
 		//裁判系统数据
-		uint16_t	heat_max;
-		int16_t 	heating;
+		uint16_t heat_max;
+		int16_t heating;
 		fp32 angle;
 		int64_t set_angle;
 		int64_t last_angle;
@@ -259,19 +243,18 @@ class Dial_mode_set
 		bool_t if_stucked;
 		bool_t stuck_mode;
 
-fp32 bullet_last_speed;
-fp32 bullet_speed;
-		
-};
-	
-extern fp32 x_coordinate,y_coordinate;  
-extern fp32 pre_x_coordinate,pre_y_coordinate;
-extern fp32 follow_radius,pre_radius; 
+		fp32 bullet_last_speed;
+		fp32 bullet_speed;
+	};
+
+	extern fp32 x_coordinate, y_coordinate;
+	extern fp32 pre_x_coordinate, pre_y_coordinate;
+	extern fp32 follow_radius, pre_radius;
 #endif
-extern void system_task(void const * argument);
-//extern void system_t_task_init();
+	extern void system_task(void const *argument);
+// extern void system_t_task_init();
 #ifdef __cplusplus
-}	
+}
 #endif
 
 #endif

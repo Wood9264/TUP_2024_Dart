@@ -16,7 +16,7 @@ gimbal_control_t *gimbal_point(void)
 	return &gimbal;
 }
 /*********************************************/
-extern bool auto_firc_flag_angle;
+// extern bool auto_firc_flag_angle;
 
 /*********************************************/
 /**
@@ -149,30 +149,30 @@ fp32 gimbal_control_t::motor_ecd_to_angle_change(uint16_t ecd, uint16_t offset_e
   */
 void gimbal_control_t::Control()
 {
-	if(syspoint()->sys_mode == ZERO_FORCE )
-	{
-		Zero_force_control();
-	}
-	else if(syspoint()->sys_mode == DBUS_MISSING_CONTROL)
-	{
-		Dbus_missing_control();
-	}
-	else if(syspoint()->sys_mode == ABSOLUTE_ANGLE||syspoint()->sys_mode== NO_FOLLOW_YAW)
-	{
-		Absolute_angle_control();
-	}
-	else if(syspoint()->sys_mode == SPIN)
-	{
-		Spin_control();
-	}
-	else if(syspoint()->sys_mode == AUTO||syspoint()->sys_mode == SPIN_AUTO)
-	{
-		Auto_control();
-	}
-	else if(syspoint()->init_state == 1)
-	{
-		Init_control();
-	}
+// 	if(syspoint()->sys_mode == ZERO_FORCE )
+// 	{
+// 		Zero_force_control();
+// 	}
+// 	else if(syspoint()->sys_mode == DBUS_MISSING_CONTROL)
+// 	{
+// 		Dbus_missing_control();
+// 	}
+// 	else if(syspoint()->sys_mode == ABSOLUTE_ANGLE||syspoint()->sys_mode== NO_FOLLOW_YAW)
+// 	{
+// 		Absolute_angle_control();
+// 	}
+// 	else if(syspoint()->sys_mode == SPIN)
+// 	{
+// 		Spin_control();
+// 	}
+// 	else if(syspoint()->sys_mode == AUTO||syspoint()->sys_mode == SPIN_AUTO)
+// 	{
+// 		Auto_control();
+// 	}
+// 	else if(syspoint()->init_state == 1)
+// 	{
+// 		Init_control();
+// 	}
 }
 
 
@@ -324,33 +324,33 @@ void gimbal_control_t::Gimbal_auto_angle_get()
 //¿ª»ðÏÞÖÆ
 if(vision_info_point()->RxPacketFir.is_spinning==1)
 {
-		if(vision_info_point()->RxPacketFir.distance>3.0)
-		{
-			if(fabs(Yaw_motor.absolute_angle-Yaw_motor.absolute_angle_set)<0.01)
-			{
-					if(fabs(Pitch_motor.absolute_angle-Pitch_motor.absolute_angle_set)<0.01)
-					{
-						auto_firc_flag_angle=1;
-					}
-					else{auto_firc_flag_angle=0;}
-			}
-			else{auto_firc_flag_angle=0;}
-		}else
-		{	
-			if(fabs(Yaw_motor.absolute_angle-Yaw_motor.absolute_angle_set)<0.02)
-			{
-					if(fabs(Pitch_motor.absolute_angle-Pitch_motor.absolute_angle_set)<0.02)
-					{
-						auto_firc_flag_angle=1;
-					}
-					else{auto_firc_flag_angle=0;}
-			}
-			else{auto_firc_flag_angle=0;}
-		}
+		// if(vision_info_point()->RxPacketFir.distance>3.0)
+		// {
+		// 	if(fabs(Yaw_motor.absolute_angle-Yaw_motor.absolute_angle_set)<0.01)
+		// 	{
+		// 			if(fabs(Pitch_motor.absolute_angle-Pitch_motor.absolute_angle_set)<0.01)
+		// 			{
+		// 				auto_firc_flag_angle=1;
+		// 			}
+		// 			else{auto_firc_flag_angle=0;}
+		// 	}
+		// 	else{auto_firc_flag_angle=0;}
+		// }else
+		// {	
+		// 	if(fabs(Yaw_motor.absolute_angle-Yaw_motor.absolute_angle_set)<0.02)
+		// 	{
+		// 			if(fabs(Pitch_motor.absolute_angle-Pitch_motor.absolute_angle_set)<0.02)
+		// 			{
+		// 				auto_firc_flag_angle=1;
+		// 			}
+		// 			else{auto_firc_flag_angle=0;}
+		// 	}
+		// 	else{auto_firc_flag_angle=0;}
+		// }
 }
 else
 {
-		auto_firc_flag_angle=1;
+		// auto_firc_flag_angle=1;
 }
  
 }

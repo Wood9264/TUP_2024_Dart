@@ -17,7 +17,7 @@ vision_info_t* vision_info_point(void)
 extern float Firc_L_firc3508_motor_speed,Firc_R_firc3508_motor_speed;
 extern float Firc_L_tempreate,Firc_R_tempreate,gloab_bullet_speed;
 
-extern float per_fir_delay;
+// extern float per_fir_delay;
 bool vision_update_flag;
 
 void Vision_Read_Data(uint8_t *ReadFromUsart)
@@ -114,7 +114,7 @@ void vision_info_t::Vision_Send_Fir_Data( uint8_t CmdID )
 	TxPacketFir.INS_accel_send[1] = INS_accel[1];
 	TxPacketFir.INS_accel_send[2] = INS_accel[2];
 	TxPacketFir.revolver_speed =JUDGE_usGetSpeedHeat();//…‰ÀŸ
-	TxPacketFir.firc_error=per_fir_delay;//¥ÚµØ—”≥Ÿ
+	// TxPacketFir.firc_error=per_fir_delay;//¥ÚµØ—”≥Ÿ
   //TxPacketFir.Color=BLUE;
   //TxPacketFir.Color=RED;
 

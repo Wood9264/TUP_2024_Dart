@@ -5,6 +5,7 @@
 #include "tim.h"
 #include "revolver_task.h"
 #include "bsp_buzzer.h"
+#include "revolver_task.h"
 #define rc_deadband_limit(input, output, dealine)        \
     {                                                    \
         if ((input) > (dealine) || (input) < -(dealine)) \
@@ -43,9 +44,8 @@ void system_task(void const *pvParameters)
 	while(1)
 	{
 		currentTime = xTaskGetTickCount();//当前系统时间
-		sys.Mode_set();
+		sys.mode_set();
 		sys.Transit();
-		sys.Key_set();
 		vTaskDelayUntil(&currentTime, 1);
 	}
 }
@@ -67,71 +67,52 @@ system_t *syspoint(void)
 system_t::system_t()
 {
 	system_rc_ctrl = get_remote_control_point();
-	rc_add_yaw =0.0f; 
-	rc_add_pit = 0.0f;
-	
 	sys_mode = ZERO_FORCE;
-	HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_1);
-	chassis_vx_set_temp=0;
-	chassis_vy_set_temp=0;
+	adjust_mode = SLIPPER;
+	shoot_mode = READY;
 }
 
 
 /**
-  * @brief          云台模式设置
+  * @brief          模式设置
   * @param[in]      null
   * @retval         null
   */
-void system_t::Mode_set()
+void system_t::mode_set()
 {	
-	  Rc_vision();
-		last_sys_mode=sys_mode;
-		chassispoint()->SPIN_flag=0;//初始化spin变量
-	  if(init_state==1)
+	last_sys_mode = sys_mode;
+	last_shoot_mode = shoot_mode;
+
+	if(IF_RC_SW0_DOWN /*|| toe_is_error(DBUS_TOE)*/)
+	{
+		sys_mode = ZERO_FORCE;
+	}
+	else if(IF_RC_SW0_MID)
+	{
+		sys_mode = ADJUST;
+
+		if(IF_RC_SW1_DOWN || IF_RC_SW1_MID)
 		{
-		  return;
+			adjust_mode = SLIPPER;
 		}
-		else
+		else if(IF_RC_SW1_UP)
 		{
-			if(sys_mode != ZERO_FORCE && (toe_is_error(DBUS_TOE) == 1)) //当前非无力模式且遥控器离线时进入失联模式
-			{
-				sys_mode = DBUS_MISSING_CONTROL;
-				return;
-			}
-			else if(switch_is_up(system_rc_ctrl->rc.s[GIMBAL_MODE_CHANNEL])||spin_mode)//SPIN   
-			{
-					if((system_rc_ctrl->mouse.press_r != 1 && vision_auto_flag ==0))
-					{
-						sys_mode = SPIN;
-					}
-					else
-					{
-						sys_mode = SPIN_AUTO;
-					}
-			}
-			else if(switch_is_down(system_rc_ctrl->rc.s[GIMBAL_MODE_CHANNEL]))  //无力
-			{
-				sys_mode = ZERO_FORCE;
-			}
-			else if(system_rc_ctrl->mouse.press_r == 1 || vision_auto_flag ==1)//自瞄
-			{
-					sys_mode=AUTO;
-			}
+			adjust_mode = CALIBRATE;
+		}
+	}
+	else if(IF_RC_SW0_UP)
+	{
+		sys_mode = SHOOT;
 
-			else if(switch_is_mid(sys.system_rc_ctrl->rc.s[GIMBAL_MODE_CHANNEL]))  //底盘跟随云台
-			{
-				sys_mode = ABSOLUTE_ANGLE;
-			}
-			
-
-
-			//初始化设置
-			if(last_sys_mode == ZERO_FORCE && sys_mode != ZERO_FORCE)
-			{
-				sys_mode = INIT;
-				init_state=1;
-			}
-  	}
+		if(IF_RC_SW1_DOWN)
+		{
+			shoot_mode = READY;
+		}
+		else if(IF_RC_SW1_MID || IF_RC_SW1_UP)
+		{
+			shoot_mode = SHOOTING;
+		}
+	}
 }
 
 /**
@@ -141,26 +122,23 @@ void system_t::Mode_set()
   */
 void system_t::Transit()
 {
-	 if(last_sys_mode != ABSOLUTE_ANGLE&&sys_mode ==ABSOLUTE_ANGLE)
-		{
-			gimbal_point()->Yaw_motor.absolute_angle_set =gimbal_point()->Yaw_motor.absolute_angle;
-		  gimbal_point()->Pitch_motor.absolute_angle_set =gimbal_point()->Pitch_motor.absolute_angle;
-		}
-		else if(last_sys_mode != RELATIVE_ANGLE&&sys_mode ==RELATIVE_ANGLE)
-		{
-			gimbal_point()->Yaw_motor.relative_angle_set =gimbal_point()->Yaw_motor.relative_angle;
-			gimbal_point()->Pitch_motor.relative_angle_set =gimbal_point()->Pitch_motor.relative_angle;
-		}
-		else if(last_sys_mode != SPIN&&sys_mode ==SPIN)
-		{
-			gimbal_point()->Yaw_motor.absolute_angle_set =gimbal_point()->Yaw_motor.absolute_angle;
-			gimbal_point()->Pitch_motor.absolute_angle_set =gimbal_point()->Pitch_motor.absolute_angle;
-		}	
-		else if(last_sys_mode != AUTO&&sys_mode ==AUTO)
-		{
-			gimbal_point()->Yaw_motor.absolute_angle_set =gimbal_point()->Yaw_motor.absolute_angle;
-			gimbal_point()->Pitch_motor.absolute_angle_set =gimbal_point()->Pitch_motor.absolute_angle;
-		}
+	if(sys_mode == SHOOT && last_sys_mode != SHOOT)
+	{
+		revolver_point()->is_fric_wheel_on = 0;
+		revolver_point()->slipper_motor.speed_set = 0;
+		revolver_point()->slipper_motor.ecd_set = revolver_point()->slipper_motor.accumulate_ecd;
+		revolver_point()->slipper_motor.bullet_num_cal();
+		revolver_point()->slipper_motor.bullet_num_set = revolver_point()->slipper_motor.bullet_num;
+		revolver_point()->slipper_motor.if_shoot_begin = 0;
+		
+	}
+	if(shoot_mode == SHOOTING && last_shoot_mode != SHOOTING)
+	{
+		
+		
+		
+		// revolver_point()->slipper_motor.ecd_set = revolver_point()->slipper_motor.accumulate_ecd;
+	}
 }
 
 

@@ -136,14 +136,14 @@ void MX_FREERTOS_Init(void) {
 	osThreadDef(RevolverTask, revolver_task, osPriorityAboveNormal, 0, 512);//
   revolverTaskHandle = osThreadCreate(osThread(RevolverTask), NULL);
 
-	osThreadDef(ChassisTask, chassis_task, osPriorityAboveNormal, 0, 512);
-  chassisTaskHandle = osThreadCreate(osThread(ChassisTask), NULL);
+	// osThreadDef(ChassisTask, chassis_task, osPriorityAboveNormal, 0, 512);
+  // chassisTaskHandle = osThreadCreate(osThread(ChassisTask), NULL);
 	
 	osThreadDef(imuTask, INS_task, osPriorityRealtime, 0, 512);
   imuTaskHandle = osThreadCreate(osThread(imuTask), NULL);
 		
-	osThreadDef(gimbalTask, gimbal_task, osPriorityHigh, 0, 512);
-  gimbalTaskHandle = osThreadCreate(osThread(gimbalTask), NULL);
+	// osThreadDef(gimbalTask, gimbal_task, osPriorityHigh, 0, 512);
+  // gimbalTaskHandle = osThreadCreate(osThread(gimbalTask), NULL);
 	
 	osThreadDef(SYSTEM, system_task, osPriorityHigh, 0, 128);
   SYSTEMHandle = osThreadCreate(osThread(SYSTEM), NULL);
@@ -154,14 +154,14 @@ void MX_FREERTOS_Init(void) {
 	osThreadDef(cali, calibrate_task, osPriorityNormal, 0, 128);
   calibrate_tast_handle = osThreadCreate(osThread(cali), NULL);
 		
-	osThreadDef(communicateTask, communi_task, osPriorityHigh, 0, 128);
-  communiTask_handel = osThreadCreate(osThread(communicateTask), NULL);
+	// osThreadDef(communicateTask, communi_task, osPriorityHigh, 0, 128);
+  // communiTask_handel = osThreadCreate(osThread(communicateTask), NULL);
 	
 	osThreadDef(DETECT, detect_task, osPriorityNormal, 0, 128);
 	detect_handle = osThreadCreate(osThread(DETECT), NULL);
  
-  osThreadDef(ui, ui_task, osPriorityNormal, 0, 256);
-	ui_handle = osThreadCreate(osThread(ui), NULL);
+  // osThreadDef(ui, ui_task, osPriorityNormal, 0, 256);
+	// ui_handle = osThreadCreate(osThread(ui), NULL);
   
 
   /* USER CODE END RTOS_THREADS */

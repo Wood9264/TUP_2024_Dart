@@ -5,42 +5,36 @@
 
 #define Total_amount 9
 
-//#define abs(x) ((x)>0? (x):(-(x)))
 #ifdef __cplusplus
-extern "C"{
-#endif
-	
-#ifdef __cplusplus
-	
-class motor_t
+extern "C"
 {
+#endif
+
+#ifdef __cplusplus
+
+	class motor_t
+	{
 	public:
 		int64_t ecd;
-	  int16_t speed_rpm;
-	  int16_t given_current;
-	  uint8_t temperate;
-    
-	  int16_t last_ecd;
-	  int64_t num;
+		int16_t speed_rpm;
+		int16_t given_current;
+		uint8_t temperate;
 
+		int16_t last_ecd;
+		int64_t num;
 
 		motor_t();
-	  
-	  friend void get_motor_measure(uint16_t number,uint8_t *rxdata);
-};
 
-extern motor_t motor[Total_amount];
-extern void get_motor_measure(uint16_t number,uint8_t *rxdata);
+		friend void get_motor_measure(uint16_t number, uint8_t *rxdata);
+	};
 
-
+	extern motor_t motor[Total_amount];
+	extern void get_motor_measure(uint16_t number, uint8_t *rxdata);
 
 #endif
-	
+
 #ifdef __cplusplus
 }
 #endif
 
-
 #endif
-
-

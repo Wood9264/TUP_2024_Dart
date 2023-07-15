@@ -24,11 +24,11 @@ void get_motor_measure(uint16_t number,uint8_t *rxdata)
 	{
 		if(motor[number].ecd >= 6500 && motor[number].last_ecd <= 1000)
 		{
-			motor[number].num += 1;
+			motor[number].num -= 1;
 		}
 		else if(motor[number].ecd <= 1000 && motor[number].last_ecd >= 6500)
 		{
-			motor[number].num -= 1;
+			motor[number].num += 1;
 		}
 
 	}		

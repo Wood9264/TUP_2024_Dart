@@ -101,13 +101,25 @@ typedef __packed struct
 
 
 /* 检测遥控器开关状态 */
-#define    IF_RC_SW1_UP      (rc_ctrl.rc.s1 == RC_SW_UP)
-#define    IF_RC_SW1_MID     (rc_ctrl.rc.s1 == RC_SW_MID)
-#define    IF_RC_SW1_DOWN    (rc_ctrl.rc.s1 == RC_SW_DOWN)
+#define    IF_RC_SW0_UP      (rc_ctrl.rc.s[0] == RC_SW_UP)
+#define    IF_RC_SW0_MID     (rc_ctrl.rc.s[0] == RC_SW_MID)
+#define    IF_RC_SW0_DOWN    (rc_ctrl.rc.s[0] == RC_SW_DOWN)
 
-#define    IF_RC_SW2_UP      (rc_ctrl.rc.s2 == RC_SW_UP)
-#define    IF_RC_SW2_MID     (rc_ctrl.rc.s2 == RC_SW_MID)
-#define    IF_RC_SW2_DOWN    (rc_ctrl.rc.s2 == RC_SW_DOWN)
+#define    IF_RC_SW1_UP      (rc_ctrl.rc.s[1] == RC_SW_UP)
+#define    IF_RC_SW1_MID     (rc_ctrl.rc.s[1] == RC_SW_MID)
+#define    IF_RC_SW1_DOWN    (rc_ctrl.rc.s[1] == RC_SW_DOWN)
+
+
+/*拨杆位置*/
+#define    IF_RIGHT_ROCKER_RIGHT_TOP      (rc_ctrl.rc.ch[0] > 600 && rc_ctrl.rc.ch[1] > 600)
+#define    IF_RIGHT_ROCKER_LEFT_TOP       (rc_ctrl.rc.ch[0] < -600 && rc_ctrl.rc.ch[1] > 600)
+#define    IF_RIGHT_ROCKER_LEFT_BOTTOM    (rc_ctrl.rc.ch[0] < -600 && rc_ctrl.rc.ch[1] < -600)
+#define    IF_RIGHT_ROCKER_RIGHT_BOTTOM   (rc_ctrl.rc.ch[0] > 600 && rc_ctrl.rc.ch[1] < -600)
+
+#define    IF_LEFT_ROCKER_RIGHT_TOP       (rc_ctrl.rc.ch[2] > 600 && rc_ctrl.rc.ch[3] > 600)
+#define    IF_LEFT_ROCKER_LEFT_TOP        (rc_ctrl.rc.ch[2] < -600 && rc_ctrl.rc.ch[3] > 600)
+#define    IF_LEFT_ROCKER_LEFT_BOTTOM     (rc_ctrl.rc.ch[2] < -600 && rc_ctrl.rc.ch[3] < -600)
+#define    IF_LEFT_ROCKER_RIGHT_BOTTOM    (rc_ctrl.rc.ch[2] > 600 && rc_ctrl.rc.ch[3] < -600)    
 
 
 /* 获取鼠标三轴的移动速度 */
