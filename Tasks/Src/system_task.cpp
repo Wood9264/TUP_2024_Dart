@@ -110,6 +110,7 @@ void system_t::Transit()
 	{
 		revolver_point()->slipper_motor.ecd_set = revolver_point()->slipper_motor.accumulate_ecd;
 		revolver_point()->slipper_motor.speed_set = 0;
+		revolver_point()->slipper_motor.calibrate_begin = 0;
 	}
 	if (sys_mode == SHOOT && last_sys_mode != SHOOT)
 	{
