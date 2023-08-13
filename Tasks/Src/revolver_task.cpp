@@ -53,6 +53,7 @@ revolver_task_t::revolver_task_t()
 		fric_motor[i].speed_pid.init(PID_POSITION, Fric_speed_pid,FRIC_SPEED_PID_MAX_OUT, FRIC_SPEED_PID_MAX_IOUT);
 	}
 	
+	slipper_motor.calibrate_begin = 0;
 	slipper_motor.has_calibrated = 0;
 	slipper_motor.if_shoot_begin = 0;
 
@@ -260,7 +261,6 @@ void slipper_motor_t::position_limit_buffer(fp32 limit_point)
 */
 void slipper_motor_t::CALIBRATE_control()
 {
-	static bool_t calibrate_begin = 0;
 	static uint16_t rc_cmd_time = 0;
 	static bool_t found_zero_point = 0; // «∑Ò’“µΩ¡„µ„
 
@@ -369,10 +369,10 @@ void revolver_task_t::READY_control()
 	else if (is_fric_wheel_on == 1)
 	{
 		
-		fric_motor[0].speed_set = -(BASE_SPEED + fric_speed_offset);
-		fric_motor[1].speed_set =  (BASE_SPEED + fric_speed_offset);
-		fric_motor[2].speed_set = -(BASE_SPEED + fric_speed_offset);
-		fric_motor[3].speed_set =  (BASE_SPEED + fric_speed_offset);
+		fric_motor[0].speed_set =  (BASE_SPEED + fric_speed_offset);
+		fric_motor[1].speed_set = -(BASE_SPEED + fric_speed_offset);
+		fric_motor[2].speed_set =  (BASE_SPEED + fric_speed_offset);
+		fric_motor[3].speed_set = -(BASE_SPEED + fric_speed_offset);
 		
 	}
 
@@ -397,10 +397,10 @@ void revolver_task_t::SHOOTING_control()
 	else if (is_fric_wheel_on == 1)
 	{
 		
-		fric_motor[0].speed_set = -(BASE_SPEED + fric_speed_offset);
-		fric_motor[1].speed_set =  (BASE_SPEED + fric_speed_offset);
-		fric_motor[2].speed_set = -(BASE_SPEED + fric_speed_offset);
-		fric_motor[3].speed_set =  (BASE_SPEED + fric_speed_offset);
+		fric_motor[0].speed_set =  (BASE_SPEED + fric_speed_offset+500);
+		fric_motor[1].speed_set = -(BASE_SPEED + fric_speed_offset+500);
+		fric_motor[2].speed_set =  (BASE_SPEED + fric_speed_offset);
+		fric_motor[3].speed_set = -(BASE_SPEED + fric_speed_offset);
 	}
 
 	slipper_motor.SHOOTING_slipper_control();
