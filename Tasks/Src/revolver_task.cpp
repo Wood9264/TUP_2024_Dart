@@ -12,6 +12,8 @@ revolver_task_t* revolver_point(void)
 	return &revolver;
 }
 
+fp32 SPEED[4];
+
 /**
   * @brief          发射机构任务
   * @param[in]      null
@@ -31,6 +33,11 @@ void revolver_task(void const *pvParameters)
 		CAN1_200_cmd_motor(revolver.fric_motor[0].give_current, revolver.fric_motor[1].give_current, revolver.fric_motor[2].give_current, revolver.fric_motor[3].give_current);
 		CAN2_200_cmd_motor(revolver.slipper_motor.give_current, 0, 0, 0);
 		vTaskDelay(2);
+
+		for(int i = 0; i < 4; i++)
+		{
+			SPEED[i] = revolver.fric_motor[i].motor_measure->speed_rpm;
+		}
   }
 }
 
@@ -135,7 +142,7 @@ void revolver_task_t::ZERO_FORCE_control()
 {
 	for(int i = 0; i < 4; i++)
 	{
-		fric_motor[i].speed_set = 0;
+		fric_motor[i].speed_set = RAMP_float(0, fric_motor[i].speed_set, FRIC_RAMP_BUFF);
 		fric_motor[i].current_calculate();
 	}
 	slipper_motor.give_current = 0;
@@ -184,7 +191,7 @@ void revolver_task_t::ADJUST_control()
 
 	for (int i = 0; i < 4; i++)
 	{
-		fric_motor[i].speed_set = 0;
+		fric_motor[i].speed_set = RAMP_float(0, fric_motor[i].speed_set, FRIC_RAMP_BUFF);
 		fric_motor[i].current_calculate();
 	}
 
@@ -368,12 +375,10 @@ void revolver_task_t::READY_control()
 	}
 	else if (is_fric_wheel_on == 1)
 	{
-		
-		fric_motor[0].speed_set =  (BASE_SPEED + fric_speed_offset);
-		fric_motor[1].speed_set = -(BASE_SPEED + fric_speed_offset);
-		fric_motor[2].speed_set =  (BASE_SPEED + fric_speed_offset);
-		fric_motor[3].speed_set = -(BASE_SPEED + fric_speed_offset);
-		
+		fric_motor[0].speed_set = RAMP_float( (BASE_SPEED + fric_speed_offset), fric_motor[0].speed_set, FRIC_RAMP_BUFF);
+		fric_motor[1].speed_set = RAMP_float(-(BASE_SPEED + fric_speed_offset), fric_motor[1].speed_set, FRIC_RAMP_BUFF);
+		fric_motor[2].speed_set = RAMP_float( (BASE_SPEED + fric_speed_offset), fric_motor[2].speed_set, FRIC_RAMP_BUFF);
+		fric_motor[3].speed_set = RAMP_float(-(BASE_SPEED + fric_speed_offset), fric_motor[3].speed_set, FRIC_RAMP_BUFF);
 	}
 
 	//滑块位置锁定
@@ -396,11 +401,10 @@ void revolver_task_t::SHOOTING_control()
 	}
 	else if (is_fric_wheel_on == 1)
 	{
-		
-		fric_motor[0].speed_set =  (BASE_SPEED + fric_speed_offset+500);
-		fric_motor[1].speed_set = -(BASE_SPEED + fric_speed_offset+500);
-		fric_motor[2].speed_set =  (BASE_SPEED + fric_speed_offset);
-		fric_motor[3].speed_set = -(BASE_SPEED + fric_speed_offset);
+		fric_motor[0].speed_set =  (BASE_SPEED + fric_speed_offset);
+		fric_motor[1].speed_set = -(BASE_SPEED + fric_speed_offset);
+		fric_motor[2].speed_set =  (BASE_SPEED + fric_speed_offset + 1000);
+		fric_motor[3].speed_set = -(BASE_SPEED + fric_speed_offset + 1000);
 	}
 
 	slipper_motor.SHOOTING_slipper_control();

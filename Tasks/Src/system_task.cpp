@@ -67,7 +67,7 @@ void system_t::mode_set()
 	last_sys_mode = sys_mode;
 	last_shoot_mode = shoot_mode;
 
-	if (IF_RC_SW0_DOWN /*|| toe_is_error(DBUS_TOE)*/)
+	if (IF_RC_SW0_DOWN || toe_is_error(DBUS_TOE))
 	{
 		sys_mode = ZERO_FORCE;
 	}
