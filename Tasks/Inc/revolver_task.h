@@ -6,16 +6,16 @@
 #include "BSP_can.h"
 #include "tim.h"
 //单发双环PID 注意抖动
-#define SLIPPER_SPEED_PID_KP 400.0f // 780.0f
-#define SLIPPER_SPEED_PID_KI 0
-#define SLIPPER_SPEED_PID_KD 200 // 2
+#define SLIPPER_SPEED_PID_KP 700.0f // 780.0f
+#define SLIPPER_SPEED_PID_KI 0.0f
+#define SLIPPER_SPEED_PID_KD 3000.0f // 2
 #define SLIPPER_SPEED_PID_MAX_OUT 9000.0f
 #define SLIPPER_SPEED_PID_MAX_IOUT 5000.0f
 
-#define SLIPPER_POSITION_PID_KP 0.020   //0.025f // 0.040f //0.00080f//0.00072f//0.025
+#define SLIPPER_POSITION_PID_KP 0.002f   //0.025f // 0.040f //0.00080f//0.00072f//0.025
 #define SLIPPER_POSITION_PID_KI 0
-#define SLIPPER_POSITION_PID_KD 0.080f		// 0.060f//0.000001f//0.08
-#define SLIPPER_POSITION_PID_MAX_OUT 2.0f // 45.0f
+#define SLIPPER_POSITION_PID_KD 0.01f		// 0.060f//0.000001f//0.08
+#define SLIPPER_POSITION_PID_MAX_OUT 10.0f // 45.0f
 #define SLIPPER_POSITION_PID_MAX_IOUT 10.0f
 
 //摩擦轮速度环PID
@@ -29,10 +29,11 @@
 
 #define BASE_SPEED 7000 //四个摩擦轮的基础转速
 
-#define ONE_DART_ECD (8192 * 23 * 1) //每发飞镖的滑块电机编码值增加量
+#define ONE_DART_ECD (8192 * 22.5f * 1) //每发飞镖的滑块电机编码值增加量
 #define MAX_DART_NUM 2 //发射架可装填的最大飞镖数量
+#define CALIBRATE_OFFSET 8192	//校准时编码值的补偿量。防止滑块回退时因为超调碰到触点开关
 
-#define RC_TO_SLIPPER_SEPPD_SET (5.0f / 660) //遥控器通道到滑块速度设定值的比例
+#define RC_TO_SLIPPER_SEPPD_SET (7.0f / 660) //遥控器通道到滑块速度设定值的比例
 #define SLIPPER_LOCK_SPEED 0.1 //滑块电机速度设定为0，且实际速度低于这个值时，电机用角度环锁定位置
 
 #define Motor_RMP_TO_SPEED 0.00290888208665721596153948461415f

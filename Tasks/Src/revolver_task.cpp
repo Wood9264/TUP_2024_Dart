@@ -319,7 +319,7 @@ void slipper_motor_t::CALIBRATE_control()
 		//设置飞镖发射时滑块每次停留的位置
 		for(int i = 0; i <= MAX_DART_NUM; i++)
 		{
-			slipper_position_ecd[i] = accumulate_ecd + i * ONE_DART_ECD;
+			slipper_position_ecd[i] = accumulate_ecd + i * ONE_DART_ECD + CALIBRATE_OFFSET;
 		}
 	}
 }
@@ -455,37 +455,15 @@ void slipper_motor_t::SHOOTING_slipper_control()
 	if (bullet_num_set <= MAX_DART_NUM)
 	{
 		ecd_set = slipper_position_ecd[bullet_num_set];
-		//接近设定位置，用角度环控制
-		if (ecd_set - accumulate_ecd < ANGLE_LOOP_SWITCH_DISTANCE)
-		{
-			angle_out = position_pid.calc(accumulate_ecd, ecd_set);
-			give_current = speed_pid.calc(motor_speed, angle_out);
-			if (num_add_flag == 0)
-			{
-				bullet_num++;
-				num_add_flag = 1;
-			}
-		}
-		//离设定位置较远，用速度环控制
-		else
-		{
-			num_add_flag = 0;
-			give_current = speed_pid.calc(motor_speed, SLIPPER_SHOOTING_SPEED);
-		}
+		angle_out = position_pid.DLcalc(accumulate_ecd, ecd_set, SLIPPER_SHOOTING_SPEED);
+		give_current = speed_pid.calc(motor_speed, angle_out);
 	}
 	//如果打完所有飞镖，自动回到零点
 	else
 	{
 		ecd_set = slipper_position_ecd[0];
-		if (accumulate_ecd - ecd_set < ANGLE_LOOP_SWITCH_DISTANCE)
-		{
-			angle_out = position_pid.calc(accumulate_ecd, ecd_set);
-			give_current = speed_pid.calc(motor_speed, angle_out);
-		}
-		else
-		{
-			give_current = speed_pid.calc(motor_speed, SLIPPER_BACK_SPEED);
-		}
+		angle_out = position_pid.DLcalc(accumulate_ecd, ecd_set, SLIPPER_SHOOTING_SPEED);
+		give_current = speed_pid.calc(motor_speed, angle_out);
 	}
 }
 

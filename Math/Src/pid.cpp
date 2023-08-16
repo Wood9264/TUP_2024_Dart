@@ -67,5 +67,43 @@ void PID_t::clear(void)
 	own_fdb = own_set = 0.0f;
 }
 
-
-	
+/**
+ * @brief		PID动态限幅（dynamic limit）算法。调用此算法时使用指定的限幅，void PID_t::init初始化的限幅不生效
+ * @param[in]	ref：当前值
+ * @param[in]	set：设定值
+ * @param[in]	max_out：限幅
+*/
+fp32 PID_t::DLcalc(fp32 ref, fp32 set, fp32 max_out)
+{
+	error[2] = error[1];
+	error[1] = error[0];
+	own_set = set;
+	own_fdb = ref;
+	error[0] = set - ref;
+	if (own_mode == PID_POSITION)
+	{
+		Pout = own_Kp * error[0];
+		Iout += own_Ki * error[0];
+		Dbuf[2] = Dbuf[1];
+		Dbuf[1] = Dbuf[0];
+		Dbuf[0] = error[0] - error[1];
+		Dout = own_Kd * Dbuf[0];
+		LimitMax(Iout, own_max_iout);
+		if (isnan(Iout) || isinf(Iout))
+			Iout = 0;
+		out = Pout + Iout + Dout;
+		LimitMax(out, max_out);
+	}
+	else if (own_mode == PID_DELTA)
+	{
+		Pout = own_Kp * (error[0] - error[1]);
+		Iout += own_Ki * error[0];
+		Dbuf[2] = Dbuf[1];
+		Dbuf[1] = Dbuf[0];
+		Dbuf[0] = (error[0] - 2.0f * error[1] + error[2]);
+		Dout = own_Kd * Dbuf[0];
+		out = Pout + Iout + Dout;
+		LimitMax(out, max_out);
+	}
+	return out;
+}

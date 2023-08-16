@@ -34,6 +34,7 @@ class PID_t
 		void init(uint8_t mode,const fp32 PID[3],fp32 max_out,fp32 max_iout);
 	  fp32 calc(fp32 ref,fp32 set);
 	  void clear(void);
+	  fp32 DLcalc(fp32 ref, fp32 set, fp32 max_out);
 };
 
 #endif	
