@@ -22,12 +22,12 @@
 #define FRIC_SPEED_PID_KP 8.0f
 #define FRIC_SPEED_PID_KI 0.0f
 #define FRIC_SPEED_PID_KD 5.0f
-#define FRIC_SPEED_PID_MAX_OUT 16384.0f
+#define FRIC_SPEED_PID_MAX_OUT 8192.0f
 #define FRIC_SPEED_PID_MAX_IOUT 5000.0f
 
 #define FRIC_RAMP_BUFF 20	//摩擦轮启动时的斜坡增加量
 
-#define BASE_SPEED 7000 //四个摩擦轮的基础转速
+#define BASE_SPEED 2000 //四个摩擦轮的基础转速
 
 #define ONE_DART_ECD (8192 * 22.5f * 1) //每发飞镖的滑块电机编码值增加量
 #define MAX_DART_NUM 2 //发射架可装填的最大飞镖数量
@@ -44,7 +44,7 @@
 #define CALIBRATE_DOWN_SPEED (-5) //校准时滑块下移的速度
 #define CALIBRATE_UP_SPEED 5 //校准时滑块上移的速度
 #define SLIPPER_SHOOTING_SPEED 10 //发射时滑块上移的速度
-#define SLIPPER_BACK_SPEED -5 //滑块自动返回零点时的速度
+#define SLIPPER_BACK_SPEED 5 //滑块自动返回零点时的速度
 
 #define REVOLVER_TASK_INIT_TIME 200
 #ifdef __cplusplus

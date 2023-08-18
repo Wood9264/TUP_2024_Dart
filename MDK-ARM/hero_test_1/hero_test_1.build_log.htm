@@ -27,6 +27,18 @@ Project File Date:  08/13/2023
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'd:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'hero_test_1'
+compiling system_task.cpp...
+compiling revolver_task.cpp...
+..\Tasks\Src\revolver_task.cpp(192): warning:  #177-D: variable "angle_out"  was declared but never referenced
+  	static fp32 angle_out = 0;
+..\Tasks\Src\revolver_task.cpp(422): warning:  #177-D: variable "num_add_flag"  was declared but never referenced
+  	static bool_t num_add_flag = 0;
+..\Tasks\Src\revolver_task.cpp: 2 warnings, 0 errors
+compiling freertos.c...
+compiling judge.cpp...
+..\Hardware\Src\judge.cpp(1715): warning:  #1-D: last line of file ends without a newline
+  }
+..\Hardware\Src\judge.cpp: 1 warning, 0 errors
 compiling gimbal_task.cpp...
 ..\Tasks\Src\gimbal_task.cpp(364): warning:  #550-D: variable "last_turn_keyboard"  was set but never used
   	 static uint16_t last_turn_keyboard = 0;
@@ -35,20 +47,8 @@ compiling gimbal_task.cpp...
 ..\Tasks\Src\gimbal_task.cpp(368): warning:  #177-D: variable "turn_mode"  was declared but never referenced
   	 int turn_mode;
 ..\Tasks\Src\gimbal_task.cpp: 3 warnings, 0 errors
-compiling revolver_task.cpp...
-..\Tasks\Src\revolver_task.cpp(190): warning:  #177-D: variable "angle_out"  was declared but never referenced
-  	static fp32 angle_out = 0;
-..\Tasks\Src\revolver_task.cpp(420): warning:  #177-D: variable "num_add_flag"  was declared but never referenced
-  	static bool_t num_add_flag = 0;
-..\Tasks\Src\revolver_task.cpp: 2 warnings, 0 errors
-compiling freertos.c...
-compiling system_task.cpp...
-compiling judge.cpp...
-..\Hardware\Src\judge.cpp(1715): warning:  #1-D: last line of file ends without a newline
-  }
-..\Hardware\Src\judge.cpp: 1 warning, 0 errors
 linking...
-Program Size: Code=76408 RO-data=4584 RW-data=1296 ZI-data=34112  
+Program Size: Code=76448 RO-data=4584 RW-data=1296 ZI-data=34128  
 FromELF: creating hex file...
 "hero_test_1\hero_test_1.axf" - 0 Error(s), 6 Warning(s).
 

@@ -5809,88 +5809,88 @@ Image Symbol Table
     i.remote_control_init                    0x08011b20   Section        0  remote_control.o(i.remote_control_init)
     i.revolver_point                         0x08011b34   Section        0  revolver_task.o(i.revolver_point)
     i.revolver_task                          0x08011b3c   Section        0  revolver_task.o(i.revolver_task)
-    i.sbus_to_rc                             0x08011bc0   Section        0  remote_control.o(i.sbus_to_rc)
-    sbus_to_rc                               0x08011bc1   Thumb Code   218  remote_control.o(i.sbus_to_rc)
-    i.sqrtf                                  0x08011c9a   Section        0  sqrtf_full.o(i.sqrtf)
-    i.syspoint                               0x08011cd8   Section        0  system_task.o(i.syspoint)
-    i.system_task                            0x08011ce0   Section        0  system_task.o(i.system_task)
-    i.toe_is_error                           0x08011d0c   Section        0  detect_task.o(i.toe_is_error)
-    i.ulTaskNotifyTake                       0x08011d24   Section        0  tasks.o(i.ulTaskNotifyTake)
-    i.update_w                               0x08011d8c   Section        0  ahrs.o(i.update_w)
-    update_w                                 0x08011d8d   Thumb Code   122  ahrs.o(i.update_w)
-    i.usart1_init                            0x08011e08   Section        0  bsp_usart.o(i.usart1_init)
-    i.uxListRemove                           0x08011efc   Section        0  list.o(i.uxListRemove)
-    i.vApplicationGetIdleTaskMemory          0x08011f24   Section        0  freertos.o(i.vApplicationGetIdleTaskMemory)
-    i.vListInitialise                        0x08011f3c   Section        0  list.o(i.vListInitialise)
-    i.vListInitialiseItem                    0x08011f52   Section        0  list.o(i.vListInitialiseItem)
-    i.vListInsert                            0x08011f58   Section        0  list.o(i.vListInsert)
-    i.vListInsertEnd                         0x08011f8e   Section        0  list.o(i.vListInsertEnd)
-    i.vPortEnterCritical                     0x08011fa8   Section        0  port.o(i.vPortEnterCritical)
-    i.vPortExitCritical                      0x08011fe8   Section        0  port.o(i.vPortExitCritical)
-    i.vPortFree                              0x08012014   Section        0  heap_4.o(i.vPortFree)
-    i.vPortSetupTimerInterrupt               0x08012078   Section        0  port.o(i.vPortSetupTimerInterrupt)
-    i.vPortValidateInterruptPriority         0x0801209c   Section        0  port.o(i.vPortValidateInterruptPriority)
-    i.vTaskDelay                             0x080120f0   Section        0  tasks.o(i.vTaskDelay)
-    i.vTaskDelayUntil                        0x08012140   Section        0  tasks.o(i.vTaskDelayUntil)
-    i.vTaskNotifyGiveFromISR                 0x080121dc   Section        0  tasks.o(i.vTaskNotifyGiveFromISR)
-    i.vTaskStartScheduler                    0x08012298   Section        0  tasks.o(i.vTaskStartScheduler)
-    i.vTaskSuspendAll                        0x08012320   Section        0  tasks.o(i.vTaskSuspendAll)
-    i.vTaskSwitchContext                     0x08012330   Section        0  tasks.o(i.vTaskSwitchContext)
-    i.verify_CRC16_check_sum                 0x08012390   Section        0  crc8_crc16.o(i.verify_CRC16_check_sum)
-    i.verify_CRC8_check_sum                  0x080123d0   Section        0  crc8_crc16.o(i.verify_CRC8_check_sum)
-    i.vision_info_point                      0x08012400   Section        0  vision.o(i.vision_info_point)
-    i.xPortStartScheduler                    0x08012408   Section        0  port.o(i.xPortStartScheduler)
-    i.xTaskCreate                            0x0801250c   Section        0  tasks.o(i.xTaskCreate)
-    i.xTaskCreateStatic                      0x08012578   Section        0  tasks.o(i.xTaskCreateStatic)
-    i.xTaskGetHandle                         0x080125d8   Section        0  tasks.o(i.xTaskGetHandle)
-    i.xTaskGetSchedulerState                 0x08012664   Section        0  tasks.o(i.xTaskGetSchedulerState)
-    i.xTaskGetTickCount                      0x08012680   Section        0  tasks.o(i.xTaskGetTickCount)
-    i.xTaskGetTickCountFromISR               0x0801268c   Section        0  tasks.o(i.xTaskGetTickCountFromISR)
-    i.xTaskIncrementTick                     0x0801269c   Section        0  tasks.o(i.xTaskIncrementTick)
-    i.xTaskResumeAll                         0x08012770   Section        0  tasks.o(i.xTaskResumeAll)
-    x$fpl$exception                          0x0801283c   Section      492  except.o(x$fpl$exception)
-    $v0                                      0x0801283c   Number         0  except.o(x$fpl$exception)
-    x$fpl$ffltll                             0x08012a28   Section      158  ffltll_clz.o(x$fpl$ffltll)
-    $v0                                      0x08012a28   Number         0  ffltll_clz.o(x$fpl$ffltll)
-    x$fpl$fpinit                             0x08012ac6   Section       10  fpinit.o(x$fpl$fpinit)
-    $v0                                      0x08012ac6   Number         0  fpinit.o(x$fpl$fpinit)
-    x$fpl$retnan                             0x08012ad0   Section      178  retnan.o(x$fpl$retnan)
-    $v0                                      0x08012ad0   Number         0  retnan.o(x$fpl$retnan)
-    x$fpl$trapveneer                         0x08012b82   Section      126  trapv.o(x$fpl$trapveneer)
-    $v0                                      0x08012b82   Number         0  trapv.o(x$fpl$trapveneer)
-    .constdata                               0x08012c00   Section      224  freertos.o(.constdata)
-    x$fpl$usenofp                            0x08012c00   Section        0  usenofp.o(x$fpl$usenofp)
-    .constdata                               0x08012ce0   Section       18  bmi088driver.o(.constdata)
-    write_BMI088_ACCEL_self_test_Reg_Data_Error 0x08012ce0   Data          18  bmi088driver.o(.constdata)
-    .constdata                               0x08012cf2   Section       12  ist8310driver.o(.constdata)
-    ist8310_write_reg_data_error             0x08012cf2   Data          12  ist8310driver.o(.constdata)
-    .constdata                               0x08012cfe   Section      768  crc8_crc16.o(.constdata)
-    CRC8_table                               0x08012cfe   Data         256  crc8_crc16.o(.constdata)
-    wCRC_table                               0x08012dfe   Data         512  crc8_crc16.o(.constdata)
-    .constdata                               0x08013000   Section       24  ins_task.o(.constdata)
-    imu_temp_PID                             0x08013000   Data          12  ins_task.o(.constdata)
-    fliter_num                               0x0801300c   Data          12  ins_task.o(.constdata)
-    .constdata                               0x08013018   Section       20  calibrate_task.o(.constdata)
-    cali_name                                0x08013018   Data          20  calibrate_task.o(.constdata)
-    .constdata                               0x0801302c   Section       84  detect_task.o(.constdata)
-    .constdata                               0x08013080   Section       48  revolver_task.o(.constdata)
-    fliter_num                               0x080130a4   Data          12  revolver_task.o(.constdata)
-    .constdata                               0x080130b0   Section      768  crc_check.o(.constdata)
-    CRC8_TAB                                 0x080130b0   Data         256  crc_check.o(.constdata)
-    wCRC_Table                               0x080131b0   Data         512  crc_check.o(.constdata)
-    .constdata                               0x080133b0   Section        8  stm32f4xx_hal_dma.o(.constdata)
-    flagBitshiftOffset                       0x080133b0   Data           8  stm32f4xx_hal_dma.o(.constdata)
-    .constdata                               0x080133b8   Section       16  system_stm32f4xx.o(.constdata)
-    .constdata                               0x080133c8   Section        8  system_stm32f4xx.o(.constdata)
-    .constdata                               0x080133d0   Section       12  ahrs.o(.constdata)
-    .constdata                               0x080133dc   Section     2052  arm_common_tables.o(.constdata)
-    .conststring                             0x08013be0   Section       76  freertos.o(.conststring)
-    .init_array                              0x08013c4c   Section        4  motor.o(.init_array)
-    .init_array                              0x08013c50   Section        4  gimbal_task.o(.init_array)
-    .init_array                              0x08013c54   Section        4  system_task.o(.init_array)
-    .init_array                              0x08013c58   Section        4  communicate_task.o(.init_array)
-    .init_array                              0x08013c5c   Section        4  revolver_task.o(.init_array)
-    .init_array                              0x08013c60   Section        0  init_aeabi.o(.init_array)
+    i.sbus_to_rc                             0x08011be8   Section        0  remote_control.o(i.sbus_to_rc)
+    sbus_to_rc                               0x08011be9   Thumb Code   218  remote_control.o(i.sbus_to_rc)
+    i.sqrtf                                  0x08011cc2   Section        0  sqrtf_full.o(i.sqrtf)
+    i.syspoint                               0x08011d00   Section        0  system_task.o(i.syspoint)
+    i.system_task                            0x08011d08   Section        0  system_task.o(i.system_task)
+    i.toe_is_error                           0x08011d34   Section        0  detect_task.o(i.toe_is_error)
+    i.ulTaskNotifyTake                       0x08011d4c   Section        0  tasks.o(i.ulTaskNotifyTake)
+    i.update_w                               0x08011db4   Section        0  ahrs.o(i.update_w)
+    update_w                                 0x08011db5   Thumb Code   122  ahrs.o(i.update_w)
+    i.usart1_init                            0x08011e30   Section        0  bsp_usart.o(i.usart1_init)
+    i.uxListRemove                           0x08011f24   Section        0  list.o(i.uxListRemove)
+    i.vApplicationGetIdleTaskMemory          0x08011f4c   Section        0  freertos.o(i.vApplicationGetIdleTaskMemory)
+    i.vListInitialise                        0x08011f64   Section        0  list.o(i.vListInitialise)
+    i.vListInitialiseItem                    0x08011f7a   Section        0  list.o(i.vListInitialiseItem)
+    i.vListInsert                            0x08011f80   Section        0  list.o(i.vListInsert)
+    i.vListInsertEnd                         0x08011fb6   Section        0  list.o(i.vListInsertEnd)
+    i.vPortEnterCritical                     0x08011fd0   Section        0  port.o(i.vPortEnterCritical)
+    i.vPortExitCritical                      0x08012010   Section        0  port.o(i.vPortExitCritical)
+    i.vPortFree                              0x0801203c   Section        0  heap_4.o(i.vPortFree)
+    i.vPortSetupTimerInterrupt               0x080120a0   Section        0  port.o(i.vPortSetupTimerInterrupt)
+    i.vPortValidateInterruptPriority         0x080120c4   Section        0  port.o(i.vPortValidateInterruptPriority)
+    i.vTaskDelay                             0x08012118   Section        0  tasks.o(i.vTaskDelay)
+    i.vTaskDelayUntil                        0x08012168   Section        0  tasks.o(i.vTaskDelayUntil)
+    i.vTaskNotifyGiveFromISR                 0x08012204   Section        0  tasks.o(i.vTaskNotifyGiveFromISR)
+    i.vTaskStartScheduler                    0x080122c0   Section        0  tasks.o(i.vTaskStartScheduler)
+    i.vTaskSuspendAll                        0x08012348   Section        0  tasks.o(i.vTaskSuspendAll)
+    i.vTaskSwitchContext                     0x08012358   Section        0  tasks.o(i.vTaskSwitchContext)
+    i.verify_CRC16_check_sum                 0x080123b8   Section        0  crc8_crc16.o(i.verify_CRC16_check_sum)
+    i.verify_CRC8_check_sum                  0x080123f8   Section        0  crc8_crc16.o(i.verify_CRC8_check_sum)
+    i.vision_info_point                      0x08012428   Section        0  vision.o(i.vision_info_point)
+    i.xPortStartScheduler                    0x08012430   Section        0  port.o(i.xPortStartScheduler)
+    i.xTaskCreate                            0x08012534   Section        0  tasks.o(i.xTaskCreate)
+    i.xTaskCreateStatic                      0x080125a0   Section        0  tasks.o(i.xTaskCreateStatic)
+    i.xTaskGetHandle                         0x08012600   Section        0  tasks.o(i.xTaskGetHandle)
+    i.xTaskGetSchedulerState                 0x0801268c   Section        0  tasks.o(i.xTaskGetSchedulerState)
+    i.xTaskGetTickCount                      0x080126a8   Section        0  tasks.o(i.xTaskGetTickCount)
+    i.xTaskGetTickCountFromISR               0x080126b4   Section        0  tasks.o(i.xTaskGetTickCountFromISR)
+    i.xTaskIncrementTick                     0x080126c4   Section        0  tasks.o(i.xTaskIncrementTick)
+    i.xTaskResumeAll                         0x08012798   Section        0  tasks.o(i.xTaskResumeAll)
+    x$fpl$exception                          0x08012864   Section      492  except.o(x$fpl$exception)
+    $v0                                      0x08012864   Number         0  except.o(x$fpl$exception)
+    x$fpl$ffltll                             0x08012a50   Section      158  ffltll_clz.o(x$fpl$ffltll)
+    $v0                                      0x08012a50   Number         0  ffltll_clz.o(x$fpl$ffltll)
+    x$fpl$fpinit                             0x08012aee   Section       10  fpinit.o(x$fpl$fpinit)
+    $v0                                      0x08012aee   Number         0  fpinit.o(x$fpl$fpinit)
+    x$fpl$retnan                             0x08012af8   Section      178  retnan.o(x$fpl$retnan)
+    $v0                                      0x08012af8   Number         0  retnan.o(x$fpl$retnan)
+    x$fpl$trapveneer                         0x08012baa   Section      126  trapv.o(x$fpl$trapveneer)
+    $v0                                      0x08012baa   Number         0  trapv.o(x$fpl$trapveneer)
+    .constdata                               0x08012c28   Section      224  freertos.o(.constdata)
+    x$fpl$usenofp                            0x08012c28   Section        0  usenofp.o(x$fpl$usenofp)
+    .constdata                               0x08012d08   Section       18  bmi088driver.o(.constdata)
+    write_BMI088_ACCEL_self_test_Reg_Data_Error 0x08012d08   Data          18  bmi088driver.o(.constdata)
+    .constdata                               0x08012d1a   Section       12  ist8310driver.o(.constdata)
+    ist8310_write_reg_data_error             0x08012d1a   Data          12  ist8310driver.o(.constdata)
+    .constdata                               0x08012d26   Section      768  crc8_crc16.o(.constdata)
+    CRC8_table                               0x08012d26   Data         256  crc8_crc16.o(.constdata)
+    wCRC_table                               0x08012e26   Data         512  crc8_crc16.o(.constdata)
+    .constdata                               0x08013028   Section       24  ins_task.o(.constdata)
+    imu_temp_PID                             0x08013028   Data          12  ins_task.o(.constdata)
+    fliter_num                               0x08013034   Data          12  ins_task.o(.constdata)
+    .constdata                               0x08013040   Section       20  calibrate_task.o(.constdata)
+    cali_name                                0x08013040   Data          20  calibrate_task.o(.constdata)
+    .constdata                               0x08013054   Section       84  detect_task.o(.constdata)
+    .constdata                               0x080130a8   Section       48  revolver_task.o(.constdata)
+    fliter_num                               0x080130cc   Data          12  revolver_task.o(.constdata)
+    .constdata                               0x080130d8   Section      768  crc_check.o(.constdata)
+    CRC8_TAB                                 0x080130d8   Data         256  crc_check.o(.constdata)
+    wCRC_Table                               0x080131d8   Data         512  crc_check.o(.constdata)
+    .constdata                               0x080133d8   Section        8  stm32f4xx_hal_dma.o(.constdata)
+    flagBitshiftOffset                       0x080133d8   Data           8  stm32f4xx_hal_dma.o(.constdata)
+    .constdata                               0x080133e0   Section       16  system_stm32f4xx.o(.constdata)
+    .constdata                               0x080133f0   Section        8  system_stm32f4xx.o(.constdata)
+    .constdata                               0x080133f8   Section       12  ahrs.o(.constdata)
+    .constdata                               0x08013404   Section     2052  arm_common_tables.o(.constdata)
+    .conststring                             0x08013c08   Section       76  freertos.o(.conststring)
+    .init_array                              0x08013c74   Section        4  motor.o(.init_array)
+    .init_array                              0x08013c78   Section        4  gimbal_task.o(.init_array)
+    .init_array                              0x08013c7c   Section        4  system_task.o(.init_array)
+    .init_array                              0x08013c80   Section        4  communicate_task.o(.init_array)
+    .init_array                              0x08013c84   Section        4  revolver_task.o(.init_array)
+    .init_array                              0x08013c88   Section        0  init_aeabi.o(.init_array)
     .data                                    0x20000000   Section       48  freertos.o(.data)
     .data                                    0x20000030   Section        4  can.o(.data)
     HAL_RCC_CAN1_CLK_ENABLED                 0x20000030   Data           4  can.o(.data)
@@ -6058,23 +6058,23 @@ Image Symbol Table
     .bss                                     0x20003e14   Section       84  system_task.o(.bss)
     .bss                                     0x20003e68   Section     1384  communicate_task.o(.bss)
     .bss                                     0x200043d0   Section      212  judge_task.o(.bss)
-    .bss                                     0x200044a8   Section      568  revolver_task.o(.bss)
-    .bss                                     0x200046e0   Section       32  stm32f4xx_hal_flash.o(.bss)
-    .bss                                     0x20004700   Section      240  tasks.o(.bss)
-    pxReadyTasksLists                        0x20004700   Data         140  tasks.o(.bss)
-    xDelayedTaskList1                        0x2000478c   Data          20  tasks.o(.bss)
-    xDelayedTaskList2                        0x200047a0   Data          20  tasks.o(.bss)
-    xPendingReadyList                        0x200047b4   Data          20  tasks.o(.bss)
-    xTasksWaitingTermination                 0x200047c8   Data          20  tasks.o(.bss)
-    xSuspendedTaskList                       0x200047dc   Data          20  tasks.o(.bss)
-    .bss                                     0x200047f0   Section    15360  heap_4.o(.bss)
-    ucHeap                                   0x200047f0   Data       15360  heap_4.o(.bss)
-    .bss                                     0x200083f0   Section       96  libspace.o(.bss)
-    HEAP                                     0x20008450   Section      512  startup_stm32f407xx.o(HEAP)
-    Heap_Mem                                 0x20008450   Data         512  startup_stm32f407xx.o(HEAP)
-    STACK                                    0x20008650   Section     1024  startup_stm32f407xx.o(STACK)
-    Stack_Mem                                0x20008650   Data        1024  startup_stm32f407xx.o(STACK)
-    __initial_sp                             0x20008a50   Data           0  startup_stm32f407xx.o(STACK)
+    .bss                                     0x200044a8   Section      584  revolver_task.o(.bss)
+    .bss                                     0x200046f0   Section       32  stm32f4xx_hal_flash.o(.bss)
+    .bss                                     0x20004710   Section      240  tasks.o(.bss)
+    pxReadyTasksLists                        0x20004710   Data         140  tasks.o(.bss)
+    xDelayedTaskList1                        0x2000479c   Data          20  tasks.o(.bss)
+    xDelayedTaskList2                        0x200047b0   Data          20  tasks.o(.bss)
+    xPendingReadyList                        0x200047c4   Data          20  tasks.o(.bss)
+    xTasksWaitingTermination                 0x200047d8   Data          20  tasks.o(.bss)
+    xSuspendedTaskList                       0x200047ec   Data          20  tasks.o(.bss)
+    .bss                                     0x20004800   Section    15360  heap_4.o(.bss)
+    ucHeap                                   0x20004800   Data       15360  heap_4.o(.bss)
+    .bss                                     0x20008400   Section       96  libspace.o(.bss)
+    HEAP                                     0x20008460   Section      512  startup_stm32f407xx.o(HEAP)
+    Heap_Mem                                 0x20008460   Data         512  startup_stm32f407xx.o(HEAP)
+    STACK                                    0x20008660   Section     1024  startup_stm32f407xx.o(STACK)
+    Stack_Mem                                0x20008660   Data        1024  startup_stm32f407xx.o(STACK)
+    __initial_sp                             0x20008a60   Data           0  startup_stm32f407xx.o(STACK)
 
     Global Symbols
 
@@ -6687,61 +6687,61 @@ Image Symbol Table
     pxPortInitialiseStack                    0x08011a71   Thumb Code    38  port.o(i.pxPortInitialiseStack)
     remote_control_init                      0x08011b21   Thumb Code    16  remote_control.o(i.remote_control_init)
     revolver_point                           0x08011b35   Thumb Code     4  revolver_task.o(i.revolver_point)
-    revolver_task                            0x08011b3d   Thumb Code   120  revolver_task.o(i.revolver_task)
-    sqrtf                                    0x08011c9b   Thumb Code    62  sqrtf_full.o(i.sqrtf)
-    syspoint                                 0x08011cd9   Thumb Code     4  system_task.o(i.syspoint)
-    system_task                              0x08011ce1   Thumb Code    38  system_task.o(i.system_task)
-    toe_is_error                             0x08011d0d   Thumb Code    20  detect_task.o(i.toe_is_error)
-    ulTaskNotifyTake                         0x08011d25   Thumb Code    96  tasks.o(i.ulTaskNotifyTake)
-    usart1_init                              0x08011e09   Thumb Code   220  bsp_usart.o(i.usart1_init)
-    uxListRemove                             0x08011efd   Thumb Code    38  list.o(i.uxListRemove)
-    vApplicationGetIdleTaskMemory            0x08011f25   Thumb Code    14  freertos.o(i.vApplicationGetIdleTaskMemory)
-    vListInitialise                          0x08011f3d   Thumb Code    22  list.o(i.vListInitialise)
-    vListInitialiseItem                      0x08011f53   Thumb Code     6  list.o(i.vListInitialiseItem)
-    vListInsert                              0x08011f59   Thumb Code    54  list.o(i.vListInsert)
-    vListInsertEnd                           0x08011f8f   Thumb Code    24  list.o(i.vListInsertEnd)
-    vPortEnterCritical                       0x08011fa9   Thumb Code    54  port.o(i.vPortEnterCritical)
-    vPortExitCritical                        0x08011fe9   Thumb Code    38  port.o(i.vPortExitCritical)
-    vPortFree                                0x08012015   Thumb Code    94  heap_4.o(i.vPortFree)
-    vPortSetupTimerInterrupt                 0x08012079   Thumb Code    32  port.o(i.vPortSetupTimerInterrupt)
-    vPortValidateInterruptPriority           0x0801209d   Thumb Code    74  port.o(i.vPortValidateInterruptPriority)
-    vTaskDelay                               0x080120f1   Thumb Code    70  tasks.o(i.vTaskDelay)
-    vTaskDelayUntil                          0x08012141   Thumb Code   146  tasks.o(i.vTaskDelayUntil)
-    vTaskNotifyGiveFromISR                   0x080121dd   Thumb Code   176  tasks.o(i.vTaskNotifyGiveFromISR)
-    vTaskStartScheduler                      0x08012299   Thumb Code   120  tasks.o(i.vTaskStartScheduler)
-    vTaskSuspendAll                          0x08012321   Thumb Code    10  tasks.o(i.vTaskSuspendAll)
-    vTaskSwitchContext                       0x08012331   Thumb Code    86  tasks.o(i.vTaskSwitchContext)
-    verify_CRC16_check_sum                   0x08012391   Thumb Code    60  crc8_crc16.o(i.verify_CRC16_check_sum)
-    verify_CRC8_check_sum                    0x080123d1   Thumb Code    46  crc8_crc16.o(i.verify_CRC8_check_sum)
-    vision_info_point                        0x08012401   Thumb Code     4  vision.o(i.vision_info_point)
-    xPortStartScheduler                      0x08012409   Thumb Code   232  port.o(i.xPortStartScheduler)
-    xTaskCreate                              0x0801250d   Thumb Code   108  tasks.o(i.xTaskCreate)
-    xTaskCreateStatic                        0x08012579   Thumb Code    96  tasks.o(i.xTaskCreateStatic)
-    xTaskGetHandle                           0x080125d9   Thumb Code   124  tasks.o(i.xTaskGetHandle)
-    xTaskGetSchedulerState                   0x08012665   Thumb Code    24  tasks.o(i.xTaskGetSchedulerState)
-    xTaskGetTickCount                        0x08012681   Thumb Code     6  tasks.o(i.xTaskGetTickCount)
-    xTaskGetTickCountFromISR                 0x0801268d   Thumb Code    12  tasks.o(i.xTaskGetTickCountFromISR)
-    xTaskIncrementTick                       0x0801269d   Thumb Code   202  tasks.o(i.xTaskIncrementTick)
-    xTaskResumeAll                           0x08012771   Thumb Code   190  tasks.o(i.xTaskResumeAll)
-    __fpl_exception                          0x0801283d   Thumb Code   454  except.o(x$fpl$exception)
-    __aeabi_ul2f                             0x08012a29   Thumb Code     0  ffltll_clz.o(x$fpl$ffltll)
-    _ll_uto_f                                0x08012a29   Thumb Code     6  ffltll_clz.o(x$fpl$ffltll)
-    __aeabi_l2f                              0x08012a2f   Thumb Code     0  ffltll_clz.o(x$fpl$ffltll)
-    _ll_sto_f                                0x08012a2f   Thumb Code   152  ffltll_clz.o(x$fpl$ffltll)
-    _fp_init                                 0x08012ac7   Thumb Code    10  fpinit.o(x$fpl$fpinit)
-    __fplib_config_fpu_vfp                   0x08012acf   Thumb Code     0  fpinit.o(x$fpl$fpinit)
-    __fplib_config_pureend_doubles           0x08012acf   Thumb Code     0  fpinit.o(x$fpl$fpinit)
-    __fpl_return_NaN                         0x08012ad1   Thumb Code   178  retnan.o(x$fpl$retnan)
-    _fp_trapveneer                           0x08012b83   Thumb Code    36  trapv.o(x$fpl$trapveneer)
-    __fpl_cmpreturn                          0x08012ba7   Thumb Code    90  trapv.o(x$fpl$trapveneer)
-    __I$use$fp                               0x08012c00   Number         0  usenofp.o(x$fpl$usenofp)
-    AHBPrescTable                            0x080133b8   Data          16  system_stm32f4xx.o(.constdata)
-    APBPrescTable                            0x080133c8   Data           8  system_stm32f4xx.o(.constdata)
-    sinTable_f32                             0x080133dc   Data        2052  arm_common_tables.o(.constdata)
-    Region$$Table$$Base                      0x08013c2c   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x08013c4c   Number         0  anon$$obj.o(Region$$Table)
-    SHT$$INIT_ARRAY$$Base                    0x08013c4c   Number         0  motor.o(.init_array)
-    SHT$$INIT_ARRAY$$Limit                   0x08013c60   Number         0  init_aeabi.o(.init_array)
+    revolver_task                            0x08011b3d   Thumb Code   156  revolver_task.o(i.revolver_task)
+    sqrtf                                    0x08011cc3   Thumb Code    62  sqrtf_full.o(i.sqrtf)
+    syspoint                                 0x08011d01   Thumb Code     4  system_task.o(i.syspoint)
+    system_task                              0x08011d09   Thumb Code    38  system_task.o(i.system_task)
+    toe_is_error                             0x08011d35   Thumb Code    20  detect_task.o(i.toe_is_error)
+    ulTaskNotifyTake                         0x08011d4d   Thumb Code    96  tasks.o(i.ulTaskNotifyTake)
+    usart1_init                              0x08011e31   Thumb Code   220  bsp_usart.o(i.usart1_init)
+    uxListRemove                             0x08011f25   Thumb Code    38  list.o(i.uxListRemove)
+    vApplicationGetIdleTaskMemory            0x08011f4d   Thumb Code    14  freertos.o(i.vApplicationGetIdleTaskMemory)
+    vListInitialise                          0x08011f65   Thumb Code    22  list.o(i.vListInitialise)
+    vListInitialiseItem                      0x08011f7b   Thumb Code     6  list.o(i.vListInitialiseItem)
+    vListInsert                              0x08011f81   Thumb Code    54  list.o(i.vListInsert)
+    vListInsertEnd                           0x08011fb7   Thumb Code    24  list.o(i.vListInsertEnd)
+    vPortEnterCritical                       0x08011fd1   Thumb Code    54  port.o(i.vPortEnterCritical)
+    vPortExitCritical                        0x08012011   Thumb Code    38  port.o(i.vPortExitCritical)
+    vPortFree                                0x0801203d   Thumb Code    94  heap_4.o(i.vPortFree)
+    vPortSetupTimerInterrupt                 0x080120a1   Thumb Code    32  port.o(i.vPortSetupTimerInterrupt)
+    vPortValidateInterruptPriority           0x080120c5   Thumb Code    74  port.o(i.vPortValidateInterruptPriority)
+    vTaskDelay                               0x08012119   Thumb Code    70  tasks.o(i.vTaskDelay)
+    vTaskDelayUntil                          0x08012169   Thumb Code   146  tasks.o(i.vTaskDelayUntil)
+    vTaskNotifyGiveFromISR                   0x08012205   Thumb Code   176  tasks.o(i.vTaskNotifyGiveFromISR)
+    vTaskStartScheduler                      0x080122c1   Thumb Code   120  tasks.o(i.vTaskStartScheduler)
+    vTaskSuspendAll                          0x08012349   Thumb Code    10  tasks.o(i.vTaskSuspendAll)
+    vTaskSwitchContext                       0x08012359   Thumb Code    86  tasks.o(i.vTaskSwitchContext)
+    verify_CRC16_check_sum                   0x080123b9   Thumb Code    60  crc8_crc16.o(i.verify_CRC16_check_sum)
+    verify_CRC8_check_sum                    0x080123f9   Thumb Code    46  crc8_crc16.o(i.verify_CRC8_check_sum)
+    vision_info_point                        0x08012429   Thumb Code     4  vision.o(i.vision_info_point)
+    xPortStartScheduler                      0x08012431   Thumb Code   232  port.o(i.xPortStartScheduler)
+    xTaskCreate                              0x08012535   Thumb Code   108  tasks.o(i.xTaskCreate)
+    xTaskCreateStatic                        0x080125a1   Thumb Code    96  tasks.o(i.xTaskCreateStatic)
+    xTaskGetHandle                           0x08012601   Thumb Code   124  tasks.o(i.xTaskGetHandle)
+    xTaskGetSchedulerState                   0x0801268d   Thumb Code    24  tasks.o(i.xTaskGetSchedulerState)
+    xTaskGetTickCount                        0x080126a9   Thumb Code     6  tasks.o(i.xTaskGetTickCount)
+    xTaskGetTickCountFromISR                 0x080126b5   Thumb Code    12  tasks.o(i.xTaskGetTickCountFromISR)
+    xTaskIncrementTick                       0x080126c5   Thumb Code   202  tasks.o(i.xTaskIncrementTick)
+    xTaskResumeAll                           0x08012799   Thumb Code   190  tasks.o(i.xTaskResumeAll)
+    __fpl_exception                          0x08012865   Thumb Code   454  except.o(x$fpl$exception)
+    __aeabi_ul2f                             0x08012a51   Thumb Code     0  ffltll_clz.o(x$fpl$ffltll)
+    _ll_uto_f                                0x08012a51   Thumb Code     6  ffltll_clz.o(x$fpl$ffltll)
+    __aeabi_l2f                              0x08012a57   Thumb Code     0  ffltll_clz.o(x$fpl$ffltll)
+    _ll_sto_f                                0x08012a57   Thumb Code   152  ffltll_clz.o(x$fpl$ffltll)
+    _fp_init                                 0x08012aef   Thumb Code    10  fpinit.o(x$fpl$fpinit)
+    __fplib_config_fpu_vfp                   0x08012af7   Thumb Code     0  fpinit.o(x$fpl$fpinit)
+    __fplib_config_pureend_doubles           0x08012af7   Thumb Code     0  fpinit.o(x$fpl$fpinit)
+    __fpl_return_NaN                         0x08012af9   Thumb Code   178  retnan.o(x$fpl$retnan)
+    _fp_trapveneer                           0x08012bab   Thumb Code    36  trapv.o(x$fpl$trapveneer)
+    __fpl_cmpreturn                          0x08012bcf   Thumb Code    90  trapv.o(x$fpl$trapveneer)
+    __I$use$fp                               0x08012c28   Number         0  usenofp.o(x$fpl$usenofp)
+    AHBPrescTable                            0x080133e0   Data          16  system_stm32f4xx.o(.constdata)
+    APBPrescTable                            0x080133f0   Data           8  system_stm32f4xx.o(.constdata)
+    sinTable_f32                             0x08013404   Data        2052  arm_common_tables.o(.constdata)
+    Region$$Table$$Base                      0x08013c54   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x08013c74   Number         0  anon$$obj.o(Region$$Table)
+    SHT$$INIT_ARRAY$$Base                    0x08013c74   Number         0  motor.o(.init_array)
+    SHT$$INIT_ARRAY$$Limit                   0x08013c88   Number         0  init_aeabi.o(.init_array)
     chassisTaskHandle                        0x20000000   Data           4  freertos.o(.data)
     imuTaskHandle                            0x20000004   Data           4  freertos.o(.data)
     judgeTaskHandle                          0x20000008   Data           4  freertos.o(.data)
@@ -6924,9 +6924,10 @@ Image Symbol Table
     ina226_data                              0x20004498   Data          12  judge_task.o(.bss)
     revolver                                 0x200044a8   Data         552  revolver_task.o(.bss)
     SPEED                                    0x200046d0   Data          16  revolver_task.o(.bss)
-    pFlash                                   0x200046e0   Data          32  stm32f4xx_hal_flash.o(.bss)
-    __libspace_start                         0x200083f0   Data          96  libspace.o(.bss)
-    __temporary_stack_top$libspace           0x20008450   Data           0  libspace.o(.bss)
+    TEMP                                     0x200046e0   Data          16  revolver_task.o(.bss)
+    pFlash                                   0x200046f0   Data          32  stm32f4xx_hal_flash.o(.bss)
+    __libspace_start                         0x20008400   Data          96  libspace.o(.bss)
+    __temporary_stack_top$libspace           0x20008460   Data           0  libspace.o(.bss)
 
 
 
@@ -6936,9 +6937,9 @@ Memory Map of the image
 
   Image Entry point : 0x08000189
 
-  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x00014170, Max: 0x00100000, ABSOLUTE, COMPRESSED[0x00013e04])
+  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x00014198, Max: 0x00100000, ABSOLUTE, COMPRESSED[0x00013e2c])
 
-    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x00013c60, Max: 0x00100000, ABSOLUTE)
+    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x00013c88, Max: 0x00100000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -7552,85 +7553,85 @@ Memory Map of the image
     0x08011a9c   0x08011a9c   0x00000084   Code   RO        11865    i.quat_normalization  AHRS.lib(ahrs.o)
     0x08011b20   0x08011b20   0x00000014   Code   RO         2226    i.remote_control_init  remote_control.o
     0x08011b34   0x08011b34   0x00000008   Code   RO         4504    i.revolver_point    revolver_task.o
-    0x08011b3c   0x08011b3c   0x00000084   Code   RO         4505    i.revolver_task     revolver_task.o
-    0x08011bc0   0x08011bc0   0x000000da   Code   RO         2227    i.sbus_to_rc        remote_control.o
-    0x08011c9a   0x08011c9a   0x0000003e   Code   RO        12181    i.sqrtf             m_wm.l(sqrtf_full.o)
-    0x08011cd8   0x08011cd8   0x00000008   Code   RO         4279    i.syspoint          system_task.o
-    0x08011ce0   0x08011ce0   0x0000002c   Code   RO         4280    i.system_task       system_task.o
-    0x08011d0c   0x08011d0c   0x00000018   Code   RO         4231    i.toe_is_error      detect_task.o
-    0x08011d24   0x08011d24   0x00000068   Code   RO        10582    i.ulTaskNotifyTake  tasks.o
-    0x08011d8c   0x08011d8c   0x0000007a   Code   RO        11866    i.update_w          AHRS.lib(ahrs.o)
-    0x08011e06   0x08011e06   0x00000002   PAD
-    0x08011e08   0x08011e08   0x000000f4   Code   RO         3693    i.usart1_init       bsp_usart.o
-    0x08011efc   0x08011efc   0x00000026   Code   RO        10197    i.uxListRemove      list.o
-    0x08011f22   0x08011f22   0x00000002   PAD
-    0x08011f24   0x08011f24   0x00000018   Code   RO          391    i.vApplicationGetIdleTaskMemory  freertos.o
-    0x08011f3c   0x08011f3c   0x00000016   Code   RO        10198    i.vListInitialise   list.o
-    0x08011f52   0x08011f52   0x00000006   Code   RO        10199    i.vListInitialiseItem  list.o
-    0x08011f58   0x08011f58   0x00000036   Code   RO        10200    i.vListInsert       list.o
-    0x08011f8e   0x08011f8e   0x00000018   Code   RO        10201    i.vListInsertEnd    list.o
-    0x08011fa6   0x08011fa6   0x00000002   PAD
-    0x08011fa8   0x08011fa8   0x00000040   Code   RO        11356    i.vPortEnterCritical  port.o
-    0x08011fe8   0x08011fe8   0x0000002c   Code   RO        11357    i.vPortExitCritical  port.o
-    0x08012014   0x08012014   0x00000064   Code   RO        11287    i.vPortFree         heap_4.o
-    0x08012078   0x08012078   0x00000024   Code   RO        11358    i.vPortSetupTimerInterrupt  port.o
-    0x0801209c   0x0801209c   0x00000054   Code   RO        11359    i.vPortValidateInterruptPriority  port.o
-    0x080120f0   0x080120f0   0x00000050   Code   RO        10588    i.vTaskDelay        tasks.o
-    0x08012140   0x08012140   0x0000009c   Code   RO        10589    i.vTaskDelayUntil   tasks.o
-    0x080121dc   0x080121dc   0x000000bc   Code   RO        10594    i.vTaskNotifyGiveFromISR  tasks.o
-    0x08012298   0x08012298   0x00000088   Code   RO        10602    i.vTaskStartScheduler  tasks.o
-    0x08012320   0x08012320   0x00000010   Code   RO        10604    i.vTaskSuspendAll   tasks.o
-    0x08012330   0x08012330   0x00000060   Code   RO        10605    i.vTaskSwitchContext  tasks.o
-    0x08012390   0x08012390   0x00000040   Code   RO         2958    i.verify_CRC16_check_sum  crc8_crc16.o
-    0x080123d0   0x080123d0   0x0000002e   Code   RO         2959    i.verify_CRC8_check_sum  crc8_crc16.o
-    0x080123fe   0x080123fe   0x00000002   PAD
-    0x08012400   0x08012400   0x00000008   Code   RO         1632    i.vision_info_point  vision.o
-    0x08012408   0x08012408   0x00000104   Code   RO        11360    i.xPortStartScheduler  port.o
-    0x0801250c   0x0801250c   0x0000006c   Code   RO        10608    i.xTaskCreate       tasks.o
-    0x08012578   0x08012578   0x00000060   Code   RO        10609    i.xTaskCreateStatic  tasks.o
-    0x080125d8   0x080125d8   0x0000008c   Code   RO        10613    i.xTaskGetHandle    tasks.o
-    0x08012664   0x08012664   0x0000001c   Code   RO        10614    i.xTaskGetSchedulerState  tasks.o
-    0x08012680   0x08012680   0x0000000c   Code   RO        10615    i.xTaskGetTickCount  tasks.o
-    0x0801268c   0x0801268c   0x00000010   Code   RO        10616    i.xTaskGetTickCountFromISR  tasks.o
-    0x0801269c   0x0801269c   0x000000d4   Code   RO        10617    i.xTaskIncrementTick  tasks.o
-    0x08012770   0x08012770   0x000000cc   Code   RO        10623    i.xTaskResumeAll    tasks.o
-    0x0801283c   0x0801283c   0x000001ec   Code   RO        12248    x$fpl$exception     g_wm.l(except.o)
-    0x08012a28   0x08012a28   0x0000009e   Code   RO        12129    x$fpl$ffltll        g_wm.l(ffltll_clz.o)
-    0x08012ac6   0x08012ac6   0x0000000a   Code   RO        12299    x$fpl$fpinit        g_wm.l(fpinit.o)
-    0x08012ad0   0x08012ad0   0x000000b2   Code   RO        12305    x$fpl$retnan        g_wm.l(retnan.o)
-    0x08012b82   0x08012b82   0x0000007e   Code   RO        12307    x$fpl$trapveneer    g_wm.l(trapv.o)
-    0x08012c00   0x08012c00   0x00000000   Code   RO        12250    x$fpl$usenofp       g_wm.l(usenofp.o)
-    0x08012c00   0x08012c00   0x000000e0   Data   RO          393    .constdata          freertos.o
-    0x08012ce0   0x08012ce0   0x00000012   Data   RO         1982    .constdata          bmi088driver.o
-    0x08012cf2   0x08012cf2   0x0000000c   Data   RO         2195    .constdata          ist8310driver.o
-    0x08012cfe   0x08012cfe   0x00000300   Data   RO         2966    .constdata          crc8_crc16.o
-    0x08012ffe   0x08012ffe   0x00000002   PAD
-    0x08013000   0x08013000   0x00000018   Data   RO         3784    .constdata          ins_task.o
-    0x08013018   0x08013018   0x00000014   Data   RO         4141    .constdata          calibrate_task.o
-    0x0801302c   0x0801302c   0x00000054   Data   RO         4238    .constdata          detect_task.o
-    0x08013080   0x08013080   0x00000030   Data   RO         4526    .constdata          revolver_task.o
-    0x080130b0   0x080130b0   0x00000300   Data   RO         4820    .constdata          crc_check.o
-    0x080133b0   0x080133b0   0x00000008   Data   RO         6328    .constdata          stm32f4xx_hal_dma.o
-    0x080133b8   0x080133b8   0x00000010   Data   RO        10060    .constdata          system_stm32f4xx.o
-    0x080133c8   0x080133c8   0x00000008   Data   RO        10061    .constdata          system_stm32f4xx.o
-    0x080133d0   0x080133d0   0x0000000c   Data   RO        11867    .constdata          AHRS.lib(ahrs.o)
-    0x080133dc   0x080133dc   0x00000804   Data   RO        12077    .constdata          arm_cortexM4lf_math.lib(arm_common_tables.o)
-    0x08013be0   0x08013be0   0x0000004c   Data   RO          394    .conststring        freertos.o
-    0x08013c2c   0x08013c2c   0x00000020   Data   RO        12530    Region$$Table       anon$$obj.o
-    0x08013c4c   0x08013c4c   0x00000004   Data   RO         1453    .init_array         motor.o
-    0x08013c50   0x08013c4c   0x00000004   Data   RO         3943    .init_array         gimbal_task.o
-    0x08013c54   0x08013c4c   0x00000004   Data   RO         4289    .init_array         system_task.o
-    0x08013c58   0x08013c4c   0x00000004   Data   RO         4356    .init_array         communicate_task.o
-    0x08013c5c   0x08013c4c   0x00000004   Data   RO         4528    .init_array         revolver_task.o
-    0x08013c60   0x08013c4c   0x00000000   Data   RO        12121    .init_array         c_w.l(init_aeabi.o)
+    0x08011b3c   0x08011b3c   0x000000ac   Code   RO         4505    i.revolver_task     revolver_task.o
+    0x08011be8   0x08011be8   0x000000da   Code   RO         2227    i.sbus_to_rc        remote_control.o
+    0x08011cc2   0x08011cc2   0x0000003e   Code   RO        12181    i.sqrtf             m_wm.l(sqrtf_full.o)
+    0x08011d00   0x08011d00   0x00000008   Code   RO         4279    i.syspoint          system_task.o
+    0x08011d08   0x08011d08   0x0000002c   Code   RO         4280    i.system_task       system_task.o
+    0x08011d34   0x08011d34   0x00000018   Code   RO         4231    i.toe_is_error      detect_task.o
+    0x08011d4c   0x08011d4c   0x00000068   Code   RO        10582    i.ulTaskNotifyTake  tasks.o
+    0x08011db4   0x08011db4   0x0000007a   Code   RO        11866    i.update_w          AHRS.lib(ahrs.o)
+    0x08011e2e   0x08011e2e   0x00000002   PAD
+    0x08011e30   0x08011e30   0x000000f4   Code   RO         3693    i.usart1_init       bsp_usart.o
+    0x08011f24   0x08011f24   0x00000026   Code   RO        10197    i.uxListRemove      list.o
+    0x08011f4a   0x08011f4a   0x00000002   PAD
+    0x08011f4c   0x08011f4c   0x00000018   Code   RO          391    i.vApplicationGetIdleTaskMemory  freertos.o
+    0x08011f64   0x08011f64   0x00000016   Code   RO        10198    i.vListInitialise   list.o
+    0x08011f7a   0x08011f7a   0x00000006   Code   RO        10199    i.vListInitialiseItem  list.o
+    0x08011f80   0x08011f80   0x00000036   Code   RO        10200    i.vListInsert       list.o
+    0x08011fb6   0x08011fb6   0x00000018   Code   RO        10201    i.vListInsertEnd    list.o
+    0x08011fce   0x08011fce   0x00000002   PAD
+    0x08011fd0   0x08011fd0   0x00000040   Code   RO        11356    i.vPortEnterCritical  port.o
+    0x08012010   0x08012010   0x0000002c   Code   RO        11357    i.vPortExitCritical  port.o
+    0x0801203c   0x0801203c   0x00000064   Code   RO        11287    i.vPortFree         heap_4.o
+    0x080120a0   0x080120a0   0x00000024   Code   RO        11358    i.vPortSetupTimerInterrupt  port.o
+    0x080120c4   0x080120c4   0x00000054   Code   RO        11359    i.vPortValidateInterruptPriority  port.o
+    0x08012118   0x08012118   0x00000050   Code   RO        10588    i.vTaskDelay        tasks.o
+    0x08012168   0x08012168   0x0000009c   Code   RO        10589    i.vTaskDelayUntil   tasks.o
+    0x08012204   0x08012204   0x000000bc   Code   RO        10594    i.vTaskNotifyGiveFromISR  tasks.o
+    0x080122c0   0x080122c0   0x00000088   Code   RO        10602    i.vTaskStartScheduler  tasks.o
+    0x08012348   0x08012348   0x00000010   Code   RO        10604    i.vTaskSuspendAll   tasks.o
+    0x08012358   0x08012358   0x00000060   Code   RO        10605    i.vTaskSwitchContext  tasks.o
+    0x080123b8   0x080123b8   0x00000040   Code   RO         2958    i.verify_CRC16_check_sum  crc8_crc16.o
+    0x080123f8   0x080123f8   0x0000002e   Code   RO         2959    i.verify_CRC8_check_sum  crc8_crc16.o
+    0x08012426   0x08012426   0x00000002   PAD
+    0x08012428   0x08012428   0x00000008   Code   RO         1632    i.vision_info_point  vision.o
+    0x08012430   0x08012430   0x00000104   Code   RO        11360    i.xPortStartScheduler  port.o
+    0x08012534   0x08012534   0x0000006c   Code   RO        10608    i.xTaskCreate       tasks.o
+    0x080125a0   0x080125a0   0x00000060   Code   RO        10609    i.xTaskCreateStatic  tasks.o
+    0x08012600   0x08012600   0x0000008c   Code   RO        10613    i.xTaskGetHandle    tasks.o
+    0x0801268c   0x0801268c   0x0000001c   Code   RO        10614    i.xTaskGetSchedulerState  tasks.o
+    0x080126a8   0x080126a8   0x0000000c   Code   RO        10615    i.xTaskGetTickCount  tasks.o
+    0x080126b4   0x080126b4   0x00000010   Code   RO        10616    i.xTaskGetTickCountFromISR  tasks.o
+    0x080126c4   0x080126c4   0x000000d4   Code   RO        10617    i.xTaskIncrementTick  tasks.o
+    0x08012798   0x08012798   0x000000cc   Code   RO        10623    i.xTaskResumeAll    tasks.o
+    0x08012864   0x08012864   0x000001ec   Code   RO        12248    x$fpl$exception     g_wm.l(except.o)
+    0x08012a50   0x08012a50   0x0000009e   Code   RO        12129    x$fpl$ffltll        g_wm.l(ffltll_clz.o)
+    0x08012aee   0x08012aee   0x0000000a   Code   RO        12299    x$fpl$fpinit        g_wm.l(fpinit.o)
+    0x08012af8   0x08012af8   0x000000b2   Code   RO        12305    x$fpl$retnan        g_wm.l(retnan.o)
+    0x08012baa   0x08012baa   0x0000007e   Code   RO        12307    x$fpl$trapveneer    g_wm.l(trapv.o)
+    0x08012c28   0x08012c28   0x00000000   Code   RO        12250    x$fpl$usenofp       g_wm.l(usenofp.o)
+    0x08012c28   0x08012c28   0x000000e0   Data   RO          393    .constdata          freertos.o
+    0x08012d08   0x08012d08   0x00000012   Data   RO         1982    .constdata          bmi088driver.o
+    0x08012d1a   0x08012d1a   0x0000000c   Data   RO         2195    .constdata          ist8310driver.o
+    0x08012d26   0x08012d26   0x00000300   Data   RO         2966    .constdata          crc8_crc16.o
+    0x08013026   0x08013026   0x00000002   PAD
+    0x08013028   0x08013028   0x00000018   Data   RO         3784    .constdata          ins_task.o
+    0x08013040   0x08013040   0x00000014   Data   RO         4141    .constdata          calibrate_task.o
+    0x08013054   0x08013054   0x00000054   Data   RO         4238    .constdata          detect_task.o
+    0x080130a8   0x080130a8   0x00000030   Data   RO         4526    .constdata          revolver_task.o
+    0x080130d8   0x080130d8   0x00000300   Data   RO         4820    .constdata          crc_check.o
+    0x080133d8   0x080133d8   0x00000008   Data   RO         6328    .constdata          stm32f4xx_hal_dma.o
+    0x080133e0   0x080133e0   0x00000010   Data   RO        10060    .constdata          system_stm32f4xx.o
+    0x080133f0   0x080133f0   0x00000008   Data   RO        10061    .constdata          system_stm32f4xx.o
+    0x080133f8   0x080133f8   0x0000000c   Data   RO        11867    .constdata          AHRS.lib(ahrs.o)
+    0x08013404   0x08013404   0x00000804   Data   RO        12077    .constdata          arm_cortexM4lf_math.lib(arm_common_tables.o)
+    0x08013c08   0x08013c08   0x0000004c   Data   RO          394    .conststring        freertos.o
+    0x08013c54   0x08013c54   0x00000020   Data   RO        12530    Region$$Table       anon$$obj.o
+    0x08013c74   0x08013c74   0x00000004   Data   RO         1453    .init_array         motor.o
+    0x08013c78   0x08013c74   0x00000004   Data   RO         3943    .init_array         gimbal_task.o
+    0x08013c7c   0x08013c74   0x00000004   Data   RO         4289    .init_array         system_task.o
+    0x08013c80   0x08013c74   0x00000004   Data   RO         4356    .init_array         communicate_task.o
+    0x08013c84   0x08013c74   0x00000004   Data   RO         4528    .init_array         revolver_task.o
+    0x08013c88   0x08013c74   0x00000000   Data   RO        12121    .init_array         c_w.l(init_aeabi.o)
 
 
-    Execution Region RW_IRAM2 (Exec base: 0x10000000, Load base: 0x08013e04, Size: 0x00000000, Max: 0x00010000, ABSOLUTE)
+    Execution Region RW_IRAM2 (Exec base: 0x10000000, Load base: 0x08013e2c, Size: 0x00000000, Max: 0x00010000, ABSOLUTE)
 
     **** No section assigned to this execution region ****
 
 
-    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x08013c60, Size: 0x00008a50, Max: 0x00020000, ABSOLUTE, COMPRESSED[0x000001a4])
+    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x08013c88, Size: 0x00008a60, Max: 0x00020000, ABSOLUTE, COMPRESSED[0x000001a4])
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -7699,13 +7700,13 @@ Memory Map of the image
     0x20003e68        -       0x00000568   Zero   RW         4354    .bss                communicate_task.o
     0x200043d0        -       0x000000d4   Zero   RW         4447    .bss                judge_task.o
     0x200044a4   COMPRESSED   0x00000004   PAD
-    0x200044a8        -       0x00000238   Zero   RW         4525    .bss                revolver_task.o
-    0x200046e0        -       0x00000020   Zero   RW         5982    .bss                stm32f4xx_hal_flash.o
-    0x20004700        -       0x000000f0   Zero   RW        10625    .bss                tasks.o
-    0x200047f0        -       0x00003c00   Zero   RW        11292    .bss                heap_4.o
-    0x200083f0        -       0x00000060   Zero   RW        12310    .bss                c_w.l(libspace.o)
-    0x20008450        -       0x00000200   Zero   RW            2    HEAP                startup_stm32f407xx.o
-    0x20008650        -       0x00000400   Zero   RW            1    STACK               startup_stm32f407xx.o
+    0x200044a8        -       0x00000248   Zero   RW         4525    .bss                revolver_task.o
+    0x200046f0        -       0x00000020   Zero   RW         5982    .bss                stm32f4xx_hal_flash.o
+    0x20004710        -       0x000000f0   Zero   RW        10625    .bss                tasks.o
+    0x20004800        -       0x00003c00   Zero   RW        11292    .bss                heap_4.o
+    0x20008400        -       0x00000060   Zero   RW        12310    .bss                c_w.l(libspace.o)
+    0x20008460        -       0x00000200   Zero   RW            2    HEAP                startup_stm32f407xx.o
+    0x20008660        -       0x00000400   Zero   RW            1    STACK               startup_stm32f407xx.o
 
 
 ==============================================================================
@@ -7756,7 +7757,7 @@ Image component sizes
       1140         12          0          0          0       2744   pid.o
        814         92          0         12          0      11945   port.o
        550         36          0          2         94     580868   remote_control.o
-      3014        186         52         41        568      14058   revolver_task.o
+      3054        190         52         41        584      14127   revolver_task.o
        112         20          0          0         32       1519   rtc.o
        596         52          0          0        368       2568   spi.o
         64         26        392          0       1536        840   startup_stm32f407xx.o
@@ -7800,7 +7801,7 @@ Image component sizes
        312         10          0          0        312      27633   vision.o
 
     ----------------------------------------------------------------------
-     69844       3442       2520       1280      34016    2565929   Object Totals
+     69884       3446       2520       1280      34032    2565998   Object Totals
          0          0         32          0          0          0   (incl. Generated)
         74          0          2         14          8          0   (incl. Padding)
 
@@ -7885,15 +7886,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     76408       3874       4584       1296      34112    2548583   Grand Totals
-     76408       3874       4584        420      34112    2548583   ELF Image Totals (compressed)
-     76408       3874       4584        420          0          0   ROM Totals
+     76448       3878       4584       1296      34128    2548652   Grand Totals
+     76448       3878       4584        420      34128    2548652   ELF Image Totals (compressed)
+     76448       3878       4584        420          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                80992 (  79.09kB)
-    Total RW  Size (RW Data + ZI Data)             35408 (  34.58kB)
-    Total ROM Size (Code + RO Data + RW Data)      81412 (  79.50kB)
+    Total RO  Size (Code + RO Data)                81032 (  79.13kB)
+    Total RW  Size (RW Data + ZI Data)             35424 (  34.59kB)
+    Total ROM Size (Code + RO Data + RW Data)      81452 (  79.54kB)
 
 ==============================================================================
 

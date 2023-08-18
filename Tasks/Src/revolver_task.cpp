@@ -13,6 +13,7 @@ revolver_task_t* revolver_point(void)
 }
 
 fp32 SPEED[4];
+fp32 TEMP[4];
 
 /**
   * @brief          发射机构任务
@@ -37,6 +38,7 @@ void revolver_task(void const *pvParameters)
 		for(int i = 0; i < 4; i++)
 		{
 			SPEED[i] = revolver.fric_motor[i].motor_measure->speed_rpm;
+			TEMP[i] = revolver.fric_motor[i].motor_measure->temperate;
 		}
   }
 }
@@ -462,7 +464,7 @@ void slipper_motor_t::SHOOTING_slipper_control()
 	else
 	{
 		ecd_set = slipper_position_ecd[0];
-		angle_out = position_pid.DLcalc(accumulate_ecd, ecd_set, SLIPPER_SHOOTING_SPEED);
+		angle_out = position_pid.DLcalc(accumulate_ecd, ecd_set, SLIPPER_BACK_SPEED);
 		give_current = speed_pid.calc(motor_speed, angle_out);
 	}
 }

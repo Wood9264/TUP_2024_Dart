@@ -1,32 +1,37 @@
 
 
-GraphedExpression="revolver.fric_motor[0].give_current", DisplayFormat=DISPLAY_FORMAT_DEC, Color=#e56a6f
-GraphedExpression="SPEED[0]", Color=#35792b
-GraphedExpression="SPEED[1]", Color=#769dda
-GraphedExpression="SPEED[2]", Color=#b14f0d
-GraphedExpression="SPEED[3]", DisplayFormat=DISPLAY_FORMAT_DEC, Color=#b3c38e
-GraphedExpression="revolver.fric_motor[1].give_current", Color=#ab7b05
-GraphedExpression="revolver.fric_motor[2].give_current", Color=#7fd3b7
-GraphedExpression="revolver.fric_motor[3].give_current", Color=#50328f
+GraphedExpression="SPEED[0]", Color=#e56a6f
+GraphedExpression="SPEED[1]", Color=#35792b
+GraphedExpression="SPEED[2]", Color=#769dda
+GraphedExpression="SPEED[3]", DisplayFormat=DISPLAY_FORMAT_DEC, Color=#b14f0d
+GraphedExpression="TEMP[0]", Color=#b3c38e
+GraphedExpression="TEMP[1]", Color=#ab7b05
+GraphedExpression="TEMP[2]", Color=#7fd3b7
+GraphedExpression="TEMP[3]", Color=#50328f
+OpenDocument="BSP_can.h", FilePath="e:/RM/Program/TUP_2024_Dart_Beta/BSP/Inc/BSP_can.h", Line=0
+OpenDocument="BSP_can.cpp", FilePath="e:/RM/Program/TUP_2024_Dart_Beta/BSP/Src/BSP_can.cpp", Line=15
 OpenDocument="revolver_task.cpp", FilePath="e:/RM/Program/TUP_2024_Dart_Beta/Tasks/Src/revolver_task.cpp", Line=0
+OpenDocument="Revolver_task.h", FilePath="e:/RM/Program/TUP_2024_Dart_Beta/Tasks/Inc/Revolver_task.h", Line=36
 OpenDocument="main.c", FilePath="e:/RM/Program/TUP_2024_Dart_Beta/Core/Src/main.c", Line=52
 OpenToolbar="Debug", Floating=0, x=0, y=0
-OpenWindow="Source Files", DockArea=LEFT, x=0, y=0, w=449, h=427, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
-OpenWindow="Watched Data 1", DockArea=LEFT, x=0, y=1, w=449, h=677, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Source Files", DockArea=LEFT, x=0, y=0, w=449, h=431, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Watched Data 1", DockArea=LEFT, x=0, y=1, w=449, h=673, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
 OpenWindow="Data Sampling", DockArea=BOTTOM, x=0, y=0, w=1054, h=328, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0, VisibleTab=0, UniformSampleSpacing=0
 OpenWindow="Timeline", DockArea=RIGHT, x=0, y=0, w=865, h=1105, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=1, DataPaneShown=1, PowerPaneShown=0, CodePaneShown=0, PinCursor="Cursor Movable", TimePerDiv="50 ms / Div", TimeStampFormat="Time", DataGraphDrawAsPoints=0, DataGraphLegendShown=1, DataGraphUniformSampleSpacing=0, DataGraphLegendPosition="258;0", DataGraphShowNamesAtCursor=0, PowerGraphDrawAsPoints=0, PowerGraphLegendShown=0, PowerGraphAvgFilterTime=Off, PowerGraphAvgFilterLen=Off, PowerGraphUniformSampleSpacing=0, PowerGraphLegendPosition="638;0", CodeGraphLegendShown=0, CodeGraphLegendPosition="654;0"
 OpenWindow="Console", DockArea=BOTTOM, x=1, y=0, w=1505, h=328, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
 SmartViewPlugin="", Page="", Toolbar="Hidden", Window="SmartView 1"
 TableHeader="Source Files", SortCol="File", SortOrder="ASCENDING", VisibleCols=["File";"Status";"Size";"#Insts";"Path"], ColWidths=[271;100;100;100;870]
-TableHeader="Data Sampling Table", SortCol="None", SortOrder="ASCENDING", VisibleCols=["Index";"Time";" revolver.fric_motor[0].give_current";" SPEED[0]";" SPEED[1]";" SPEED[2]";" SPEED[3]";" revolver.fric_motor[1].give_current";" revolver.fric_motor[2].give_current";" revolver.fric_motor[3].give_current"], ColWidths=[100;100;100;100;100;100;100;100;100;100]
-TableHeader="Data Sampling Setup", SortCol="Expression", SortOrder="ASCENDING", VisibleCols=["Expression";"Type";"Value";"Min";"Max";"Average";"# Changes";"Min. Change";"Max. Change"], ColWidths=[438;100;100;100;100;124;110;126;126]
+TableHeader="Data Sampling Table", SortCol="None", SortOrder="ASCENDING", VisibleCols=["Index";"Time";" SPEED[0]";" SPEED[1]";" SPEED[2]";" SPEED[3]";" TEMP[0]";" TEMP[1]";" TEMP[2]";" TEMP[3]"], ColWidths=[100;100;100;100;100;100;100;100;100;100]
+TableHeader="Data Sampling Setup", SortCol="Expression", SortOrder="ASCENDING", VisibleCols=["Expression";"Type";"Value";"Min";"Max";"Average";"# Changes";"Min. Change";"Max. Change"], ColWidths=[438;100;100;154;164;100;110;126;126]
 TableHeader="Power Sampling", SortCol="None", SortOrder="ASCENDING", VisibleCols=["Index";"Time";"Ch 0"], ColWidths=[100;100;100]
+TableHeader="Task List", SortCol="None", SortOrder="ASCENDING", VisibleCols=["Name";"Run Count";"Priority";"Status";"Timeout";"Stack Info";"ID";"Mutex Count";"Notified Value";"Notify State"], ColWidths=[110;110;110;110;110;110;110;110;110;110]
 TableHeader="Watched Data 1", SortCol="Expression", SortOrder="ASCENDING", VisibleCols=["Expression";"Value";"Location";"Refresh";"Access"], ColWidths=[170;100;106;100;100]
 TableHeader="RegisterSelectionDialog", SortCol="None", SortOrder="ASCENDING", VisibleCols=[], ColWidths=[]
 TableHeader="TargetExceptionDialog", SortCol="Name", SortOrder="ASCENDING", VisibleCols=["Name";"Value";"Address";"Description"], ColWidths=[200;100;100;340]
-WatchedExpression="revolver", Window=Watched Data 1
+WatchedExpression="revolver", RefreshRate=5, Window=Watched Data 1
 WatchedExpression="revolver.fric_motor[0].give_current", Window=Watched Data 1
 WatchedExpression="SPEED", Window=Watched Data 1
 WatchedExpression="revolver.fric_motor[1].give_current", Window=Watched Data 1
 WatchedExpression="revolver.fric_motor[2].give_current", Window=Watched Data 1
 WatchedExpression="revolver.fric_motor[3].give_current", Window=Watched Data 1
+WatchedExpression="TEMP", Window=Watched Data 1
