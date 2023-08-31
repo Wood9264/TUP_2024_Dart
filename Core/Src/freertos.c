@@ -37,6 +37,7 @@
 #include "detect_task.h"
 #include "monitor_task.h"
 #include "ui_task.h"
+#include "OLED_task.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -67,6 +68,7 @@ osThreadId communiTask_handel;
 osThreadId detect_handle;
 osThreadId monitor_handle;
 osThreadId ui_handle;
+osThreadId oledTaskHandle;
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
 
@@ -163,6 +165,8 @@ void MX_FREERTOS_Init(void) {
   // osThreadDef(ui, ui_task, osPriorityNormal, 0, 256);
 	// ui_handle = osThreadCreate(osThread(ui), NULL);
   
+  osThreadDef(oledTask, OLED_task, osPriorityNormal, 0, 256);
+  oledTaskHandle = osThreadCreate(osThread(oledTask), NULL);
 
   /* USER CODE END RTOS_THREADS */
 

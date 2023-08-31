@@ -6,6 +6,7 @@
         "sstream": "cpp",
         "streambuf": "cpp",
         "cmath": "cpp",
-        "cstdlib": "cpp"
+        "cstdlib": "cpp",
+        "oled.h": "c"
     }
 }
