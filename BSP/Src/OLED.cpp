@@ -4,8 +4,8 @@
   * @brief      0.96 inch oled use SSD1306 driver. the file includes oled initialization function,
   *             and some OLED setting function, GRAM operate function, oled show num ,char and string function,
   *             show RoboMaster LOGO function.
-  *             0.96OLEDÊ¹ÓÃSSD1306Çı¶¯Æ÷£¬±¾ÎÄ¼ş°üÀ¨³õÊ¼»¯º¯ÊıÒÔ¼°ÆäËûOLEDÉèÖÃº¯Êı£¬ GRAM²Ù×÷º¯Êı£¬oledÏÔÊ¾Êı×Ö£¬×Ö·û£¬×Ö·û´®º¯Êı
-  *             ÒÔ¼°ÏÔÊ¾RoboMaster LOGOº¯Êı
+  *             0.96OLEDä½¿ç”¨SSD1306é©±åŠ¨å™¨ï¼Œæœ¬æ–‡ä»¶åŒ…æ‹¬åˆå§‹åŒ–å‡½æ•°ä»¥åŠå…¶ä»–OLEDè®¾ç½®å‡½æ•°ï¼Œ GRAMæ“ä½œå‡½æ•°ï¼Œoledæ˜¾ç¤ºæ•°å­—ï¼Œå­—ç¬¦ï¼Œå­—ç¬¦ä¸²å‡½æ•°
+  *             ä»¥åŠæ˜¾ç¤ºRoboMaster LOGOå‡½æ•°
   * @note       
   * @history
   *  Version    Date            Author          Modification
@@ -38,9 +38,9 @@ static uint8_t OLED_GRAM[128][8];
   * @retval         none
   */
 /**
-  * @brief          Ğ´Êı¾İ»òÕßÖ¸Áîµ½OLED£¬ Èç¹ûÊ¹ÓÃµÄÊÇSPI£¬ÇëÖØĞ´Õâ¸öº¯Êı
-  * @param[in]      dat: ÒªĞ´ÈëµÄ×Ö½Ú
-  * @param[in]      cmd: OLED_CMD ´ú±íĞ´ÈëµÄ×Ö½ÚÊÇÖ¸Áî; OLED_DATA ´ú±íĞ´ÈëµÄ×Ö½ÚÊÇÊı¾İ
+  * @brief          å†™æ•°æ®æˆ–è€…æŒ‡ä»¤åˆ°OLEDï¼Œ å¦‚æœä½¿ç”¨çš„æ˜¯SPIï¼Œè¯·é‡å†™è¿™ä¸ªå‡½æ•°
+  * @param[in]      dat: è¦å†™å…¥çš„å­—èŠ‚
+  * @param[in]      cmd: OLED_CMD ä»£è¡¨å†™å…¥çš„å­—èŠ‚æ˜¯æŒ‡ä»¤; OLED_DATA ä»£è¡¨å†™å…¥çš„å­—èŠ‚æ˜¯æ•°æ®
   * @retval         none
   */
 void oled_write_byte(uint8_t dat, uint8_t cmd)
@@ -65,7 +65,7 @@ void oled_write_byte(uint8_t dat, uint8_t cmd)
   * @retval         none
   */
 /**
-  * @brief          ³õÊ¼»¯OLEDÄ£¿é£¬
+  * @brief          åˆå§‹åŒ–OLEDæ¨¡å—ï¼Œ
   * @param[in]      none
   * @retval         none
   */
@@ -107,7 +107,7 @@ void OLED_init(void)
   * @retval         none
   */
 /**
-  * @brief          ´ò¿ªOLEDÏÔÊ¾
+  * @brief          æ‰“å¼€OLEDæ˜¾ç¤º
   * @param[in]      none
   * @retval         none
   */
@@ -124,7 +124,7 @@ void OLED_display_on(void)
   * @retval         none
   */
 /**
-  * @brief          ¹Ø±ÕOLEDÏÔÊ¾
+  * @brief          å…³é—­OLEDæ˜¾ç¤º
   * @param[in]      none
   * @retval         none
   */
@@ -144,11 +144,11 @@ void OLED_display_off(void)
   * @retval         none
   */
 /**
-  * @brief          ²Ù×÷GRAMÄÚ´æ(128*8charÊı×é)
-  * @param[in]      pen: ²Ù×÷ÀàĞÍ.
-                    PEN_CLEAR: ÉèÖÃÎª0x00
-                    PEN_WRITE: ÉèÖÃÎª0xff
-                    PEN_INVERSION: °´Î»È¡·´
+  * @brief          æ“ä½œGRAMå†…å­˜(128*8charæ•°ç»„)
+  * @param[in]      pen: æ“ä½œç±»å‹.
+                    PEN_CLEAR: è®¾ç½®ä¸º0x00
+                    PEN_WRITE: è®¾ç½®ä¸º0xff
+                    PEN_INVERSION: æŒ‰ä½å–å
   * @retval         none
   */
 void OLED_operate_gram(pen_typedef pen)
@@ -182,9 +182,9 @@ void OLED_operate_gram(pen_typedef pen)
   * @retval         none
   */
 /**
-  * @brief          ÉèÖÃ¹â±êÆğµã(x,y)
-  * @param[in]      x:xÖá, ´Ó 0 µ½ 127
-  * @param[in]      y:yÖá, ´Ó 0 µ½ 7
+  * @brief          è®¾ç½®å…‰æ ‡èµ·ç‚¹(x,y)
+  * @param[in]      x:xè½´, ä» 0 åˆ° 127
+  * @param[in]      y:yè½´, ä» 0 åˆ° 7
   * @retval         none
   */
 void OLED_set_pos(uint8_t x, uint8_t y)
@@ -206,13 +206,13 @@ void OLED_set_pos(uint8_t x, uint8_t y)
   * @retval         none
   */
 /**
-  * @brief          ²Ù×÷GRAMÖĞµÄÒ»¸öÎ»£¬Ïàµ±ÓÚ²Ù×÷ÆÁÄ»µÄÒ»¸öµã
-  * @param[in]      x:xÖá,  [0,X_WIDTH-1]
-  * @param[in]      y:yÖá,  [0,Y_WIDTH-1]
-  * @param[in]      pen: ²Ù×÷ÀàĞÍ,
-                        PEN_CLEAR: ÉèÖÃ (x,y) µãÎª 0
-                        PEN_WRITE: ÉèÖÃ (x,y) µãÎª 1
-                        PEN_INVERSION: (x,y) Öµ·´×ª
+  * @brief          æ“ä½œGRAMä¸­çš„ä¸€ä¸ªä½ï¼Œç›¸å½“äºæ“ä½œå±å¹•çš„ä¸€ä¸ªç‚¹
+  * @param[in]      x:xè½´,  [0,X_WIDTH-1]
+  * @param[in]      y:yè½´,  [0,Y_WIDTH-1]
+  * @param[in]      pen: æ“ä½œç±»å‹,
+                        PEN_CLEAR: è®¾ç½® (x,y) ç‚¹ä¸º 0
+                        PEN_WRITE: è®¾ç½® (x,y) ç‚¹ä¸º 1
+                        PEN_INVERSION: (x,y) å€¼åè½¬
   * @retval         none
   */
 void OLED_draw_point(int8_t x, int8_t y, pen_typedef pen)
@@ -254,12 +254,12 @@ void OLED_draw_point(int8_t x, int8_t y, pen_typedef pen)
   * @retval         none
   */
 /**
-  * @brief          »­Ò»ÌõÖ±Ïß£¬´Ó(x1,y1)µ½(x2,y2)
-  * @param[in]      x1: Æğµã
-  * @param[in]      y1: Æğµã
-  * @param[in]      x2: ÖÕµã
-  * @param[in]      y2: ÖÕµã
-  * @param[in]      pen: ²Ù×÷ÀàĞÍ,PEN_CLEAR,PEN_WRITE,PEN_INVERSION.
+  * @brief          ç”»ä¸€æ¡ç›´çº¿ï¼Œä»(x1,y1)åˆ°(x2,y2)
+  * @param[in]      x1: èµ·ç‚¹
+  * @param[in]      y1: èµ·ç‚¹
+  * @param[in]      x2: ç»ˆç‚¹
+  * @param[in]      y2: ç»ˆç‚¹
+  * @param[in]      pen: æ“ä½œç±»å‹,PEN_CLEAR,PEN_WRITE,PEN_INVERSION.
   * @retval         none
   */
   
@@ -313,10 +313,10 @@ void OLED_draw_line(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, pen_typedef 
   * @retval         none
   */
 /**
-  * @brief          ÏÔÊ¾Ò»¸ö×Ö·û
-  * @param[in]      row: ×Ö·ûµÄ¿ªÊ¼ĞĞ
-  * @param[in]      col: ×Ö·ûµÄ¿ªÊ¼ÁĞ
-  * @param[in]      chr: ×Ö·û
+  * @brief          æ˜¾ç¤ºä¸€ä¸ªå­—ç¬¦
+  * @param[in]      row: å­—ç¬¦çš„å¼€å§‹è¡Œ
+  * @param[in]      col: å­—ç¬¦çš„å¼€å§‹åˆ—
+  * @param[in]      chr: å­—ç¬¦
   * @retval         none
   */
 void OLED_show_char(uint8_t row, uint8_t col, uint8_t chr)
@@ -359,10 +359,10 @@ void OLED_show_char(uint8_t row, uint8_t col, uint8_t chr)
   * @retval         none
   */
 /**
-  * @brief          ÏÔÊ¾Ò»¸ö×Ö·û´®
-  * @param[in]      row: ×Ö·û´®µÄ¿ªÊ¼ĞĞ
-  * @param[in]      col: ×Ö·û´®µÄ¿ªÊ¼ÁĞ
-  * @param[in]      chr: ×Ö·û´®
+  * @brief          æ˜¾ç¤ºä¸€ä¸ªå­—ç¬¦ä¸²
+  * @param[in]      row: å­—ç¬¦ä¸²çš„å¼€å§‹è¡Œ
+  * @param[in]      col: å­—ç¬¦ä¸²çš„å¼€å§‹åˆ—
+  * @param[in]      chr: å­—ç¬¦ä¸²
   * @retval         none
   */
 void OLED_show_string(uint8_t row, uint8_t col, const char *chr)
@@ -393,11 +393,11 @@ void OLED_show_string(uint8_t row, uint8_t col, const char *chr)
   * @retval         none
   */
 /**
-  * @brief          ¸ñÊ½Êä³ö
-  * @param[in]      row: ¿ªÊ¼ÁĞ£¬0 <= row <= 4;
-  * @param[in]      col: ¿ªÊ¼ĞĞ£¬ 0 <= col <= 20;
-  * @param[in]      *fmt:¸ñÊ½»¯Êä³ö×Ö·û´®
-  * @note           Èç¹û×Ö·û´®³¤¶È´óÓÚÒ»ĞĞ£¬¶îÍâµÄ×Ö·û»á»»ĞĞ
+  * @brief          æ ¼å¼è¾“å‡º
+  * @param[in]      row: å¼€å§‹åˆ—ï¼Œ0 <= row <= 4;
+  * @param[in]      col: å¼€å§‹è¡Œï¼Œ 0 <= col <= 20;
+  * @param[in]      *fmt:æ ¼å¼åŒ–è¾“å‡ºå­—ç¬¦ä¸²
+  * @note           å¦‚æœå­—ç¬¦ä¸²é•¿åº¦å¤§äºä¸€è¡Œï¼Œé¢å¤–çš„å­—ç¬¦ä¼šæ¢è¡Œ
   * @retval         none
   */
 void OLED_printf(uint8_t row, uint8_t col, const char *fmt,...)
@@ -429,7 +429,7 @@ void OLED_printf(uint8_t row, uint8_t col, const char *fmt,...)
   * @retval         none
   */
 /**
-  * @brief          ·¢ËÍÊı¾İµ½OLEDµÄGRAM
+  * @brief          å‘é€æ•°æ®åˆ°OLEDçš„GRAM
   * @param[in]      none
   * @retval         none
   */
@@ -455,7 +455,7 @@ void OLED_refresh_gram(void)
   * @retval         none
   */
 /**
-  * @brief          ÏÔÊ¾RMµÄLOGO
+  * @brief          æ˜¾ç¤ºRMçš„LOGO
   * @param[in]      none
   * @retval         none
   */
@@ -490,7 +490,7 @@ void OLED_LOGO(void)
 }
 
 /**
-  * @brief          Ô­Éñ£¬Æô¶¯£¡
+  * @brief          åŸç¥ï¼Œå¯åŠ¨ï¼
   * @param[in]      none
   * @retval         none
   */

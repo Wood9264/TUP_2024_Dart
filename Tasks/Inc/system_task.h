@@ -6,14 +6,14 @@
 #include "ladrc_feedforward.h"
 #include "user_lib.h"
 #include "vision.h"
-// yaw,pitch¿ØÖÆÍ¨µÀÒÔ¼°×´Ì¬¿ª¹ØÍ¨µÀ
+// yaw,pitchæ§åˆ¶é€šé“ä»¥åŠçŠ¶æ€å¼€å…³é€šé“
 #define YAW_CHANNEL 2
 #define PITCH_CHANNEL 3
 #define GIMBAL_MODE_CHANNEL 0
 #define REVOLVER_MODE_CHANNEL 1
-//Ç°ºóµÄÒ£¿ØÆ÷Í¨µÀºÅÂë
+//å‰åçš„é¥æ§å™¨é€šé“å·ç 
 #define CHASSIS_X_CHANNEL 1
-//×óÓÒµÄÒ£¿ØÆ÷Í¨µÀºÅÂë
+//å·¦å³çš„é¥æ§å™¨é€šé“å·ç 
 #define CHASSIS_Y_CHANNEL 0
 
 #define GIMBAL_CALC 0
@@ -22,7 +22,7 @@
 #define YAW_MOUSE_SEN 0.00005f
 #define PITCH_MOUSE_SEN 0.00005f
 
-//Ò£¿ØÆ÷Ç°ºó×óÓÒÒ¡¸Ë£¨max 660£©×ª»¯³É³µÌåÇ°ºóËÙ¶È£¨m/s£©µÄ±ÈÀı
+//é¥æ§å™¨å‰åå·¦å³æ‘‡æ†ï¼ˆmax 660ï¼‰è½¬åŒ–æˆè½¦ä½“å‰åé€Ÿåº¦ï¼ˆm/sï¼‰çš„æ¯”ä¾‹
 #define CHASSIS_VX_RC_SEN 0.005f
 #define CHASSIS_VY_RC_SEN 0.005f
 
@@ -30,31 +30,31 @@
 #define CHASSIS_VY_RE_SEN 0.65f
 
 #define CHASSIS_WZ_RE_SEN 0.7f
-//Ò£¿ØÆ÷Ò¡¸Ë£¨max 660£©×ª»¯³É³µÌåyaw pitchËÙ¶È£¨m/s£©µÄ±ÈÀı
+//é¥æ§å™¨æ‘‡æ†ï¼ˆmax 660ï¼‰è½¬åŒ–æˆè½¦ä½“yaw pitché€Ÿåº¦ï¼ˆm/sï¼‰çš„æ¯”ä¾‹
 #define YAW_RC_SEN -0.00001f
 #define PITCH_RC_SEN -0.00000422f // 0.005
 
-// YAW×óÓÒ×ª¿ØÖÆ°´Å¥
+// YAWå·¦å³è½¬æ§åˆ¶æŒ‰é’®
 #define GIMBAL_LEFT_KEY KEY_PRESSED_OFFSET_Q
 #define GIMBAL_RIGHT_KEY KEY_PRESSED_OFFSET_E
 
-//µ×ÅÌÇ°ºó×óÓÒ¿ØÖÆ°´¼ü
+//åº•ç›˜å‰åå·¦å³æ§åˆ¶æŒ‰é”®
 #define CHASSIS_FRONT_KEY KEY_PRESSED_OFFSET_W
 #define CHASSIS_BACK_KEY KEY_PRESSED_OFFSET_S
 #define CHASSIS_LEFT_KEY KEY_PRESSED_OFFSET_A
 #define CHASSIS_RIGHT_KEY KEY_PRESSED_OFFSET_D
 
-//Ò£¿ØÆ÷ÊäÈëËÀÇø£¬ÒòÎªÒ£¿ØÆ÷´æÔÚ²îÒì£¬Ò¡¸ËÔÚÖĞ¼ä£¬ÆäÖµ²»Ò»¶¨ÎªÁã
+//é¥æ§å™¨è¾“å…¥æ­»åŒºï¼Œå› ä¸ºé¥æ§å™¨å­˜åœ¨å·®å¼‚ï¼Œæ‘‡æ†åœ¨ä¸­é—´ï¼Œå…¶å€¼ä¸ä¸€å®šä¸ºé›¶
 #define RC_DEADBAND 0
-//Ò¡¸ËËÀÇø£¨µ×ÅÌ£©
+//æ‘‡æ†æ­»åŒºï¼ˆåº•ç›˜ï¼‰
 #define CHASSIS_RC_DEADLINE 50
 
-//µ×ÅÌÔË¶¯¹ı³Ì×î´óÇ°½øËÙ¶È
+//åº•ç›˜è¿åŠ¨è¿‡ç¨‹æœ€å¤§å‰è¿›é€Ÿåº¦
 #define NORMAL_MAX_CHASSIS_SPEED_X 5.0f
-//µ×ÅÌÔË¶¯¹ı³Ì×î´óÆ½ÒÆËÙ¶È
+//åº•ç›˜è¿åŠ¨è¿‡ç¨‹æœ€å¤§å¹³ç§»é€Ÿåº¦
 #define NORMAL_MAX_CHASSIS_SPEED_Y 3.0f
 
-#define HEAT_ERROR 30 //ÈÈÁ¿ÏŞÖÆ
+#define HEAT_ERROR 30 //çƒ­é‡é™åˆ¶
 
 #ifdef __cplusplus
 extern "C"
@@ -91,7 +91,7 @@ extern "C"
 		adjust_mode_e adjust_mode;
 		shoot_mode_e shoot_mode;
 		shoot_mode_e last_shoot_mode;
-		/*ÏÂÃæµÄ¶«Î÷¶¼Ã»ÓÃ*/
+		/*ä¸‹é¢çš„ä¸œè¥¿éƒ½æ²¡ç”¨*/
 
 
 
@@ -110,15 +110,15 @@ extern "C"
 		bool_t head_go_flag;
 		bool init_state;
 
-		//    first_order_filter_type_t chassis_cmd_slow_set_vx;  //use first order filter to slow set-point.Ê¹ÓÃÒ»½×µÍÍ¨ÂË²¨¼õ»ºÉè¶¨Öµ
-		//    first_order_filter_type_t chassis_cmd_slow_set_vy;  //use first order filter to slow set-point.Ê¹ÓÃÒ»½×µÍÍ¨ÂË²¨¼õ»ºÉè¶¨Öµ
+		//    first_order_filter_type_t chassis_cmd_slow_set_vx;  //use first order filter to slow set-point.ä½¿ç”¨ä¸€é˜¶ä½é€šæ»¤æ³¢å‡ç¼“è®¾å®šå€¼
+		//    first_order_filter_type_t chassis_cmd_slow_set_vy;  //use first order filter to slow set-point.ä½¿ç”¨ä¸€é˜¶ä½é€šæ»¤æ³¢å‡ç¼“è®¾å®šå€¼
 		//
 		fp32 chassis_vx_set_temp;
 		fp32 chassis_vy_set_temp;
-		fp32 vx_max_speed; // max forward speed, unit m/s.Ç°½ø·½Ïò×î´óËÙ¶È µ¥Î»m/s
-		fp32 vx_min_speed; // max backward speed, unit m/s.ºóÍË·½Ïò×î´óËÙ¶È µ¥Î»m/s
-		fp32 vy_max_speed; // max letf speed, unit m/s.×ó·½Ïò×î´óËÙ¶È µ¥Î»m/s
-		fp32 vy_min_speed; // max right speed, unit m/s.ÓÒ·½Ïò×î´óËÙ¶È µ¥Î»m/s
+		fp32 vx_max_speed; // max forward speed, unit m/s.å‰è¿›æ–¹å‘æœ€å¤§é€Ÿåº¦ å•ä½m/s
+		fp32 vx_min_speed; // max backward speed, unit m/s.åé€€æ–¹å‘æœ€å¤§é€Ÿåº¦ å•ä½m/s
+		fp32 vy_max_speed; // max letf speed, unit m/s.å·¦æ–¹å‘æœ€å¤§é€Ÿåº¦ å•ä½m/s
+		fp32 vy_min_speed; // max right speed, unit m/s.å³æ–¹å‘æœ€å¤§é€Ÿåº¦ å•ä½m/s
 
 		system_t();
 
@@ -136,14 +136,14 @@ extern "C"
 
 	extern system_t *syspoint(void);
 
-//ÉäËÙ»·²âÊÔ
+//å°„é€Ÿç¯æµ‹è¯•
 #define SPEED_PID_KP 15
 #define SPEED_PID_KI 0
 #define SPEED_PID_KD 1
 #define SPEED_PID_MAX_OUT 30
 #define SPEED_PID_MAX_IOUT 10
 
-//Ä¦²ÁÂÖ×ªÊıÉè¶¨
+//æ‘©æ“¦è½®è½¬æ•°è®¾å®š
 #define FRICTION_L1_SPEED 4600 // 15
 #define FRICTION_L2_SPEED 4800 // 18
 #define FRICTION_L3_SPEED 7200 // 30
@@ -154,7 +154,7 @@ extern "C"
 
 #define RevChannel 1
 
-#define AN_BULLET 36864 // 38000//33903.370320855614973262032085562	//36864//33903.370320855614973262032085562		//µ¥¸ö×Óµ¯µç»úÎ»ÖÃÔö¼ÓÖµ
+#define AN_BULLET 36864 // 38000//33903.370320855614973262032085562	//36864//33903.370320855614973262032085562		//å•ä¸ªå­å¼¹ç”µæœºä½ç½®å¢åŠ å€¼
 
 	typedef enum
 	{
@@ -179,11 +179,11 @@ extern "C"
 	public:
 		Friction_Wheel_Mode friction_wheel_mode;
 		void Friction_Wheel_behaviour_init();
-		const RC_ctrl_t *Friction_wheel_RC; //Ä¦²ÁÂÖÊ¹ÓÃµÄÒ£¿ØÆ÷Ö¸Õë
-		void Friction_wheel_mode_set();		//Ä¦²ÁÂÖÄ£Ê½ÉèÖÃ
+		const RC_ctrl_t *Friction_wheel_RC; //æ‘©æ“¦è½®ä½¿ç”¨çš„é¥æ§å™¨æŒ‡é’ˆ
+		void Friction_wheel_mode_set();		//æ‘©æ“¦è½®æ¨¡å¼è®¾ç½®
 		void Friction_wheel_mode_off_set();
 		void Friction_wheel_mode_on_set();
-		void User_fix(); //×ªËÙÊÖ¶¯²¹³¥
+		void User_fix(); //è½¬é€Ÿæ‰‹åŠ¨è¡¥å¿
 		void Temp_Fix_30S();
 		void Temp_Fix_18S();
 		void Temp_Fix_15S();
@@ -222,7 +222,7 @@ extern "C"
 		void Dial_mode_init();
 		void Dial_behaviour_set();
 		void real_firc_info_update();
-		const RC_ctrl_t *Dial_RC; //²¦ÅÌÊ¹ÓÃµÄÒ£¿ØÆ÷Ö¸Õë
+		const RC_ctrl_t *Dial_RC; //æ‹¨ç›˜ä½¿ç”¨çš„é¥æ§å™¨æŒ‡é’ˆ
 		uint8_t Revolver_Switch;
 		uint8_t Revolver_last_Switch;
 		int16_t speed_time;
@@ -232,7 +232,7 @@ extern "C"
 		eRevolverCtrlMode Revolver_mode;
 		eRevolverCtrlMode last_Revolver_mode;
 
-		//²ÃÅĞÏµÍ³Êı¾İ
+		//è£åˆ¤ç³»ç»Ÿæ•°æ®
 		uint16_t heat_max;
 		int16_t heating;
 		fp32 angle;

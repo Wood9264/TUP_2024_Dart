@@ -16,20 +16,20 @@ fp32 SPEED[4];
 fp32 TEMP[4];
 
 /**
-  * @brief          ·¢Éä»ú¹¹ÈÎÎñ
+  * @brief          å‘å°„æœºæ„ä»»åŠ¡
   * @param[in]      null
   */
 void revolver_task(void const *pvParameters)
 {
-	//ÑÓÊ±
+	//å»¶æ—¶
 	vTaskDelay(REVOLVER_TASK_INIT_TIME);
 	while(1)
 	{
-		//Êı¾İ¸üĞÂ
+		//æ•°æ®æ›´æ–°
 		revolver.revolver_feedback_update();
-		//·ÖÈÎÎñ¿ØÖÆ
+		//åˆ†ä»»åŠ¡æ§åˆ¶
 		revolver.control();
-		//·¢ËÍµçÁ÷
+		//å‘é€ç”µæµ
 		CAN1_200_cmd_motor(revolver.fric_motor[0].give_current, revolver.fric_motor[1].give_current, revolver.fric_motor[2].give_current, revolver.fric_motor[3].give_current);
 		CAN2_200_cmd_motor(revolver.slipper_motor.give_current, 0, 0, 0);
 		vTaskDelay(2);
@@ -43,12 +43,12 @@ void revolver_task(void const *pvParameters)
 }
 
 /**
-  * @brief          ·¢Éä»ú¹¹ÈÎÎñ³õÊ¼»¯
+  * @brief          å‘å°„æœºæ„ä»»åŠ¡åˆå§‹åŒ–
   * @param[in]      null
   */
 revolver_task_t::revolver_task_t()
 {
-	//³õÊ¼»¯PID
+	//åˆå§‹åŒ–PID
 	fp32 slipper_speed_pid[3] = {SLIPPER_SPEED_PID_KP, SLIPPER_SPEED_PID_KI, SLIPPER_SPEED_PID_KD};
 	fp32 slipper_position_pid[3] = {SLIPPER_POSITION_PID_KP, SLIPPER_POSITION_PID_KI, SLIPPER_POSITION_PID_KD};
 	fp32 Fric_speed_pid[3] = {FRIC_SPEED_PID_KP, FRIC_SPEED_PID_KI, FRIC_SPEED_PID_KD};
@@ -65,7 +65,7 @@ revolver_task_t::revolver_task_t()
 	slipper_motor.has_calibrated = 0;
 	slipper_motor.if_shoot_begin = 0;
 
-	//µç»úÖ¸Õë
+	//ç”µæœºæŒ‡é’ˆ
 	slipper_motor.motor_measure = get_motor_measure_class(SLIPPER_MOTOR);
 	fric_motor[0].motor_measure = get_motor_measure_class(FL);
 	fric_motor[1].motor_measure = get_motor_measure_class(FR);
@@ -76,7 +76,7 @@ revolver_task_t::revolver_task_t()
 }
 
 /**
-  * @brief          ·¢Éä»ú¹¹Êı¾İ¸üĞÂ
+  * @brief          å‘å°„æœºæ„æ•°æ®æ›´æ–°
   * @param[in]      null
   */
 void revolver_task_t::revolver_feedback_update()
@@ -85,20 +85,20 @@ void revolver_task_t::revolver_feedback_update()
 	static fp32 speed_fliter_2 = 0.0f;
 	static fp32 speed_fliter_3 = 0.0f;
 
-	//»¬¿éµç»úËÙ¶ÈÂË²¨
+	//æ»‘å—ç”µæœºé€Ÿåº¦æ»¤æ³¢
 	static const fp32 fliter_num[3] = {1.725709860247969f, -0.75594777109163436f, 0.030237910843665373f};
-	//¶ş½×µÍÍ¨ÂË²¨
+	//äºŒé˜¶ä½é€šæ»¤æ³¢
 	speed_fliter_1 = speed_fliter_2;
 	speed_fliter_2 = speed_fliter_3;
 	speed_fliter_3 = speed_fliter_2 * fliter_num[0] + speed_fliter_1 * fliter_num[1] + (slipper_motor.motor_measure->speed_rpm * Motor_RMP_TO_SPEED) * fliter_num[2];
 	slipper_motor.motor_speed = speed_fliter_3;
-	//ÀÛ¼Æ±àÂëÖµ
+	//ç´¯è®¡ç¼–ç å€¼
 	slipper_motor.accumulate_ecd = slipper_motor.motor_measure->num * 8192 + slipper_motor.motor_measure->ecd;
 
 	slipper_motor.bottom_tick = HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_11);
 
 	static int16_t recali_time = 0;
-	//³ıÁËĞ£×¼µÄÊ±ºò£¬ÆäËüÊ±ºò»¬¿é²»»áÅöµ½µ×²¿´¥µã¿ª¹Ø£»Èç¹ûÅöµ½ËµÃ÷Ğ£×¼³ö´íÁË£¬ÒªÖØĞÂĞ£×¼
+	//é™¤äº†æ ¡å‡†çš„æ—¶å€™ï¼Œå…¶å®ƒæ—¶å€™æ»‘å—ä¸ä¼šç¢°åˆ°åº•éƒ¨è§¦ç‚¹å¼€å…³ï¼›å¦‚æœç¢°åˆ°è¯´æ˜æ ¡å‡†å‡ºé”™äº†ï¼Œè¦é‡æ–°æ ¡å‡†
 	if(slipper_motor.has_calibrated ==1 && slipper_motor.bottom_tick == 1)
 	{
 		recali_time++;
@@ -114,16 +114,16 @@ void revolver_task_t::revolver_feedback_update()
 }
 
 /**
- * @brief	·ÖÈÎÎñ¿ØÖÆ
+ * @brief	åˆ†ä»»åŠ¡æ§åˆ¶
 */
 void revolver_task_t::control()
 {
 	if(syspoint()->sys_mode == ZERO_FORCE)
 	{
 		ZERO_FORCE_control();
-		//Ä¦²ÁÂÖ×ªËÙ²¹³¥
+		//æ‘©æ“¦è½®è½¬é€Ÿè¡¥å¿
 		fric_speed_offset_control();
-		//Ò£¿ØÆ÷¶ÁÈ¡Ä¦²ÁÂÖ×ªËÙ
+		//é¥æ§å™¨è¯»å–æ‘©æ“¦è½®è½¬é€Ÿ
 		fric_speed_buzzer();
 	}
 	else if(syspoint()->sys_mode == ADJUST)
@@ -137,7 +137,7 @@ void revolver_task_t::control()
 }
 
 /**
- * @brief	ÎŞÁ¦Ä£Ê½
+ * @brief	æ— åŠ›æ¨¡å¼
 */
 void revolver_task_t::ZERO_FORCE_control()
 {
@@ -150,16 +150,16 @@ void revolver_task_t::ZERO_FORCE_control()
 }
 
 /**
- * @brief	Ò£¿ØÆ÷µ÷Ä¦²ÁÂÖµÄ×ªËÙ
+ * @brief	é¥æ§å™¨è°ƒæ‘©æ“¦è½®çš„è½¬é€Ÿ
 */
 void revolver_task_t::fric_speed_offset_control()
 {
 	static bool_t offset_flag = 0;
 
-	//Ò£¿ØÆ÷ÓÒÒ¡¸Ë¨J½øĞĞµ÷Õû
+	//é¥æ§å™¨å³æ‘‡æ†â†—è¿›è¡Œè°ƒæ•´
 	if (IF_RIGHT_ROCKER_RIGHT_TOP)
 	{
-		//×óÒ¡¸ËÓÒ²¦Ò»´Î+100£¬ ×ó²¦Ò»´Î-100
+		//å·¦æ‘‡æ†å³æ‹¨ä¸€æ¬¡+100ï¼Œ å·¦æ‹¨ä¸€æ¬¡-100
 		if (revolver_rc_ctrl->rc.ch[2] > 500)
 		{
 			if (offset_flag == 0)
@@ -184,7 +184,7 @@ void revolver_task_t::fric_speed_offset_control()
 }
 
 /**
- * @brief	µ÷ÕûÄ£Ê½£¬¿ÉÒÔÊÖ¶¯µ÷Õû»¬¿éµÄÎ»ÖÃ
+ * @brief	è°ƒæ•´æ¨¡å¼ï¼Œå¯ä»¥æ‰‹åŠ¨è°ƒæ•´æ»‘å—çš„ä½ç½®
 */
 void revolver_task_t::ADJUST_control()
 {
@@ -196,7 +196,7 @@ void revolver_task_t::ADJUST_control()
 		fric_motor[i].current_calculate();
 	}
 
-	//Ğ£×¼»¬¿éÁãµãºó²ÅÄÜÊÖ¶¯µ÷Õû»¬¿éÎ»ÖÃ
+	//æ ¡å‡†æ»‘å—é›¶ç‚¹åæ‰èƒ½æ‰‹åŠ¨è°ƒæ•´æ»‘å—ä½ç½®
 	if (syspoint()->adjust_mode == SLIPPER && slipper_motor.has_calibrated)
 	{
 		slipper_motor.SLIPPER_control();
@@ -229,23 +229,23 @@ void revolver_task_t::ADJUST_control()
 }
 
 /**
- * @brief	ÊÖ¶¯µ÷Õû»¬¿éÎ»ÖÃ
+ * @brief	æ‰‹åŠ¨è°ƒæ•´æ»‘å—ä½ç½®
 */
 void slipper_motor_t::SLIPPER_control()
 {
 	speed_set = (revolver.revolver_rc_ctrl->rc.ch[3]) * RC_TO_SLIPPER_SEPPD_SET;
-	//µ×²¿ÏŞÎ»»º³å
+	//åº•éƒ¨é™ä½ç¼“å†²
 	if(motor_speed < 0)
 	{
 		// position_limit_buffer(slipper_position_ecd[0]);
 	}
-	//¶¥²¿ÏŞÎ»»º³å
+	//é¡¶éƒ¨é™ä½ç¼“å†²
 	else if(motor_speed > 0)
 	{
 		// position_limit_buffer(slipper_position_ecd[MAX_DART_NUM]);
 	}
 
-	//Èí¼şÏŞÎ»
+	//è½¯ä»¶é™ä½
 	if(accumulate_ecd < slipper_position_ecd[0] && speed_set < 0)
 	{
 		speed_set = 0;
@@ -265,14 +265,14 @@ void slipper_motor_t::position_limit_buffer(fp32 limit_point)
 }
 
 /**
- * @brief	Ğ£×¼Ä£Ê½£¬Éè¶¨×îµ×²¿Îª»¬¿éµÄÁãµã
+ * @brief	æ ¡å‡†æ¨¡å¼ï¼Œè®¾å®šæœ€åº•éƒ¨ä¸ºæ»‘å—çš„é›¶ç‚¹
 */
 void slipper_motor_t::CALIBRATE_control()
 {
 	static uint16_t rc_cmd_time = 0;
-	static bool_t found_zero_point = 0; //ÊÇ·ñÕÒµ½Áãµã
+	static bool_t found_zero_point = 0; //æ˜¯å¦æ‰¾åˆ°é›¶ç‚¹
 
-	//Ò£¿ØÆ÷¨K¨L¿ªÊ¼Ğ£×¼
+	//é¥æ§å™¨â†˜â†™å¼€å§‹æ ¡å‡†
 	if(IF_LEFT_ROCKER_RIGHT_BOTTOM && IF_RIGHT_ROCKER_LEFT_BOTTOM)
 	{
 		rc_cmd_time++;
@@ -293,23 +293,23 @@ void slipper_motor_t::CALIBRATE_control()
 	}
 
 
-	//´¥µã¿ª¹Ø±»Ñ¹ÏÂ£¬ÕÒµ½Áãµã
+	//è§¦ç‚¹å¼€å…³è¢«å‹ä¸‹ï¼Œæ‰¾åˆ°é›¶ç‚¹
 	if(bottom_tick)
 	{
 		found_zero_point = 1;
 	}
 
-	//»¬¿éÏÂÒÆ
+	//æ»‘å—ä¸‹ç§»
 	if(found_zero_point == 0)
 	{
 		speed_set = CALIBRATE_DOWN_SPEED;
 	}
-	//Ñ¹ÏÂ´¥µã¿ª¹ØºóÉÏÒÆ
+	//å‹ä¸‹è§¦ç‚¹å¼€å…³åä¸Šç§»
 	else if(found_zero_point == 1 && bottom_tick == 1)
 	{
 		speed_set = CALIBRATE_UP_SPEED;
 	}
-	//»¬¿éÀë¿ª´¥µã¿ª¹Ø£¬Ğ£×¼Íê±Ï
+	//æ»‘å—ç¦»å¼€è§¦ç‚¹å¼€å…³ï¼Œæ ¡å‡†å®Œæ¯•
 	else if(found_zero_point == 1 && bottom_tick == 0)
 	{
 		speed_set = 0;
@@ -317,7 +317,7 @@ void slipper_motor_t::CALIBRATE_control()
 		found_zero_point = 0;
 		calibrate_begin = 0;
 
-		//ÉèÖÃ·ÉïÚ·¢ÉäÊ±»¬¿éÃ¿´ÎÍ£ÁôµÄÎ»ÖÃ
+		//è®¾ç½®é£é•–å‘å°„æ—¶æ»‘å—æ¯æ¬¡åœç•™çš„ä½ç½®
 		for(int i = 0; i <= MAX_DART_NUM; i++)
 		{
 			slipper_position_ecd[i] = accumulate_ecd + i * ONE_DART_ECD + CALIBRATE_OFFSET;
@@ -326,7 +326,7 @@ void slipper_motor_t::CALIBRATE_control()
 }
 
 /**
- * @brief	·¢ÉäÄ£Ê½
+ * @brief	å‘å°„æ¨¡å¼
 */
 void revolver_task_t::SHOOT_control()
 {
@@ -346,14 +346,14 @@ void revolver_task_t::SHOOT_control()
 }
 
 /**
- * @brief	×¼±¸·¢Éä£¬ÔÚ´ËÄ£Ê½ÏÂ²ÅÄÜ¿ªÆôÄ¦²ÁÂÖ
+ * @brief	å‡†å¤‡å‘å°„ï¼Œåœ¨æ­¤æ¨¡å¼ä¸‹æ‰èƒ½å¼€å¯æ‘©æ“¦è½®
 */
 void revolver_task_t::READY_control()
 {
 	static uint16_t rc_cmd_time = 0;
 	static fp32 angle_out = 0;
 
-	//Ò£¿ØÆ÷¨J¨I£¬¿ªÆôÄ¦²ÁÂÖ
+	//é¥æ§å™¨â†—â†–ï¼Œå¼€å¯æ‘©æ“¦è½®
 	if(IF_LEFT_ROCKER_RIGHT_TOP && IF_RIGHT_ROCKER_LEFT_TOP)
 	{
 		rc_cmd_time++;
@@ -382,17 +382,17 @@ void revolver_task_t::READY_control()
 		fric_motor[3].speed_set = RAMP_float(-(BASE_SPEED + fric_speed_offset), fric_motor[3].speed_set, FRIC_RAMP_BUFF);
 	}
 
-	//»¬¿éÎ»ÖÃËø¶¨
+	//æ»‘å—ä½ç½®é”å®š
 	angle_out = slipper_motor.position_pid.calc(slipper_motor.accumulate_ecd, slipper_motor.ecd_set);
 	slipper_motor.give_current = slipper_motor.speed_pid.calc(slipper_motor.motor_speed, angle_out);
 }
 
 /**
- * @brief	¿ªÊ¼·¢Éä
+ * @brief	å¼€å§‹å‘å°„
 */
 void revolver_task_t::SHOOTING_control()
 {
-	//Ä¦²ÁÂÖ×ªËÙÉè¶¨
+	//æ‘©æ“¦è½®è½¬é€Ÿè®¾å®š
 	if(is_fric_wheel_on == 0)
 	{
 		for(int i = 0; i < 4; i++)
@@ -413,7 +413,7 @@ void revolver_task_t::SHOOTING_control()
 }
 
 /**
- * @brief	·¢ÉäÊ±»¬¿éµÄ¿ØÖÆ
+ * @brief	å‘å°„æ—¶æ»‘å—çš„æ§åˆ¶
 */
 void slipper_motor_t::SHOOTING_slipper_control()
 {
@@ -421,7 +421,7 @@ void slipper_motor_t::SHOOTING_slipper_control()
 	static bool_t num_add_flag = 0;
 	static fp32 angle_out = 0;
 
-	//Èç¹ûÎ´Ğ£×¼£¬»¬¿éËø¶¨
+	//å¦‚æœæœªæ ¡å‡†ï¼Œæ»‘å—é”å®š
 	if (has_calibrated == 0)
 	{
 		angle_out = position_pid.calc(accumulate_ecd, ecd_set);
@@ -429,7 +429,7 @@ void slipper_motor_t::SHOOTING_slipper_control()
 		return;
 	}
 
-	//Ò£¿ØÆ÷×óÒ¡¸Ë¨IÃ¿´òÒ»´Î£¬·¢ÉäÊıÁ¿+1
+	//é¥æ§å™¨å·¦æ‘‡æ†â†–æ¯æ‰“ä¸€æ¬¡ï¼Œå‘å°„æ•°é‡+1
 	if (IF_LEFT_ROCKER_LEFT_TOP)
 	{
 		if_shoot_begin = 1;
@@ -444,7 +444,7 @@ void slipper_motor_t::SHOOTING_slipper_control()
 		set_num_add_flag = 0;
 	}
 
-	//¿ªÊ¼·¢ÉäÇ°£¬»¬¿éÎ»ÖÃËøËÀ
+	//å¼€å§‹å‘å°„å‰ï¼Œæ»‘å—ä½ç½®é”æ­»
 	if (if_shoot_begin == 0)
 	{
 		angle_out = position_pid.calc(accumulate_ecd, ecd_set);
@@ -452,14 +452,14 @@ void slipper_motor_t::SHOOTING_slipper_control()
 		return;
 	}
 
-	//Î´´òÍêËùÓĞ·ÉïÚ
+	//æœªæ‰“å®Œæ‰€æœ‰é£é•–
 	if (bullet_num_set <= MAX_DART_NUM)
 	{
 		ecd_set = slipper_position_ecd[bullet_num_set];
 		angle_out = position_pid.DLcalc(accumulate_ecd, ecd_set, SLIPPER_SHOOTING_SPEED);
 		give_current = speed_pid.calc(motor_speed, angle_out);
 	}
-	//Èç¹û´òÍêËùÓĞ·ÉïÚ£¬×Ô¶¯»Øµ½Áãµã
+	//å¦‚æœæ‰“å®Œæ‰€æœ‰é£é•–ï¼Œè‡ªåŠ¨å›åˆ°é›¶ç‚¹
 	else
 	{
 		ecd_set = slipper_position_ecd[0];
@@ -469,12 +469,12 @@ void slipper_motor_t::SHOOTING_slipper_control()
 }
 
 /**
- * @brief	¼ÆËã»¬¿é¾àÀëÄÄ¸öÍ£Áôµã×î½ü£¬¾ÍÈ¡ÄÄ¸ö¼Ç×÷ÒÑ¾­·¢ÉäµÄ·ÉïÚÊı
+ * @brief	è®¡ç®—æ»‘å—è·ç¦»å“ªä¸ªåœç•™ç‚¹æœ€è¿‘ï¼Œå°±å–å“ªä¸ªè®°ä½œå·²ç»å‘å°„çš„é£é•–æ•°
 */
 void slipper_motor_t::bullet_num_cal()
 {
 	int i = 0, j = 0;
-	fp32 ecd_offset[MAX_DART_NUM + 1]; //µ±Ç°»¬¿éÎ»ÖÃµÄ±àÂëÖµÓëÃ¿¸öÍ£Áôµã±àÂëÖµµÄ²î
+	fp32 ecd_offset[MAX_DART_NUM + 1]; //å½“å‰æ»‘å—ä½ç½®çš„ç¼–ç å€¼ä¸æ¯ä¸ªåœç•™ç‚¹ç¼–ç å€¼çš„å·®
 
 	for(i = 0; i <= MAX_DART_NUM; i++)
 	{
@@ -492,7 +492,7 @@ void slipper_motor_t::bullet_num_cal()
 }
 
 /**
- * @brief	Ä¦²ÁÂÖµçÁ÷¼ÆËã
+ * @brief	æ‘©æ“¦è½®ç”µæµè®¡ç®—
 */
 void fric_motor_t::current_calculate()
 {
@@ -500,7 +500,7 @@ void fric_motor_t::current_calculate()
 }
 
 /**
- * @brief	Ò£¿ØÆ÷¶ÁÈ¡Ä¦²ÁÂÖ×ªËÙ
+ * @brief	é¥æ§å™¨è¯»å–æ‘©æ“¦è½®è½¬é€Ÿ
 */
 void revolver_task_t::fric_speed_buzzer()
 {
@@ -508,14 +508,14 @@ void revolver_task_t::fric_speed_buzzer()
 
 	if (IF_RIGHT_ROCKER_RIGHT_BOTTOM)
 	{
-		//Ç§Î»
+		//åƒä½
 		if (IF_LEFT_ROCKER_RIGHT_TOP)
 		{
 			show_num = (BASE_SPEED + fric_speed_offset) / 1000;
 			buzzer_warn_error(show_num);
 
 		}
-		//°ÙÎ»
+		//ç™¾ä½
 		else if (IF_LEFT_ROCKER_LEFT_TOP)
 		{
 			show_num = ((int)(BASE_SPEED + fric_speed_offset) / 100) % 10;
