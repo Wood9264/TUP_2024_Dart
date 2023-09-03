@@ -3,12 +3,16 @@
 #include "cmsis_os.h"
 #include "FreeRTOS.h"
 
+static void GENSHIN_START();
+
 extern revolver_task_t revolver;
 
 void OLED_task(void const *pvParameters)
 {
+    vTaskDelay(2000);
     OLED_init();
-    vTaskDelay(1000);
+    //原神，启动！
+    GENSHIN_START();
 
     while (1)
     {
@@ -27,6 +31,26 @@ void OLED_task(void const *pvParameters)
         OLED_printf(3, 5, "%d", revolver.fric_motor[3].motor_measure->temperate);
 
         OLED_refresh_gram();
+        vTaskDelay(2);
+    }
+}
+
+static void GENSHIN_START()
+{
+    oled_write_byte(0x81, OLED_CMD);
+    oled_write_byte(0x00, OLED_CMD);
+
+    OLED_GENSHIN_LOGO();
+    for (int i = 0x0; i < 0x80; i++)
+    {
+        oled_write_byte(0x81, OLED_CMD);
+        oled_write_byte(i, OLED_CMD);
+        vTaskDelay(10);
+    }
+    for (int i = 0x81; i < 0xff; i++)
+    {
+        oled_write_byte(0x81, OLED_CMD);
+        oled_write_byte(i, OLED_CMD);
         vTaskDelay(2);
     }
 }

@@ -489,11 +489,37 @@ void OLED_LOGO(void)
     OLED_refresh_gram();
 }
 
+/**
+  * @brief          Ô­Éñ£¬Æô¶¯£¡
+  * @param[in]      none
+  * @retval         none
+  */
+void OLED_GENSHIN_LOGO(void)
+{
+    uint8_t temp_char = 0;
+    uint8_t x = 0, y = 0;
+    uint8_t i = 0;
+    OLED_operate_gram(PEN_CLEAR);
 
 
-
-
-
-
-
-
+    for(; y < 64; y += 8)
+    {
+        for(x = 0; x < 128; x++)
+        {
+            temp_char = GENSHIN_IMPACT_LOGO[x][y/8];
+            for(i = 0; i < 8; i++)
+            {
+                if(temp_char & 0x80)
+                {
+                    OLED_draw_point(x, y + i,PEN_WRITE);
+                }
+                else
+                {
+                    OLED_draw_point(x,y + i,PEN_CLEAR);
+                }
+                temp_char <<= 1;
+            }
+        }
+    }
+    OLED_refresh_gram();
+}

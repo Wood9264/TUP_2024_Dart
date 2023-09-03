@@ -247,6 +247,15 @@ extern void OLED_refresh_gram(void);
   */
 extern void OLED_LOGO(void);
 
+/**
+  * @brief          Ô­Éñ£¬Æô¶¯£¡
+  * @param[in]      none
+  * @retval         none
+  */
+extern void OLED_GENSHIN_LOGO(void);
+
+extern void oled_write_byte(uint8_t dat, uint8_t cmd);
+
 #ifdef __cplusplus
 }
 #endif

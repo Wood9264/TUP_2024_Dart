@@ -23,7 +23,6 @@ void revolver_task(void const *pvParameters)
 {
 	//延时
 	vTaskDelay(REVOLVER_TASK_INIT_TIME);
-	rc_ctrl.rc.s[0] = 3;
 	while(1)
 	{
 		//数据更新
