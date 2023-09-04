@@ -12,7 +12,7 @@
 #define SLIPPER_SPEED_PID_MAX_OUT 9000.0f
 #define SLIPPER_SPEED_PID_MAX_IOUT 5000.0f
 
-#define SLIPPER_POSITION_PID_KP 0.002f   //0.025f // 0.040f //0.00080f//0.00072f//0.025
+#define SLIPPER_POSITION_PID_KP 0.001f   //0.025f // 0.040f //0.00080f//0.00072f//0.025
 #define SLIPPER_POSITION_PID_KI 0
 #define SLIPPER_POSITION_PID_KD 0.01f		// 0.060f//0.000001f//0.08
 #define SLIPPER_POSITION_PID_MAX_OUT 10.0f // 45.0f
@@ -29,7 +29,7 @@
 
 #define BASE_SPEED 2000 //四个摩擦轮的基础转速
 
-#define ONE_DART_ECD (8192 * 22.5f * 1) //每发飞镖的滑块电机编码值增加量
+#define ONE_DART_ECD 134985 //每发飞镖的滑块电机编码值增加量
 #define MAX_DART_NUM 2 //发射架可装填的最大飞镖数量
 #define CALIBRATE_OFFSET 8192	//校准时编码值的补偿量。防止滑块回退时因为超调碰到触点开关
 
