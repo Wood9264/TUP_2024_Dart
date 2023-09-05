@@ -1317,6 +1317,11 @@
               <FileType>8</FileType>
               <FilePath>..\BSP\Src\BSP_led.cpp</FilePath>
             </File>
+            <File>
+              <FileName>OLED.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\BSP\Src\OLED.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1376,6 +1381,11 @@
               <FileName>revolver_task.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\Tasks\Src\revolver_task.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>OLED_task.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\Tasks\Src\OLED_task.cpp</FilePath>
             </File>
           </Files>
         </Group>

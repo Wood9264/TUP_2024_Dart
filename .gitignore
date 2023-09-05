@@ -24,9 +24,16 @@
 *.lai
 *.la
 *.a
-*.lib
 
 # Executables
 *.exe
 *.out
 *.app
+
+# Keil5
+MDK-ARM/.vscode/
+MDK-ARM/hero_test_1/
+MDK-ARM/JLinkLog.txt
+MDK-ARM/JLinkSettings.ini
+*.map
+*.uvguix.*

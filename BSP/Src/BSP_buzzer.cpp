@@ -15,11 +15,11 @@ void buzzer_off(void)
 void buzzer_warn_error(int num)
 {
 	static int show_num = 0;
-	static int stop_num = 300;
+	static int stop_num = 200;
 	if (show_num == 0 && stop_num == 0)
 	{
 		show_num = num;
-		stop_num = 300;
+		stop_num = 200;
 	}
 	else if (show_num == 0)
 	{
@@ -30,11 +30,11 @@ void buzzer_warn_error(int num)
 	{
 		static int tick = 0;
 		tick++;
-		if (tick < 150)
+		if (tick < 100)
 		{
 			buzzer_off();
 		}
-		else if (tick < 300)
+		else if (tick < 200)
 		{
 			buzzer_on(1, 10000);
 		}

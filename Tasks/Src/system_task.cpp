@@ -9,18 +9,18 @@
 
 system_t sys;
 
-/*****************È«¾Ö±äÁ¿*************************/
-int steering_mode = 1; //µ¯²Õ¸ÇÄ£Ê½ 0Îª¹Ø±Õ£¬1Îª´ò¿ª
-int vision_mode = 1;   //´òµ¯Ä£Ê½1£º1v1 ×Ô¶¯¿ª»ğ  3£º3v3 ÊÖ¶¯¿ª»ğ
-int spin_mode = 0;	   //ÊÇ·ñ¿ªÆôĞ¡ÍÓÂİ
+/*****************å…¨å±€å˜é‡*************************/
+int steering_mode = 1; //å¼¹èˆ±ç›–æ¨¡å¼ 0ä¸ºå…³é—­ï¼Œ1ä¸ºæ‰“å¼€
+int vision_mode = 1;   //æ‰“å¼¹æ¨¡å¼1ï¼š1v1 è‡ªåŠ¨å¼€ç«  3ï¼š3v3 æ‰‹åŠ¨å¼€ç«
+int spin_mode = 0;	   //æ˜¯å¦å¼€å¯å°é™€èº
 
-fp32 x_coordinate, y_coordinate;		 //×ÔÃéÎ»ÖÃui
-fp32 pre_x_coordinate, pre_y_coordinate; //×ÔÃéÔ¤²âÎ»ÖÃui
-fp32 follow_radius, pre_radius;			 //×ÔÃé×°¼×°å°ë¾¶
+fp32 x_coordinate, y_coordinate;		 //è‡ªç„ä½ç½®ui
+fp32 pre_x_coordinate, pre_y_coordinate; //è‡ªç„é¢„æµ‹ä½ç½®ui
+fp32 follow_radius, pre_radius;			 //è‡ªç„è£…ç”²æ¿åŠå¾„
 
 /***************************************************/
 /**
- * @brief          ÏµÍ³Ö÷ÈÎÎñ
+ * @brief          ç³»ç»Ÿä¸»ä»»åŠ¡
  * @param[in]      none
  */
 void system_task(void const *pvParameters)
@@ -29,7 +29,7 @@ void system_task(void const *pvParameters)
 	uint32_t currentTime;
 	while (1)
 	{
-		currentTime = xTaskGetTickCount(); //µ±Ç°ÏµÍ³Ê±¼ä
+		currentTime = xTaskGetTickCount(); //å½“å‰ç³»ç»Ÿæ—¶é—´
 		sys.mode_set();
 		sys.Transit();
 		vTaskDelayUntil(&currentTime, 1);
@@ -37,8 +37,8 @@ void system_task(void const *pvParameters)
 }
 
 /**
- * @brief 		È¡ÏµÍ³ÀàÖ¸Õë
- * @retval   ÏµÍ³¶ÔÏó
+ * @brief 		å–ç³»ç»Ÿç±»æŒ‡é’ˆ
+ * @retval   ç³»ç»Ÿå¯¹è±¡
  */
 system_t *syspoint(void)
 {
@@ -46,7 +46,7 @@ system_t *syspoint(void)
 }
 
 /**
- * @brief          ¹¹Ôìº¯Êı³õÊ¼»¯
+ * @brief          æ„é€ å‡½æ•°åˆå§‹åŒ–
  * @param[in]      null
  */
 system_t::system_t()
@@ -58,7 +58,7 @@ system_t::system_t()
 }
 
 /**
- * @brief          Ä£Ê½ÉèÖÃ
+ * @brief          æ¨¡å¼è®¾ç½®
  * @param[in]      null
  * @retval         null
  */
@@ -67,7 +67,7 @@ void system_t::mode_set()
 	last_sys_mode = sys_mode;
 	last_shoot_mode = shoot_mode;
 
-	if (IF_RC_SW0_DOWN /*|| toe_is_error(DBUS_TOE)*/)
+	if (IF_RC_SW0_DOWN || toe_is_error(DBUS_TOE))
 	{
 		sys_mode = ZERO_FORCE;
 	}
@@ -100,7 +100,7 @@ void system_t::mode_set()
 }
 
 /**
- * @brief          ÔÆÌ¨Ä£Ê½×ª»»
+ * @brief          äº‘å°æ¨¡å¼è½¬æ¢
  * @param[in]      null
  * @retval         null
  */
