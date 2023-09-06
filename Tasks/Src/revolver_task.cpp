@@ -97,6 +97,15 @@ void revolver_task_t::revolver_feedback_update()
 
 	slipper_motor.bottom_tick = HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_11);
 
+	if (slipper_motor.bottom_tick)
+	{
+		buzzer_on(3, 10000);
+	}
+	else
+	{
+		buzzer_off();
+	}
+
 	static int16_t recali_time = 0;
 	//除了校准的时候，其它时候滑块不会碰到底部触点开关；如果碰到说明校准出错了，要重新校准
 	if(slipper_motor.has_calibrated ==1 && slipper_motor.bottom_tick == 1)
