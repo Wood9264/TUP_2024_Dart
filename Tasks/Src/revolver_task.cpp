@@ -156,8 +156,33 @@ void revolver_task_t::fric_speed_offset_control()
 {
 	static bool_t offset_flag = 0;
 
-	//遥控器右摇杆↗进行调整
+	//遥控器右摇杆↗调整千位
 	if (IF_RIGHT_ROCKER_RIGHT_TOP)
+	{
+		//左摇杆右拨一次+1000， 左拨一次-1000
+		if (revolver_rc_ctrl->rc.ch[2] > 500)
+		{
+			if (offset_flag == 0)
+			{
+				fric_speed_offset += 1000;
+				offset_flag = 1;
+			}
+		}
+		else if (revolver_rc_ctrl->rc.ch[2] < -500)
+		{
+			if (offset_flag == 0)
+			{
+				fric_speed_offset -= 1000;
+				offset_flag = 1;
+			}
+		}
+		else
+		{
+			offset_flag = 0;
+		}
+	}
+	//遥控器右摇杆↖调整百位
+	else if (IF_RIGHT_ROCKER_LEFT_TOP)
 	{
 		//左摇杆右拨一次+100， 左拨一次-100
 		if (revolver_rc_ctrl->rc.ch[2] > 500)
@@ -173,6 +198,31 @@ void revolver_task_t::fric_speed_offset_control()
 			if (offset_flag == 0)
 			{
 				fric_speed_offset -= 100;
+				offset_flag = 1;
+			}
+		}
+		else
+		{
+			offset_flag = 0;
+		}
+	}
+	//遥控器右摇杆↙调整十位
+	else if (IF_RIGHT_ROCKER_LEFT_BOTTOM)
+	{
+		//左摇杆右拨一次+10， 左拨一次-10
+		if (revolver_rc_ctrl->rc.ch[2] > 500)
+		{
+			if (offset_flag == 0)
+			{
+				fric_speed_offset += 10;
+				offset_flag = 1;
+			}
+		}
+		else if (revolver_rc_ctrl->rc.ch[2] < -500)
+		{
+			if (offset_flag == 0)
+			{
+				fric_speed_offset -= 10;
 				offset_flag = 1;
 			}
 		}
@@ -506,19 +556,26 @@ void revolver_task_t::fric_speed_buzzer()
 {
 	static uint8_t show_num = 0;
 
+	//遥控器右摇杆↘进行读取
 	if (IF_RIGHT_ROCKER_RIGHT_BOTTOM)
 	{
-		//千位
+		//左摇杆↗读取千位
 		if (IF_LEFT_ROCKER_RIGHT_TOP)
 		{
 			show_num = (BASE_SPEED + fric_speed_offset) / 1000;
 			buzzer_warn_error(show_num);
 
 		}
-		//百位
+		//左摇杆↖读取百位
 		else if (IF_LEFT_ROCKER_LEFT_TOP)
 		{
 			show_num = ((int)(BASE_SPEED + fric_speed_offset) / 100) % 10;
+			buzzer_warn_error(show_num);
+		}
+		//左摇杆↙读取十位
+		else if (IF_LEFT_ROCKER_LEFT_BOTTOM)
+		{
+			show_num = ((int)(BASE_SPEED + fric_speed_offset) / 10) % 10;
 			buzzer_warn_error(show_num);
 		}
 		else
