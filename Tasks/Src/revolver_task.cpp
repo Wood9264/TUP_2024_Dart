@@ -61,6 +61,7 @@ revolver_task_t::revolver_task_t()
 		fric_motor[i].speed_pid.init(PID_POSITION, Fric_speed_pid,FRIC_SPEED_PID_MAX_OUT, FRIC_SPEED_PID_MAX_IOUT);
 	}
 	
+	fric_speed_offset = 0;
 	slipper_motor.calibrate_begin = 0;
 	slipper_motor.has_calibrated = 0;
 	slipper_motor.if_shoot_begin = 0;
