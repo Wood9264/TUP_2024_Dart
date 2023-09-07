@@ -325,51 +325,76 @@ void slipper_motor_t::position_limit_buffer(fp32 limit_point)
 
 /**
  * @brief	校准模式，设定最底部为滑块的零点
-*/
+ */
 void slipper_motor_t::CALIBRATE_control()
 {
-	static uint16_t rc_cmd_time = 0;
-	static bool_t found_zero_point = 0; //是否找到零点
+	static uint16_t rc_cmd_auto_time = 0;
+	static uint16_t rc_cmd_manual_time = 0;
 
-	//遥控器↘↙开始校准
-	if(IF_LEFT_ROCKER_RIGHT_BOTTOM && IF_RIGHT_ROCKER_LEFT_BOTTOM)
+	//遥控器↙↘开始自动校准
+	if (IF_LEFT_ROCKER_LEFT_BOTTOM && IF_RIGHT_ROCKER_RIGHT_BOTTOM)
 	{
-		rc_cmd_time++;
+		rc_cmd_auto_time++;
 	}
 	else
 	{
-		rc_cmd_time = 0;
+		rc_cmd_auto_time = 0;
 	}
-	if(rc_cmd_time > 200)
+	if (rc_cmd_auto_time > 200)
 	{
 		calibrate_begin = 1;
 	}
 
-	if(calibrate_begin == 0)
+	//遥控器↘↙手动校准，适用于触点开关失效的情况
+	if (IF_LEFT_ROCKER_RIGHT_BOTTOM && IF_RIGHT_ROCKER_LEFT_BOTTOM)
+	{
+		rc_cmd_manual_time++;
+	}
+	else
+	{
+		rc_cmd_manual_time = 0;
+	}
+	if (rc_cmd_manual_time > 200)
+	{
+		manual_calibrate();
+	}
+
+	if (calibrate_begin == 1)
+	{
+		auto_calibrate();
+	}
+	else 
 	{
 		speed_set = 0;
 		return;
 	}
+}
 
+/**
+ * @brief	自动校准
+ */
+void slipper_motor_t::auto_calibrate()
+{
+	static bool_t found_zero_point = 0; //是否找到零点
 
 	//触点开关被压下，找到零点
-	if(bottom_tick)
+	if (bottom_tick)
 	{
 		found_zero_point = 1;
 	}
 
 	//滑块下移
-	if(found_zero_point == 0)
+	if (found_zero_point == 0)
 	{
 		speed_set = CALIBRATE_DOWN_SPEED;
 	}
 	//压下触点开关后上移
-	else if(found_zero_point == 1 && bottom_tick == 1)
+	else if (found_zero_point == 1 && bottom_tick == 1)
 	{
 		speed_set = CALIBRATE_UP_SPEED;
 	}
 	//滑块离开触点开关，校准完毕
-	else if(found_zero_point == 1 && bottom_tick == 0)
+	else if (found_zero_point == 1 && bottom_tick == 0)
 	{
 		speed_set = 0;
 		has_calibrated = 1;
@@ -377,10 +402,26 @@ void slipper_motor_t::CALIBRATE_control()
 		calibrate_begin = 0;
 
 		//设置飞镖发射时滑块每次停留的位置
-		for(int i = 0; i <= MAX_DART_NUM; i++)
+		for (int i = 0; i <= MAX_DART_NUM; i++)
 		{
 			slipper_position_ecd[i] = accumulate_ecd + i * ONE_DART_ECD + CALIBRATE_OFFSET;
 		}
+	}
+}
+
+/**
+ * @brief	手动校准，适用于触点开关失效的情况
+ */
+void slipper_motor_t::manual_calibrate()
+{
+	speed_set = 0;
+	has_calibrated = 1;
+	calibrate_begin = 0;
+
+	//设置飞镖发射时滑块每次停留的位置
+	for (int i = 0; i <= MAX_DART_NUM; i++)
+	{
+		slipper_position_ecd[i] = accumulate_ecd + i * ONE_DART_ECD + CALIBRATE_OFFSET;
 	}
 }
 

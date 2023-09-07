@@ -92,6 +92,8 @@ class fric_motor_t
 		void SLIPPER_control();
 		void position_limit_buffer(fp32 limit_point);
 		void CALIBRATE_control();
+		void auto_calibrate();
+		void manual_calibrate();
 		void bullet_num_cal();
 		void SHOOTING_slipper_control();
 	};
