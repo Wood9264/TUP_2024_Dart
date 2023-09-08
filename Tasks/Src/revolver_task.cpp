@@ -23,8 +23,11 @@ void revolver_task(void const *pvParameters)
 {
 	//延时
 	vTaskDelay(REVOLVER_TASK_INIT_TIME);
+	uint32_t currentTime;
 	while(1)
 	{
+		//获取当前系统时间
+		currentTime = xTaskGetTickCount();
 		//数据更新
 		revolver.revolver_feedback_update();
 		//分任务控制
@@ -32,7 +35,7 @@ void revolver_task(void const *pvParameters)
 		//发送电流
 		CAN1_200_cmd_motor(revolver.fric_motor[0].give_current, revolver.fric_motor[1].give_current, revolver.fric_motor[2].give_current, revolver.fric_motor[3].give_current);
 		CAN2_200_cmd_motor(revolver.slipper_motor.give_current, 0, 0, 0);
-		vTaskDelay(2);
+		vTaskDelayUntil(&currentTime, 1);
 
 		for(int i = 0; i < 4; i++)
 		{
@@ -341,7 +344,7 @@ void slipper_motor_t::CALIBRATE_control()
 	{
 		rc_cmd_auto_time = 0;
 	}
-	if (rc_cmd_auto_time > 200)
+	if (rc_cmd_auto_time > 400)
 	{
 		calibrate_begin = 1;
 	}
@@ -355,7 +358,7 @@ void slipper_motor_t::CALIBRATE_control()
 	{
 		rc_cmd_manual_time = 0;
 	}
-	if (rc_cmd_manual_time > 200)
+	if (rc_cmd_manual_time > 400)
 	{
 		manual_calibrate();
 	}
@@ -463,7 +466,7 @@ void revolver_task_t::READY_control()
 	{
 		rc_cmd_time = 0;
 	}
-	if(rc_cmd_time > 200)
+	if(rc_cmd_time > 400)
 	{
 		is_fric_wheel_on = 1;
 	}
