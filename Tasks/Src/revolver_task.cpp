@@ -4,6 +4,7 @@
 #include "Revolver_task.h"
 #include "judge_task.h"
 #include "BSP_buzzer.h"
+#include "monitor_task.h"
 
 revolver_task_t  revolver; 
 
