@@ -13,6 +13,8 @@
 extern "C"{
 #endif
 
+#ifdef __cplusplus
+
 	typedef struct
 	{
 		uint8_t buzzer_off_tick;	   //蜂鸣器启动持续的tick数
@@ -24,13 +26,13 @@ extern "C"{
 		uint16_t buzzer_pwm;		   //蜂鸣器的重载值
 	} buzzer_t;
 
-#ifdef __cplusplus
+#endif
+
 /**
   * @brief          监视任务
   * @param[in]      pvParameters: NULL
   * @retval         none
   */
-#endif
 extern void	monitor_task(void const *argument);
 extern void buzzer_warn(uint8_t num_set, uint16_t interval, uint16_t psc, uint16_t pwm);
 #ifdef __cplusplus
