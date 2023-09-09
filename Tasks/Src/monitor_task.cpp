@@ -44,12 +44,12 @@ static void led_monitor(void)
 	//闪蓝灯，视觉通信正常
 	if (vision_info_point()->RxPacketSed.SOF == 0xB5)
 	{
-		if (tick < 100)
+		if (tick < 200)
 		{
 			aRGB_led_show(0xFF0000FF);
 			tick++;
 		}
-		else if (tick < 200)
+		else if (tick < 400)
 		{
 			aRGB_led_show(0x000000FF);
 			tick++;
@@ -62,13 +62,13 @@ static void led_monitor(void)
 	//红灯快闪，CAN线设备掉线
 	else if ((toe_is_error(CAN_TOE) == 1))
 	{
-		if (tick < 50)
+		if (tick < 100)
 		{
 			aRGB_led_show(0xFFFF0000);
 			tick++;
 		}
 
-		else if (tick < 100)
+		else if (tick < 200)
 		{
 			aRGB_led_show(0x00FF0000);
 			tick++;
@@ -81,12 +81,12 @@ static void led_monitor(void)
 	//闪绿灯，正常运行，无视觉
 	else
 	{
-		if (tick < 100)
+		if (tick < 200)
 		{
 			aRGB_led_show(0xFF00FF00);
 			tick++;
 		}
-		else if (tick < 200)
+		else if (tick < 400)
 		{
 			aRGB_led_show(0x0000FF00);
 			tick++;
