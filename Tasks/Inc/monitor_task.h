@@ -16,7 +16,7 @@ extern "C"{
 	typedef struct
 	{
 		uint8_t buzzer_off_tick;	   //蜂鸣器启动持续的tick数
-		uint16_t buzzer_tick;		   //蜂鸣器响停的tick计数
+		uint16_t buzzer_tick;		   //蜂鸣器响、停持续的tick计数
 		uint8_t buzzer_warn_num;	   //蜂鸣器报警的次数
 		uint8_t buzzer_warn_num_set;   //蜂鸣器报警的设定次数
 		uint16_t buzzer_warn_interval; //蜂鸣器响的间隔时间

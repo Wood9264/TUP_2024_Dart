@@ -16,6 +16,7 @@ buzzer_t buzzer;
 
 static void led_monitor(void);
 static void buzzer_monitor(void);
+void buzzer_warn_init(void);
 
 /**
   * @brief          监视任务
@@ -24,6 +25,9 @@ static void buzzer_monitor(void);
   */
 void monitor_task(void const *argument)
 {
+	vTaskDelay(1000);
+	buzzer_warn_init();
+
 	while (1)
 	{
 		led_monitor();
@@ -179,4 +183,19 @@ void buzzer_warn(uint8_t num_set, uint16_t interval, uint16_t psc, uint16_t pwm)
 		//重置停止计数
 		buzzer.buzzer_off_tick = 0;
 	}
+}
+
+/**
+  * @brief          蜂鸣器初始化
+  * @retval         none
+  */
+void buzzer_warn_init(void)
+{
+	buzzer.buzzer_off_tick = BUZZER_MAX_OFF_TICK;
+	buzzer.buzzer_tick = 0;
+	buzzer.buzzer_warn_num = 0;
+	buzzer.buzzer_warn_num_set = 0;
+	buzzer.buzzer_warn_interval = 0;
+	buzzer.buzzer_psc = 0;
+	buzzer.buzzer_pwm = 0;
 }
