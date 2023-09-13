@@ -288,7 +288,8 @@ bool_t RC_held_single_return(CHANNEL_int channel, uint16_t time)
 
 /**
  * @brief       判断双组合键保持按下或左右摇杆同时保持在指定位置的时间是否超过阈值，并在满足条件时只返回一次1
- * @param[in]   channel：要检测的通道
+ * @param[in]   channel_1：要检测的第一个通道
+ * @param[in]	channel_2：要检测的第二个通道
  * @param[in]   time：保持的时间阈值
  * @retval      如果通道连续保持了指定的时间，只返回一次1；否则返回0
  */
