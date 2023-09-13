@@ -131,8 +131,11 @@ void revolver_task_t::control()
 	if(syspoint()->sys_mode == ZERO_FORCE)
 	{
 		ZERO_FORCE_control();
-		//摩擦轮转速补偿
-		fric_speed_offset_control();
+		if(IF_RC_SW1_MID)
+		{
+			//摩擦轮转速补偿
+			fric_speed_offset_control();
+		}
 		//遥控器读取摩擦轮转速
 		fric_speed_buzzer();
 	}
