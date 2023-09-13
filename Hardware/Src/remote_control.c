@@ -245,7 +245,7 @@ bool_t RC_held_continuous_return(CHANNEL_int channel, uint16_t time)
 			active_time[channel]++;
 			return 0;
 		}
-		else if (active_time[channel] >= time)
+		else
 		{
 			return 1;
 		}
