@@ -85,6 +85,37 @@ typedef __packed struct
         } key;
 
 } RC_ctrl_t;
+
+typedef enum
+{
+        KEY_W,                     // 0
+        KEY_S,                     // 1
+        KEY_A,                     // 2
+        KEY_D,                     // 3
+        KEY_SHIFT,                 // 4
+        KEY_CTRL,                  // 5
+        KEY_Q,                     // 6
+        KEY_E,                     // 7
+        KEY_R,                     // 8
+        KEY_F,                     // 9
+        KEY_G,                     // 10
+        KEY_Z,                     // 11
+        KEY_X,                     // 12
+        KEY_C,                     // 13
+        KEY_V,                     // 14
+        KEY_B,                     // 15
+        MOUSE_L,                   // 16
+        MOUSE_R,                   // 17
+        RIGHT_ROCKER_RIGHT_TOP,    // 18
+        RIGHT_ROCKER_LEFT_TOP,     // 19
+        RIGHT_ROCKER_LEFT_BOTTOM,  // 20
+        RIGHT_ROCKER_RIGHT_BOTTOM, // 21
+        LEFT_ROCKER_RIGHT_TOP,     // 22
+        LEFT_ROCKER_LEFT_TOP,      // 23
+        LEFT_ROCKER_LEFT_BOTTOM,   // 24
+        LEFT_ROCKER_RIGHT_BOTTOM,  // 25
+} CHANNEL_int;
+
 typedef __packed struct
 {
 	uint16_t rc_keyB_time;  //按键B的时间
@@ -163,6 +194,9 @@ extern uint8_t RC_data_is_error(void);
 extern void slove_RC_lost(void);
 extern void slove_data_error(void);
 extern void sbus_to_usart1(uint8_t *sbus);
+extern bool_t RC_held_continuous_return(CHANNEL_int channel, uint16_t time);
+extern bool_t RC_held_single_return(CHANNEL_int channel, uint16_t time);
+extern bool_t RC_double_held_single_return(CHANNEL_int channel_1, CHANNEL_int channel_2, uint16_t time);
 extern RC_ctrl_t rc_ctrl;
 
 

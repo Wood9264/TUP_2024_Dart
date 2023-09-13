@@ -194,3 +194,127 @@ static void sbus_to_rc(volatile const uint8_t *sbus_buf, RC_ctrl_t *rc_ctrl)
     rc_ctrl->rc.ch[3] -= RC_CH_VALUE_OFFSET;
     rc_ctrl->rc.ch[4] -= RC_CH_VALUE_OFFSET;
 }
+
+/**
+ * @brief       判断按键是否被按下或摇杆是否在指定位置
+ * @param[in]   channel：要判断的通道
+ * @retval      指定通道被激活返回1，否则返回0
+ * @attention   本函数只由RC_time_count函数调用
+*/
+static bool_t is_channel_activate(CHANNEL_int channel)
+{
+    switch (channel)
+    {
+    case MOUSE_L:
+        return IF_MOUSE_PRESSED_LEFT;
+    case MOUSE_R:
+        return IF_MOUSE_PRESSED_RIGH;
+    case RIGHT_ROCKER_RIGHT_TOP:
+        return IF_RIGHT_ROCKER_RIGHT_TOP;
+    case RIGHT_ROCKER_LEFT_TOP:
+        return IF_RIGHT_ROCKER_LEFT_TOP;
+    case RIGHT_ROCKER_LEFT_BOTTOM:
+        return IF_RIGHT_ROCKER_LEFT_BOTTOM;
+    case RIGHT_ROCKER_RIGHT_BOTTOM:
+        return IF_RIGHT_ROCKER_RIGHT_BOTTOM;
+    case LEFT_ROCKER_RIGHT_TOP:
+        return IF_LEFT_ROCKER_RIGHT_TOP;
+    case LEFT_ROCKER_LEFT_TOP:
+        return IF_LEFT_ROCKER_LEFT_TOP;
+    case LEFT_ROCKER_LEFT_BOTTOM:
+        return IF_LEFT_ROCKER_LEFT_BOTTOM;
+    case LEFT_ROCKER_RIGHT_BOTTOM:
+        return IF_LEFT_ROCKER_RIGHT_BOTTOM;
+    default:
+        return (rc_ctrl.key.v & ((uint16_t)1 << channel) != 0);
+    }
+}
+
+/**
+ * @brief       判断按键保持按下或摇杆保持在指定位置的时间是否超过阈值
+ * @param[in]   channel：要检测的通道
+ * @param[in]   time：保持的时间阈值
+ * @retval      如果通道连续保持了指定的时间，返回1；否则返回0
+ */
+bool_t RC_held_continuous_return(CHANNEL_int channel, uint16_t time)
+{
+    static uint16_t active_time[25];
+
+    if (is_channel_activate(channel))
+    {
+        if (active_time[channel] < time)
+        {
+            active_time[channel]++;
+            return 0;
+        }
+        else if (active_time[channel] >= time)
+        {
+            return 1;
+        }
+    }
+    else
+    {
+        active_time[channel] = 0;
+        return 0;
+    }
+}
+
+/**
+ * @brief       判断按键保持按下或摇杆保持在指定位置的时间是否超过阈值，并在满足条件时只返回一次1
+ * @param[in]   channel：要检测的通道
+ * @param[in]   time：保持的时间阈值
+ * @retval      如果通道连续保持了指定的时间，只返回一次1；否则返回0
+ */
+bool_t RC_held_single_return(CHANNEL_int channel, uint16_t time)
+{
+    static bool_t has_returned_one[25];
+
+    if (RC_held_continuous_return(channel, time))
+    {
+        if (has_returned_one[channel])
+        {
+            return 0;
+        }
+        else
+        {
+            has_returned_one[channel] = 1;
+            return 1;
+        }
+    }
+    else
+    {
+        has_returned_one[channel] = 0;
+        return 0;
+    }
+}
+
+/**
+ * @brief       判断双组合键保持按下或左右摇杆同时保持在指定位置的时间是否超过阈值，并在满足条件时只返回一次1
+ * @param[in]   channel：要检测的通道
+ * @param[in]   time：保持的时间阈值
+ * @retval      如果通道连续保持了指定的时间，只返回一次1；否则返回0
+ */
+bool_t RC_double_held_single_return(CHANNEL_int channel_1, CHANNEL_int channel_2, uint16_t time)
+{
+    static bool_t has_returned_one[25];
+
+    if (RC_held_continuous_return(channel_1, time) && RC_held_continuous_return(channel_2, time))
+    {
+        if (has_returned_one[channel_1] || has_returned_one[channel_2])
+        {
+            return 0;
+        }
+        else
+        {
+            has_returned_one[channel_1] = 1;
+            has_returned_one[channel_2] = 1;
+            return 1;
+        }
+    }
+    else
+    {
+        has_returned_one[channel_1] = 0;
+        has_returned_one[channel_2] = 0;
+        return 0;
+    }
+}
