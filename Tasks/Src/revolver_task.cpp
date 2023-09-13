@@ -408,6 +408,7 @@ void slipper_motor_t::manual_calibrate()
 	{
 		slipper_position_ecd[i] = accumulate_ecd + i * ONE_DART_ECD + CALIBRATE_OFFSET;
 	}
+	buzzer_warn(0, 0, 3, 10000);
 }
 
 /**
