@@ -104,11 +104,7 @@ void revolver_task_t::revolver_feedback_update()
 
 	if (slipper_motor.bottom_tick)
 	{
-		buzzer_on(3, 10000);
-	}
-	else
-	{
-		buzzer_off();
+		buzzer_warn(0, 0, 3, 10000);
 	}
 
 	static int16_t recali_time = 0;
@@ -618,28 +614,26 @@ void revolver_task_t::fric_speed_buzzer()
 		if (IF_LEFT_ROCKER_RIGHT_TOP)
 		{
 			show_num = (BASE_SPEED + fric_speed_offset) / 1000;
-			buzzer_warn_error(show_num);
+			buzzer_warn(show_num, 100, 1, 10000);
 
 		}
 		//左摇杆↖读取百位
 		else if (IF_LEFT_ROCKER_LEFT_TOP)
 		{
 			show_num = ((int)(BASE_SPEED + fric_speed_offset) / 100) % 10;
-			buzzer_warn_error(show_num);
+			buzzer_warn(show_num, 100, 1, 10000);
 		}
 		//左摇杆↙读取十位
 		else if (IF_LEFT_ROCKER_LEFT_BOTTOM)
 		{
 			show_num = ((int)(BASE_SPEED + fric_speed_offset) / 10) % 10;
-			buzzer_warn_error(show_num);
+			buzzer_warn(show_num, 100, 1, 10000);
 		}
-		else
+		//左摇杆↘读取个位
+		else if (IF_LEFT_ROCKER_RIGHT_BOTTOM)
 		{
-			buzzer_off();
+			show_num = ((int)(BASE_SPEED + fric_speed_offset)) % 10;
+			buzzer_warn(show_num, 100, 1, 10000);
 		}
-	}
-	else
-	{
-		buzzer_off();
 	}
 }
