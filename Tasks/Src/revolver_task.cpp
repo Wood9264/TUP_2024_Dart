@@ -179,6 +179,7 @@ void revolver_task_t::fric_speed_offset_control()
 			{
 				fric_speed_offset += 1000;
 				offset_flag = 1;
+				buzzer_warn(0, 0, 1, 10000);
 			}
 		}
 		else if (revolver_rc_ctrl->rc.ch[2] < -500)
@@ -187,6 +188,7 @@ void revolver_task_t::fric_speed_offset_control()
 			{
 				fric_speed_offset -= 1000;
 				offset_flag = 1;
+				buzzer_warn(0, 0, 1, 10000);
 			}
 		}
 		else
@@ -204,6 +206,7 @@ void revolver_task_t::fric_speed_offset_control()
 			{
 				fric_speed_offset += 100;
 				offset_flag = 1;
+				buzzer_warn(0, 0, 2, 10000);
 			}
 		}
 		else if (revolver_rc_ctrl->rc.ch[2] < -500)
@@ -212,6 +215,7 @@ void revolver_task_t::fric_speed_offset_control()
 			{
 				fric_speed_offset -= 100;
 				offset_flag = 1;
+				buzzer_warn(0, 0, 2, 10000);
 			}
 		}
 		else
@@ -229,6 +233,7 @@ void revolver_task_t::fric_speed_offset_control()
 			{
 				fric_speed_offset += 10;
 				offset_flag = 1;
+				buzzer_warn(0, 0, 3, 10000);
 			}
 		}
 		else if (revolver_rc_ctrl->rc.ch[2] < -500)
@@ -237,6 +242,7 @@ void revolver_task_t::fric_speed_offset_control()
 			{
 				fric_speed_offset -= 10;
 				offset_flag = 1;
+				buzzer_warn(0, 0, 3, 10000);
 			}
 		}
 		else
