@@ -332,33 +332,14 @@ void slipper_motor_t::position_limit_buffer(fp32 limit_point)
  */
 void slipper_motor_t::CALIBRATE_control()
 {
-	static uint16_t rc_cmd_auto_time = 0;
-	static uint16_t rc_cmd_manual_time = 0;
-
 	//遥控器↙↘开始自动校准
-	if (IF_LEFT_ROCKER_LEFT_BOTTOM && IF_RIGHT_ROCKER_RIGHT_BOTTOM)
-	{
-		rc_cmd_auto_time++;
-	}
-	else
-	{
-		rc_cmd_auto_time = 0;
-	}
-	if (rc_cmd_auto_time > 400)
+	if (RC_double_held_single_return(LEFT_ROCKER_LEFT_BOTTOM, RIGHT_ROCKER_RIGHT_BOTTOM, 400))
 	{
 		calibrate_begin = 1;
 	}
 
 	//遥控器↘↙手动校准，适用于触点开关失效的情况
-	if (IF_LEFT_ROCKER_RIGHT_BOTTOM && IF_RIGHT_ROCKER_LEFT_BOTTOM)
-	{
-		rc_cmd_manual_time++;
-	}
-	else
-	{
-		rc_cmd_manual_time = 0;
-	}
-	if (rc_cmd_manual_time > 400)
+	if (RC_double_held_single_return(LEFT_ROCKER_RIGHT_BOTTOM, RIGHT_ROCKER_LEFT_BOTTOM, 400))
 	{
 		manual_calibrate();
 	}
@@ -454,19 +435,10 @@ void revolver_task_t::SHOOT_control()
 */
 void revolver_task_t::READY_control()
 {
-	static uint16_t rc_cmd_time = 0;
 	static fp32 angle_out = 0;
 
 	//遥控器↗↖，开启摩擦轮
-	if(IF_LEFT_ROCKER_RIGHT_TOP && IF_RIGHT_ROCKER_LEFT_TOP)
-	{
-		rc_cmd_time++;
-	}
-	else
-	{
-		rc_cmd_time = 0;
-	}
-	if(rc_cmd_time > 400)
+	if(RC_double_held_single_return(LEFT_ROCKER_RIGHT_TOP, RIGHT_ROCKER_LEFT_TOP, 400))
 	{
 		is_fric_wheel_on = 1;
 	}
@@ -521,8 +493,6 @@ void revolver_task_t::SHOOTING_control()
 */
 void slipper_motor_t::SHOOTING_slipper_control()
 {
-	static bool_t set_num_add_flag = 0;
-	static bool_t num_add_flag = 0;
 	static fp32 angle_out = 0;
 
 	//如果未校准，滑块锁定
@@ -534,21 +504,13 @@ void slipper_motor_t::SHOOTING_slipper_control()
 	}
 
 	//遥控器左摇杆↖每打一次，发射数量+1
-	if (IF_LEFT_ROCKER_LEFT_TOP)
+	if (RC_held_single_return(LEFT_ROCKER_LEFT_TOP, 1))
 	{
 		if_shoot_begin = 1;
-		if (set_num_add_flag == 0)
-		{
-			bullet_num_set++;
-			set_num_add_flag = 1;
-		}
-	}
-	else
-	{
-		set_num_add_flag = 0;
+		bullet_num_set++;
 	}
 
-	//开始发射前，滑块位置锁死
+	//开始发射前，滑块位置锁死在当前位置
 	if (if_shoot_begin == 0)
 	{
 		angle_out = position_pid.calc(accumulate_ecd, ecd_set);
