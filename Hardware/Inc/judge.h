@@ -10,22 +10,22 @@
 #define    TRUE     1
 #define    BLUE     0
 #define    RED      1
-//2021²ÃÅĞÏµÍ³¹Ù·½½Ó¿ÚĞ­Òé
-//Í¨ĞÅ·½Ê½ÊÇ´®¿Ú£¬ÅäÖÃÎª²¨ÌØÂÊ 115200£¬ 8 Î»Êı¾İÎ»£¬ 1 Î»Í£Ö¹Î»£¬ÎŞÓ²¼şÁ÷¿Ø£¬ÎŞĞ£ÑéÎ»
-//ÃüÁîÂë 0x0001~ 0x020A  ¹Ù·½ÏÂ·¢±ÈÈüÊı¾İ
-//ÃüÁîÂë 0x0301 »úÆ÷ÈË¼ä½»»¥Êı¾İ ¿É½øĞĞ»úÆ÷ÈË¼äÊı¾İ½»»¥ ui»æÖÆ
-//ÃüÁîÂë 0x0302 ×Ô¶¨Òå¿ØÖÆÆ÷½»»¥Êı¾İ½Ó¿Ú
-//ÃüÁîÂë 0x0303 ¿Í»§¶ËĞ¡µØÍ¼½»»¥Êı¾İ ÔÆÌ¨ÊÖÍ¨¹ı¿Í»§¶ËÏò»úÆ÷ÈËÏÂ·¢ĞÅÏ¢
-//ÃüÁîÂë 0x0304 ¼üÅÌ¡¢Êó±êĞÅÏ¢£¬Í¨¹ıÍ¼´«´®¿Ú·¢ËÍ
-//ÃüÁîÂë 0x0305 ¿Í»§¶ËĞ¡µØÍ¼½ÓÊÕĞÅÏ¢  ½ÓÊÕÀ×´ï·¢ËÍµÄ×ø±êĞÅÏ¢
+//2021è£åˆ¤ç³»ç»Ÿå®˜æ–¹æ¥å£åè®®
+//é€šä¿¡æ–¹å¼æ˜¯ä¸²å£ï¼Œé…ç½®ä¸ºæ³¢ç‰¹ç‡ 115200ï¼Œ 8 ä½æ•°æ®ä½ï¼Œ 1 ä½åœæ­¢ä½ï¼Œæ— ç¡¬ä»¶æµæ§ï¼Œæ— æ ¡éªŒä½
+//å‘½ä»¤ç  0x0001~ 0x020A  å®˜æ–¹ä¸‹å‘æ¯”èµ›æ•°æ®
+//å‘½ä»¤ç  0x0301 æœºå™¨äººé—´äº¤äº’æ•°æ® å¯è¿›è¡Œæœºå™¨äººé—´æ•°æ®äº¤äº’ uiç»˜åˆ¶
+//å‘½ä»¤ç  0x0302 è‡ªå®šä¹‰æ§åˆ¶å™¨äº¤äº’æ•°æ®æ¥å£
+//å‘½ä»¤ç  0x0303 å®¢æˆ·ç«¯å°åœ°å›¾äº¤äº’æ•°æ® äº‘å°æ‰‹é€šè¿‡å®¢æˆ·ç«¯å‘æœºå™¨äººä¸‹å‘ä¿¡æ¯
+//å‘½ä»¤ç  0x0304 é”®ç›˜ã€é¼ æ ‡ä¿¡æ¯ï¼Œé€šè¿‡å›¾ä¼ ä¸²å£å‘é€
+//å‘½ä»¤ç  0x0305 å®¢æˆ·ç«¯å°åœ°å›¾æ¥æ”¶ä¿¡æ¯  æ¥æ”¶é›·è¾¾å‘é€çš„åæ ‡ä¿¡æ¯
 
-//³¤¶È¸ù¾İĞ­Òé¶¨Òå,Êı¾İ¶Î³¤¶ÈÎªnĞèÒª¸ù¾İÖ¡Í·µÚ¶ş×Ö½ÚÀ´»ñÈ¡
-#define    LEN_HEADER    5        //Ö¡Í·³¤
-#define    LEN_CMDID     2        //ÃüÁîÂë³¤¶È
-//#define    LEN_DATA      32        //Êı¾İ³¤¶È
-#define    LEN_TAIL      2	      //Ö¡Î²CRC16
+//é•¿åº¦æ ¹æ®åè®®å®šä¹‰,æ•°æ®æ®µé•¿åº¦ä¸ºnéœ€è¦æ ¹æ®å¸§å¤´ç¬¬äºŒå­—èŠ‚æ¥è·å–
+#define    LEN_HEADER    5        //å¸§å¤´é•¿
+#define    LEN_CMDID     2        //å‘½ä»¤ç é•¿åº¦
+//#define    LEN_DATA      32        //æ•°æ®é•¿åº¦
+#define    LEN_TAIL      2	      //å¸§å°¾CRC16
 
-//ÆğÊ¼×Ö½Ú,Ğ­Òé¹Ì¶¨Îª0xA5
+//èµ·å§‹å­—èŠ‚,åè®®å›ºå®šä¸º0xA5
 #define    JUDGE_FRAME_HEADER         (0xA5)
 
 #ifdef __cplusplus
@@ -33,7 +33,7 @@ extern "C"{
 #endif
 	
 #ifdef __cplusplus
-//Í¨ĞÅĞ­ÒéÆ«ÒÆÎ»ÖÃ
+//é€šä¿¡åè®®åç§»ä½ç½®
 typedef enum 
 {
 	FRAME_HEADER         = 0,
@@ -43,12 +43,12 @@ typedef enum
 }JudgeFrameOffset;
 
 
-//5×Ö½ÚÖ¡Í·,Æ«ÒÆÎ»ÖÃ
+//5å­—èŠ‚å¸§å¤´,åç§»ä½ç½®
 typedef enum
 {
-	SOF          = 0,//ÆğÊ¼Î»
-	DATA_LENGTH  = 1,//Ö¡ÄÚÊı¾İ³¤¶È,¸ù¾İÕâ¸öÀ´»ñÈ¡Êı¾İ³¤¶È
-	SEQ          = 3,//°üĞòºÅ
+	SOF          = 0,//èµ·å§‹ä½
+	DATA_LENGTH  = 1,//å¸§å†…æ•°æ®é•¿åº¦,æ ¹æ®è¿™ä¸ªæ¥è·å–æ•°æ®é•¿åº¦
+	SEQ          = 3,//åŒ…åºå·
 	CRC8         = 4 //CRC8
 }FrameHeaderOffset;
 
@@ -79,76 +79,76 @@ enum judge_robot_ID{
 	plane_blue     = 106,
 };
 
-/***************ÃüÁîÂëID********************/
+/***************å‘½ä»¤ç ID********************/
 
 /* 
-   ID: 0x0001  Byte:  11    ±ÈÈü×´Ì¬Êı¾İ£¬                  1Hz ÖÜÆÚ·¢ËÍ      
-   ID: 0x0002  Byte:  1     ±ÈÈü½á¹ûÊı¾İ£¬                  ±ÈÈü½áÊøºó·¢ËÍ      
-   ID: 0x0003  Byte:  32//Ô­28    ±ÈÈü»úÆ÷ÈËÑªÁ¿Êı¾İ£¬            1Hz ÖÜÆÚ·¢ËÍ  
-   ID: 0x0004  Byte:  3     ·ÉïÚ·¢Éä×´Ì¬£¬                  ·ÉïÚ·¢Éäºó·¢ËÍ
-   ID: 0x0005  Byte:  11    ÈË¹¤ÖÇÄÜÌôÕ½Èü¼Ó³ÉÓë³Í·£Çø×´Ì¬   1Hz ÖÜÆÚ·¢ËÍ 
-   ID: 0X0101  Byte:  4    ³¡µØÊÂ¼şÊı¾İ£¬                  1Hz ÖÜÆÚ·¢ËÍ 
-   ID: 0X0102  Byte:  3    ³¡µØ²¹¸øÕ¾¶¯×÷±êÊ¶Êı¾İ£¬        ¶¯×÷·¢Éúºó·¢ËÍ
-   ID: 0x0103  Byte:  2    	ÇëÇó²¹¸øÕ¾²¹µ¯Êı¾İ	          ÓÉ²ÎÈü¶Ó·¢ËÍ£¬ÉÏÏŞ 10Hz¡££¨RM ¶Ô¿¹ÈüÉĞÎ´¿ª·Å£©   
-   ID: 0X0104  Byte:  3//Ô­2    ²ÃÅĞ¾¯¸æÊı¾İ£¬                  ¾¯¸æ·¢Éúºó·¢ËÍ        
-   ID: 0x0105  Byte:  1    ·ÉïÚ·¢Éä¿Úµ¹¼ÆÊ±£¬              1Hz ÖÜÆÚ·¢ËÍ
+   ID: 0x0001  Byte:  11    æ¯”èµ›çŠ¶æ€æ•°æ®ï¼Œ                  1Hz å‘¨æœŸå‘é€      
+   ID: 0x0002  Byte:  1     æ¯”èµ›ç»“æœæ•°æ®ï¼Œ                  æ¯”èµ›ç»“æŸåå‘é€      
+   ID: 0x0003  Byte:  32//åŸ28    æ¯”èµ›æœºå™¨äººè¡€é‡æ•°æ®ï¼Œ            1Hz å‘¨æœŸå‘é€  
+   ID: 0x0004  Byte:  3     é£é•–å‘å°„çŠ¶æ€ï¼Œ                  é£é•–å‘å°„åå‘é€
+   ID: 0x0005  Byte:  11    äººå·¥æ™ºèƒ½æŒ‘æˆ˜èµ›åŠ æˆä¸æƒ©ç½šåŒºçŠ¶æ€   1Hz å‘¨æœŸå‘é€ 
+   ID: 0X0101  Byte:  4    åœºåœ°äº‹ä»¶æ•°æ®ï¼Œ                  1Hz å‘¨æœŸå‘é€ 
+   ID: 0X0102  Byte:  3    åœºåœ°è¡¥ç»™ç«™åŠ¨ä½œæ ‡è¯†æ•°æ®ï¼Œ        åŠ¨ä½œå‘ç”Ÿåå‘é€
+   ID: 0x0103  Byte:  2    	è¯·æ±‚è¡¥ç»™ç«™è¡¥å¼¹æ•°æ®	          ç”±å‚èµ›é˜Ÿå‘é€ï¼Œä¸Šé™ 10Hzã€‚ï¼ˆRM å¯¹æŠ—èµ›å°šæœªå¼€æ”¾ï¼‰   
+   ID: 0X0104  Byte:  3//åŸ2    è£åˆ¤è­¦å‘Šæ•°æ®ï¼Œ                  è­¦å‘Šå‘ç”Ÿåå‘é€        
+   ID: 0x0105  Byte:  1    é£é•–å‘å°„å£å€’è®¡æ—¶ï¼Œ              1Hz å‘¨æœŸå‘é€
 
 
-   ID: 0x0202  Byte:  16//Ô­14   ÊµÊ±¹¦ÂÊÈÈÁ¿Êı¾İ£¬              50Hz ÖÜÆÚ·¢ËÍ
-   ID: 0x0203  Byte:  16   »úÆ÷ÈËÎ»ÖÃÊı¾İ£¬                10Hz ·¢ËÍ
-   ID: 0x0204  Byte:  1    »úÆ÷ÈËÔöÒæÊı¾İ£¬                1Hz ÖÜÆÚ·¢ËÍ
-   ID: 0x0205  Byte:  3    ¿ÕÖĞ»úÆ÷ÈËÄÜÁ¿×´Ì¬Êı¾İ£¬        10Hz ÖÜÆÚ·¢ËÍ£¬Ö»ÓĞ¿ÕÖĞ»úÆ÷ÈËÖ÷¿Ø·¢ËÍ
-   ID: 0x0206  Byte:  1    ÉËº¦×´Ì¬Êı¾İ£¬                  ÉËº¦·¢Éúºó·¢ËÍ
-   ID: 0x0207  Byte:  7//Ô­6    ÊµÊ±Éä»÷Êı¾İ£¬                  ×Óµ¯·¢Éäºó·¢ËÍ
-	 ID: 0x0208  Byte: 6//Ô­2    µ¯ÍèÊ£Óà·¢ÉäÊı£¬½ö¿ÕÖĞ»úÆ÷ÈË£¬ÉÚ±ø»úÆ÷ÈËÒÔ¼° ICRA »úÆ÷ÈË·¢ËÍ  1Hz ÖÜÆÚ·¢ËÍ
-	 ID: 0x0209  Byte:  4    »úÆ÷ÈË RFID ×´Ì¬£¬              1Hz ÖÜÆÚ·¢ËÍ
-	 ID: 0x020A  Byte:  12   ·ÉïÚ»úÆ÷ÈË¿Í»§¶ËÖ¸ÁîÊı¾İ£¬      10Hz ÖÜÆÚ·¢ËÍ
-	 ID: 0x0301  Byte:  n    »úÆ÷ÈË¼ä½»»¥Êı¾İ£¬              ·¢ËÍ·½´¥·¢·¢ËÍ£¬
-	 ID: 0x0302  Byte:  n    ×Ô¶¨Òå¿ØÖÆÆ÷½»»¥Êı¾İ½Ó¿Ú,      Í¨¹ı¿Í»§¶Ë´¥·¢·¢ËÍ£¬ÉÏÏŞ 30Hz
-	 ID: 0x0303  Byte:  15   ¿Í»§¶ËĞ¡µØÍ¼½»»¥Êı¾İ,  		   ´¥·¢·¢ËÍ
-	 ID: 0x0304  Byte:  12	 ¼üÅÌ¡¢Êó±êĞÅÏ¢,					Í¨¹ıÍ¼´«´®¿Ú·¢ËÍ
-	 ID: 0X0305  Byte:  10	 ¿Í»§¶ËĞ¡µØÍ¼½ÓÊÕĞÅÏ¢		×î´ó½ÓÊÕÆµÂÊ£º 10Hz À×´ïÕ¾·¢ËÍµÄ×ø±êĞÅÏ¢¿ÉÒÔ±»ËùÓĞ¼º·½²Ù×÷ÊÖÔÚµÚÒ»ÊÓ½ÇĞ¡µØÍ¼¿´µ½¡£	
+   ID: 0x0202  Byte:  16//åŸ14   å®æ—¶åŠŸç‡çƒ­é‡æ•°æ®ï¼Œ              50Hz å‘¨æœŸå‘é€
+   ID: 0x0203  Byte:  16   æœºå™¨äººä½ç½®æ•°æ®ï¼Œ                10Hz å‘é€
+   ID: 0x0204  Byte:  1    æœºå™¨äººå¢ç›Šæ•°æ®ï¼Œ                1Hz å‘¨æœŸå‘é€
+   ID: 0x0205  Byte:  3    ç©ºä¸­æœºå™¨äººèƒ½é‡çŠ¶æ€æ•°æ®ï¼Œ        10Hz å‘¨æœŸå‘é€ï¼Œåªæœ‰ç©ºä¸­æœºå™¨äººä¸»æ§å‘é€
+   ID: 0x0206  Byte:  1    ä¼¤å®³çŠ¶æ€æ•°æ®ï¼Œ                  ä¼¤å®³å‘ç”Ÿåå‘é€
+   ID: 0x0207  Byte:  7//åŸ6    å®æ—¶å°„å‡»æ•°æ®ï¼Œ                  å­å¼¹å‘å°„åå‘é€
+	 ID: 0x0208  Byte: 6//åŸ2    å¼¹ä¸¸å‰©ä½™å‘å°„æ•°ï¼Œä»…ç©ºä¸­æœºå™¨äººï¼Œå“¨å…µæœºå™¨äººä»¥åŠ ICRA æœºå™¨äººå‘é€  1Hz å‘¨æœŸå‘é€
+	 ID: 0x0209  Byte:  4    æœºå™¨äºº RFID çŠ¶æ€ï¼Œ              1Hz å‘¨æœŸå‘é€
+	 ID: 0x020A  Byte:  12   é£é•–æœºå™¨äººå®¢æˆ·ç«¯æŒ‡ä»¤æ•°æ®ï¼Œ      10Hz å‘¨æœŸå‘é€
+	 ID: 0x0301  Byte:  n    æœºå™¨äººé—´äº¤äº’æ•°æ®ï¼Œ              å‘é€æ–¹è§¦å‘å‘é€ï¼Œ
+	 ID: 0x0302  Byte:  n    è‡ªå®šä¹‰æ§åˆ¶å™¨äº¤äº’æ•°æ®æ¥å£,      é€šè¿‡å®¢æˆ·ç«¯è§¦å‘å‘é€ï¼Œä¸Šé™ 30Hz
+	 ID: 0x0303  Byte:  15   å®¢æˆ·ç«¯å°åœ°å›¾äº¤äº’æ•°æ®,  		   è§¦å‘å‘é€
+	 ID: 0x0304  Byte:  12	 é”®ç›˜ã€é¼ æ ‡ä¿¡æ¯,					é€šè¿‡å›¾ä¼ ä¸²å£å‘é€
+	 ID: 0X0305  Byte:  10	 å®¢æˆ·ç«¯å°åœ°å›¾æ¥æ”¶ä¿¡æ¯		æœ€å¤§æ¥æ”¶é¢‘ç‡ï¼š 10Hz é›·è¾¾ç«™å‘é€çš„åæ ‡ä¿¡æ¯å¯ä»¥è¢«æ‰€æœ‰å·±æ–¹æ“ä½œæ‰‹åœ¨ç¬¬ä¸€è§†è§’å°åœ°å›¾çœ‹åˆ°ã€‚	
 
 */
 
 
-//ÃüÁîÂëID,ÓÃÀ´ÅĞ¶Ï½ÓÊÕµÄÊÇÊ²Ã´Êı¾İ
+//å‘½ä»¤ç ID,ç”¨æ¥åˆ¤æ–­æ¥æ”¶çš„æ˜¯ä»€ä¹ˆæ•°æ®
 typedef enum
 { 
-	ID_game_status                 = 0x0001,//±ÈÈü×´Ì¬Êı¾İ,1HzÖÜÆÚ·¢ËÍ
-	ID_game_result 	               = 0x0002,//±ÈÈü½á¹ûÊı¾İ£¬±ÈÈü½áÊøºó·¢ËÍ
-	ID_robot_HP                    = 0x0003,//±ÈÈü»úÆ÷ÈËÑªÁ¿Êı¾İ,1HzÖÜÆÚ·¢ËÍ
-	ID_dart_status                 = 0x0004,//·ÉïÚ·¢Éä×´Ì¬£¬·ÉïÚ·¢ÉäÊ±·¢ËÍ
+	ID_game_status                 = 0x0001,//æ¯”èµ›çŠ¶æ€æ•°æ®,1Hzå‘¨æœŸå‘é€
+	ID_game_result 	               = 0x0002,//æ¯”èµ›ç»“æœæ•°æ®ï¼Œæ¯”èµ›ç»“æŸåå‘é€
+	ID_robot_HP                    = 0x0003,//æ¯”èµ›æœºå™¨äººè¡€é‡æ•°æ®,1Hzå‘¨æœŸå‘é€
+	ID_dart_status                 = 0x0004,//é£é•–å‘å°„çŠ¶æ€ï¼Œé£é•–å‘å°„æ—¶å‘é€
 	ID_ICRA_buff_debuff_zone_status= 0x0005,
-	ID_event_data                  = 0x0101,//³¡µØÊÂ¼şÊı¾İ,1Hz ÖÜÆÚ·¢ËÍ 
-	ID_supply_projectile_action    = 0x0102,//³¡µØ²¹¸øÕ¾¶¯×÷±êÊ¶Êı¾İ,¶¯×÷·¢Éúºó·¢ËÍ
-	ID_referee_warning             = 0x0104,//²ÃÅĞ¾¯¸æÊı¾İ£¬¾¯¸æ·¢Éúºó·¢ËÍ 
-	ID_dart_remaining_time         = 0x0105,//·ÉïÚ·¢Éä¿Úµ¹¼ÆÊ±£¬1HzÖÜÆÚ·¢ËÍ
-  ID_robot_status                = 0x0201,//»úÆ÷ÈË×´Ì¬Êı¾İ,10HzÖÜÆÚ·¢ËÍ 
-	ID_heat_data                   = 0x0202,//ÊµÊ±¹¦ÂÊÈÈÁ¿Êı¾İ,50HzÖÜÆÚ·¢ËÍ 
-	ID_robot_pos                   = 0x0203,//»úÆ÷ÈËÎ»ÖÃÊı¾İ,10Hz·¢ËÍ
-	ID_buff                        = 0x0204,//»úÆ÷ÈËÔöÒæÊı¾İ,1Hz ÖÜÆÚ·¢ËÍ 
-	ID_aerial_robot_energy         = 0x0205,//¿ÕÖĞ»úÆ÷ÈËÄÜÁ¿×´Ì¬Êı¾İ,10HzÖÜÆÚ·¢ËÍ,Ö»ÓĞ¿ÕÖĞ»úÆ÷ÈËÖ÷¿Ø·¢ËÍ
-	ID_robot_hurt                  = 0x0206,//ÉËº¦×´Ì¬Êı¾İ,£¬ÉËº¦·¢Éúºó·¢ËÍ
-	ID_shoot_data                  = 0x0207,//ÊµÊ±Éä»÷Êı¾İ,×Óµ¯·¢Éäºó·¢ËÍ 
-	ID_bullet_remaining            = 0x0208,//µ¯ÍèÊ£Óà·¢ÉäÊı£¬½ö¿ÕÖĞ»úÆ÷ÈË£¬ÉÚ±ø»úÆ÷ÈËÒÔ¼° ICRA »úÆ÷ÈË·¢ËÍ£¬1Hz ÖÜÆÚ·¢ËÍ
-	ID_rfid_status                 = 0x0209,//»úÆ÷ÈË RFID ×´Ì¬£¬1Hz ÖÜÆÚ·¢ËÍ 
-	ID_dart_client_cmd             = 0x020A,//·ÉïÚ»úÆ÷ÈË¿Í»§¶ËÖ¸ÁîÊı¾İ£¬10Hz ÖÜÆÚ·¢ËÍ 
-	ID_robot_interactive_header_data      = 0x0301, //»úÆ÷ÈË¼ä½»»¥Êı¾İ£¬·¢ËÍ·½´¥·¢·¢ËÍ
-	ID_customize_controller_interaction_data_interface     = 0x0302, //×Ô¶¨Òå¿ØÖÆÆ÷½»»¥Êı¾İ½Ó¿Ú£¬Í¨¹ı¿Í»§¶Ë´¥·¢·¢ËÍ£¬ÉÏÏŞ 30Hz
-  ID_minimap_interactive_data    = 0x0303, //¿Í»§¶ËĞ¡µØÍ¼½»»¥Êı¾İ£¬´¥·¢·¢ËÍ
-	ID_keybord_and_mouse_massage   = 0x0304, //¼üÅÌ¡¢Êó±êĞÅÏ¢£¬Í¨¹ıÍ¼´«´®¿Ú·¢ËÍ
-	ID_client_map_command     	   = 0x0305, //À×´ïÕ¾·¢ËÍµÄ×ø±êĞÅÏ¢¿ÉÒÔ±»ËùÓĞ¼º·½²Ù×÷ÊÖÔÚµÚÒ»ÊÓ½ÇĞ¡µØÍ¼¿´µ½
+	ID_event_data                  = 0x0101,//åœºåœ°äº‹ä»¶æ•°æ®,1Hz å‘¨æœŸå‘é€ 
+	ID_supply_projectile_action    = 0x0102,//åœºåœ°è¡¥ç»™ç«™åŠ¨ä½œæ ‡è¯†æ•°æ®,åŠ¨ä½œå‘ç”Ÿåå‘é€
+	ID_referee_warning             = 0x0104,//è£åˆ¤è­¦å‘Šæ•°æ®ï¼Œè­¦å‘Šå‘ç”Ÿåå‘é€ 
+	ID_dart_remaining_time         = 0x0105,//é£é•–å‘å°„å£å€’è®¡æ—¶ï¼Œ1Hzå‘¨æœŸå‘é€
+  ID_robot_status                = 0x0201,//æœºå™¨äººçŠ¶æ€æ•°æ®,10Hzå‘¨æœŸå‘é€ 
+	ID_heat_data                   = 0x0202,//å®æ—¶åŠŸç‡çƒ­é‡æ•°æ®,50Hzå‘¨æœŸå‘é€ 
+	ID_robot_pos                   = 0x0203,//æœºå™¨äººä½ç½®æ•°æ®,10Hzå‘é€
+	ID_buff                        = 0x0204,//æœºå™¨äººå¢ç›Šæ•°æ®,1Hz å‘¨æœŸå‘é€ 
+	ID_aerial_robot_energy         = 0x0205,//ç©ºä¸­æœºå™¨äººèƒ½é‡çŠ¶æ€æ•°æ®,10Hzå‘¨æœŸå‘é€,åªæœ‰ç©ºä¸­æœºå™¨äººä¸»æ§å‘é€
+	ID_robot_hurt                  = 0x0206,//ä¼¤å®³çŠ¶æ€æ•°æ®,ï¼Œä¼¤å®³å‘ç”Ÿåå‘é€
+	ID_shoot_data                  = 0x0207,//å®æ—¶å°„å‡»æ•°æ®,å­å¼¹å‘å°„åå‘é€ 
+	ID_bullet_remaining            = 0x0208,//å¼¹ä¸¸å‰©ä½™å‘å°„æ•°ï¼Œä»…ç©ºä¸­æœºå™¨äººï¼Œå“¨å…µæœºå™¨äººä»¥åŠ ICRA æœºå™¨äººå‘é€ï¼Œ1Hz å‘¨æœŸå‘é€
+	ID_rfid_status                 = 0x0209,//æœºå™¨äºº RFID çŠ¶æ€ï¼Œ1Hz å‘¨æœŸå‘é€ 
+	ID_dart_client_cmd             = 0x020A,//é£é•–æœºå™¨äººå®¢æˆ·ç«¯æŒ‡ä»¤æ•°æ®ï¼Œ10Hz å‘¨æœŸå‘é€ 
+	ID_robot_interactive_header_data      = 0x0301, //æœºå™¨äººé—´äº¤äº’æ•°æ®ï¼Œå‘é€æ–¹è§¦å‘å‘é€
+	ID_customize_controller_interaction_data_interface     = 0x0302, //è‡ªå®šä¹‰æ§åˆ¶å™¨äº¤äº’æ•°æ®æ¥å£ï¼Œé€šè¿‡å®¢æˆ·ç«¯è§¦å‘å‘é€ï¼Œä¸Šé™ 30Hz
+  ID_minimap_interactive_data    = 0x0303, //å®¢æˆ·ç«¯å°åœ°å›¾äº¤äº’æ•°æ®ï¼Œè§¦å‘å‘é€
+	ID_keybord_and_mouse_massage   = 0x0304, //é”®ç›˜ã€é¼ æ ‡ä¿¡æ¯ï¼Œé€šè¿‡å›¾ä¼ ä¸²å£å‘é€
+	ID_client_map_command     	   = 0x0305, //é›·è¾¾ç«™å‘é€çš„åæ ‡ä¿¡æ¯å¯ä»¥è¢«æ‰€æœ‰å·±æ–¹æ“ä½œæ‰‹åœ¨ç¬¬ä¸€è§†è§’å°åœ°å›¾çœ‹åˆ°
 
 } CmdID;
 
-//ÃüÁîÂëÊı¾İ¶Î³¤,¸ù¾İ¹Ù·½Ğ­ÒéÀ´¶¨Òå³¤¶È
+//å‘½ä»¤ç æ•°æ®æ®µé•¿,æ ¹æ®å®˜æ–¹åè®®æ¥å®šä¹‰é•¿åº¦
 typedef enum
 {
 		/* Std */
-	LEN_FRAME_HEAD 	                 = 5,	// Ö¡Í·³¤¶È
-	LEN_CMD_ID 		                   = 2,	// ÃüÁîÂë³¤¶È
-	LEN_FRAME_TAIL 	                 = 2,	// Ö¡Î²CRC16
+	LEN_FRAME_HEAD 	                 = 5,	// å¸§å¤´é•¿åº¦
+	LEN_CMD_ID 		                   = 2,	// å‘½ä»¤ç é•¿åº¦
+	LEN_FRAME_TAIL 	                 = 2,	// å¸§å°¾CRC16
 	
 	LEN_game_status                  =  11,	//0x0001
 	LEN_game_result                  =  1,	//0x0002
@@ -177,38 +177,38 @@ typedef enum
 
 
 
-/*±ÈÈü×´Ì¬Êı¾İ£º 0x0001      ·¢ËÍ·¶Î§£ºËùÓĞ»úÆ÷ÈË¡£*/
+/*æ¯”èµ›çŠ¶æ€æ•°æ®ï¼š 0x0001      å‘é€èŒƒå›´ï¼šæ‰€æœ‰æœºå™¨äººã€‚*/
 typedef __packed struct
 {
-//Óï·¨£ºÔÚ×Ô¶¨ÒåµÄ±äÁ¿ºóÃæ¼ÓÉÏ£ºÊı×Ö ±íÃ÷¸Ã±äÁ¿ËùÕ¼µÄÎ»Êı
+//è¯­æ³•ï¼šåœ¨è‡ªå®šä¹‰çš„å˜é‡åé¢åŠ ä¸Šï¼šæ•°å­— è¡¨æ˜è¯¥å˜é‡æ‰€å çš„ä½æ•°
 uint8_t game_type : 4;
 uint8_t game_progress : 4;
 uint16_t stage_remain_time;
 	
 uint64_t SyncTimeStamp;	
 } ext_game_status_t;
-/* 0-3 bit£º ±ÈÈüÀàĞÍ
-	 1£º RoboMaster »ú¼×´óÊ¦Èü£»
-	 2£º RoboMaster »ú¼×´óÊ¦µ¥ÏîÈü£»
-	 3£º ICRA RoboMaster ÈË¹¤ÖÇÄÜÌôÕ½Èü
-	 4£º RoboMaster ÁªÃËÈü 3V3
-	 5£º RoboMaster ÁªÃËÈü 1V1
-	 4-7 bit£º µ±Ç°±ÈÈü½×¶Î
-	 0£º Î´¿ªÊ¼±ÈÈü£»
-	 1£º ×¼±¸½×¶Î£»
-	 2£º ×Ô¼ì½×¶Î£»
-	 3£º 5s µ¹¼ÆÊ±£»
-	 4£º ¶ÔÕ½ÖĞ£»
-   5£º ±ÈÈü½áËãÖĞ
+/* 0-3 bitï¼š æ¯”èµ›ç±»å‹
+	 1ï¼š RoboMaster æœºç”²å¤§å¸ˆèµ›ï¼›
+	 2ï¼š RoboMaster æœºç”²å¤§å¸ˆå•é¡¹èµ›ï¼›
+	 3ï¼š ICRA RoboMaster äººå·¥æ™ºèƒ½æŒ‘æˆ˜èµ›
+	 4ï¼š RoboMaster è”ç›Ÿèµ› 3V3
+	 5ï¼š RoboMaster è”ç›Ÿèµ› 1V1
+	 4-7 bitï¼š å½“å‰æ¯”èµ›é˜¶æ®µ
+	 0ï¼š æœªå¼€å§‹æ¯”èµ›ï¼›
+	 1ï¼š å‡†å¤‡é˜¶æ®µï¼›
+	 2ï¼š è‡ªæ£€é˜¶æ®µï¼›
+	 3ï¼š 5s å€’è®¡æ—¶ï¼›
+	 4ï¼š å¯¹æˆ˜ä¸­ï¼›
+   5ï¼š æ¯”èµ›ç»“ç®—ä¸­
 */
 
-/*±ÈÈü½á¹ûÊı¾İ£º 0x0002     ·¢ËÍ·¶Î§£ºËùÓĞ»úÆ÷ÈË¡£*/
+/*æ¯”èµ›ç»“æœæ•°æ®ï¼š 0x0002     å‘é€èŒƒå›´ï¼šæ‰€æœ‰æœºå™¨äººã€‚*/
 typedef __packed struct
 {
 uint8_t winner;
 } ext_game_result_t;
 
-/*»úÆ÷ÈËÑªÁ¿Êı¾İ 0x0003     ·¢ËÍ·¶Î§£ºËùÓĞ»úÆ÷ÈË¡£*/
+/*æœºå™¨äººè¡€é‡æ•°æ® 0x0003     å‘é€èŒƒå›´ï¼šæ‰€æœ‰æœºå™¨äººã€‚*/
 typedef __packed struct
 {
 uint16_t red_1_robot_HP;
@@ -229,7 +229,7 @@ uint16_t blue_outpost_HP;
 uint16_t blue_base_HP;
 } ext_game_robot_HP_t;
 
-/*·ÉïÚ·¢Éä×´Ì¬£º 0x0004          ·¢ËÍ·¶Î§£ºËùÓĞ»úÆ÷ÈË¡£*/
+/*é£é•–å‘å°„çŠ¶æ€ï¼š 0x0004          å‘é€èŒƒå›´ï¼šæ‰€æœ‰æœºå™¨äººã€‚*/
 typedef __packed struct
 {
 uint8_t dart_belong;
@@ -237,7 +237,7 @@ uint16_t stage_remaining_time;
 } ext_dart_status_t;
 
 
-/*ÈË¹¤ÖÇÄÜÌôÕ½Èü¼Ó³ÉÓë³Í·£Çø×´Ì¬£º 0x0005   ·¢ËÍ·¶Î§£ºËùÓĞ»úÆ÷ÈË¡£*/
+/*äººå·¥æ™ºèƒ½æŒ‘æˆ˜èµ›åŠ æˆä¸æƒ©ç½šåŒºçŠ¶æ€ï¼š 0x0005   å‘é€èŒƒå›´ï¼šæ‰€æœ‰æœºå™¨äººã€‚*/
 typedef __packed struct
 {
 uint8_t F1_zone_status:1;
@@ -258,13 +258,13 @@ uint16_t blue1_bullet_left;
 uint16_t blue2_bullet_left;
 } ext_ICRA_buff_debuff_zone_status_t;
 
-/*³¡µØÊÂ¼şÊı¾İ£º 0x0101      ·¢ËÍ·¶Î§£º ¼º·½»úÆ÷ÈË*/
+/*åœºåœ°äº‹ä»¶æ•°æ®ï¼š 0x0101      å‘é€èŒƒå›´ï¼š å·±æ–¹æœºå™¨äºº*/
 typedef __packed struct
 {
 uint32_t event_type;
 } ext_event_data_t;
 
-/*²¹¸øÕ¾¶¯×÷±êÊ¶£º 0x0102                ·¢ËÍ·¶Î§£º¼º·½»úÆ÷ÈË*/
+/*è¡¥ç»™ç«™åŠ¨ä½œæ ‡è¯†ï¼š 0x0102                å‘é€èŒƒå›´ï¼šå·±æ–¹æœºå™¨äºº*/
 typedef __packed struct
 {
 uint8_t supply_projectile_id;
@@ -273,20 +273,20 @@ uint8_t supply_projectile_step;
 uint8_t supply_projectile_num;
 } ext_supply_projectile_action_t;
 
-/*²ÃÅĞ¾¯¸æĞÅÏ¢£º cmd_id      0x0104         ·¢ËÍ·¶Î§£º¼º·½»úÆ÷ÈË*/
+/*è£åˆ¤è­¦å‘Šä¿¡æ¯ï¼š cmd_id      0x0104         å‘é€èŒƒå›´ï¼šå·±æ–¹æœºå™¨äºº*/
 typedef __packed struct
 {
 uint8_t level;
 uint8_t foul_robot_id;
 } ext_referee_warning_t;
 
-/*·ÉïÚ·¢Éä¿Úµ¹¼ÆÊ±£º cmd_id   0x0105      ·¢ËÍ·¶Î§£º¼º·½»úÆ÷ÈË*/
+/*é£é•–å‘å°„å£å€’è®¡æ—¶ï¼š cmd_id   0x0105      å‘é€èŒƒå›´ï¼šå·±æ–¹æœºå™¨äºº*/
 typedef __packed struct
 {
 uint8_t dart_remaining_time;
 } ext_dart_remaining_time_t;
 
-/*±ÈÈü»úÆ÷ÈË×´Ì¬£º 0x0201                  ·¢ËÍ·¶Î§£ºµ¥Ò»»úÆ÷ÈË*/
+/*æ¯”èµ›æœºå™¨äººçŠ¶æ€ï¼š 0x0201                  å‘é€èŒƒå›´ï¼šå•ä¸€æœºå™¨äºº*/
 typedef __packed struct
 {
 uint8_t robot_id;
@@ -308,7 +308,7 @@ uint8_t mains_power_chassis_output : 1;
 uint8_t mains_power_shooter_output : 1;
 } ext_game_robot_status_t;
 
-/*ÊµÊ±¹¦ÂÊÈÈÁ¿Êı¾İ£º 0x0202                ·¢ËÍ·¶Î§£ºµ¥Ò»»úÆ÷ÈË*/
+/*å®æ—¶åŠŸç‡çƒ­é‡æ•°æ®ï¼š 0x0202                å‘é€èŒƒå›´ï¼šå•ä¸€æœºå™¨äºº*/
 typedef __packed struct
 {
 uint16_t chassis_volt;
@@ -320,7 +320,7 @@ uint16_t shooter_id2_17mm_cooling_heat;
 uint16_t shooter_id1_42mm_cooling_heat;
 } ext_power_heat_data_t;
 
-/*»úÆ÷ÈËÎ»ÖÃ£º 0x0203                     ·¢ËÍ·¶Î§£ºµ¥Ò»»úÆ÷ÈË¡£*/
+/*æœºå™¨äººä½ç½®ï¼š 0x0203                     å‘é€èŒƒå›´ï¼šå•ä¸€æœºå™¨äººã€‚*/
 typedef __packed struct
 {
 float x;
@@ -329,26 +329,26 @@ float z;
 float yaw;
 } ext_game_robot_pos_t;
 
-/*»úÆ÷ÈËÔöÒæ£º 0x0204                      ·¢ËÍ·¶Î§£ºµ¥Ò»»úÆ÷ÈË¡£*/
+/*æœºå™¨äººå¢ç›Šï¼š 0x0204                      å‘é€èŒƒå›´ï¼šå•ä¸€æœºå™¨äººã€‚*/
 typedef __packed struct
 {
 uint8_t power_rune_buff;
 }ext_buff_t;
 
-/*¿ÕÖĞ»úÆ÷ÈËÄÜÁ¿×´Ì¬£º 0x0205              ·¢ËÍ·¶Î§£ºµ¥Ò»»úÆ÷ÈË*/
+/*ç©ºä¸­æœºå™¨äººèƒ½é‡çŠ¶æ€ï¼š 0x0205              å‘é€èŒƒå›´ï¼šå•ä¸€æœºå™¨äºº*/
 typedef __packed struct
 {
 uint8_t attack_time;
 } aerial_robot_energy_t;
 
-/*ÉËº¦×´Ì¬£º 0x0206¡£                      ·¢ËÍ·¶Î§£ºµ¥Ò»»úÆ÷ÈË¡£*/
+/*ä¼¤å®³çŠ¶æ€ï¼š 0x0206ã€‚                      å‘é€èŒƒå›´ï¼šå•ä¸€æœºå™¨äººã€‚*/
 typedef __packed struct
 {
 uint8_t armor_id : 4;
 uint8_t hurt_type : 4;
 } ext_robot_hurt_t;
 
-/*ÊµÊ±Éä»÷ĞÅÏ¢£º 0x0207                    ·¢ËÍ·¶Î§£ºµ¥Ò»»úÆ÷ÈË¡£*/
+/*å®æ—¶å°„å‡»ä¿¡æ¯ï¼š 0x0207                    å‘é€èŒƒå›´ï¼šå•ä¸€æœºå™¨äººã€‚*/
 typedef __packed struct
 {
 uint8_t bullet_type;
@@ -357,7 +357,7 @@ uint8_t bullet_freq;
 float bullet_speed;
 } ext_shoot_data_t;
 
-/*×Óµ¯Ê£Óà·¢ÉäÊı£º 0x0208                  ·¢ËÍ·¶Î§£ºµ¥Ò»»úÆ÷ÈË¡£¿ÕÖĞ»úÆ÷ÈË£¬ÉÚ±ø»úÆ÷ÈËÒÔ¼° ICRA »úÆ÷ÈË,Ö÷¿Ø·¢ËÍ*/
+/*å­å¼¹å‰©ä½™å‘å°„æ•°ï¼š 0x0208                  å‘é€èŒƒå›´ï¼šå•ä¸€æœºå™¨äººã€‚ç©ºä¸­æœºå™¨äººï¼Œå“¨å…µæœºå™¨äººä»¥åŠ ICRA æœºå™¨äºº,ä¸»æ§å‘é€*/
 typedef __packed struct
 {
 uint16_t bullet_remaining_num_17mm;
@@ -366,13 +366,13 @@ uint16_t coin_remaining_num;
 } ext_bullet_remaining_t;
 
 
-/*»úÆ÷ÈË RFID ×´Ì¬£º 0x0209                ·¢ËÍ·¶Î§£ºµ¥Ò»»úÆ÷ÈË*/
+/*æœºå™¨äºº RFID çŠ¶æ€ï¼š 0x0209                å‘é€èŒƒå›´ï¼šå•ä¸€æœºå™¨äºº*/
 typedef __packed struct
 {
 uint32_t rfid_status;
 } ext_rfid_status_t;
 
-/*·ÉïÚ»úÆ÷ÈË¿Í»§¶ËÖ¸ÁîÊı¾İ£º 0x020A        ·¢ËÍ·¶Î§£ºµ¥Ò»»úÆ÷ÈË*/
+/*é£é•–æœºå™¨äººå®¢æˆ·ç«¯æŒ‡ä»¤æ•°æ®ï¼š 0x020A        å‘é€èŒƒå›´ï¼šå•ä¸€æœºå™¨äºº*/
 typedef __packed struct
 {
 uint8_t dart_launch_opening_status;
@@ -383,54 +383,54 @@ uint16_t operate_launch_cmd_time;
 
 
 
-/*»úÆ÷ÈË¼ä½»»¥Êı¾İ   0x0301*/
+/*æœºå™¨äººé—´äº¤äº’æ•°æ®   0x0301*/
 
 /* 
-	½»»¥Êı¾İ°üÀ¨Ò»¸öÍ³Ò»µÄÊı¾İ¶ÎÍ·½á¹¹¡£
-  Êı¾İ¶Î°üº¬ÁËÄÚÈİID£¬·¢ËÍÕßÒÔ¼°½ÓÊÕÕßµÄIDºÍÄÚÈİÊı¾İ¶Î£¬
-  Õû¸ö½»»¥Êı¾İµÄ°ü×Ü¹²³¤×î´óÎª 128 ¸ö×Ö½Ú£¬
-  ¼õÈ¥ frame_header,cmd_id ºÍ frame_tail ¹² 9 ¸ö×Ö½Ú
-  ÒÔ¼°Êı¾İ¶ÎÍ·½á¹¹µÄ 6 ¸ö×Ö½Ú£¬¹Ê¶ø·¢ËÍµÄÄÚÈİÊı¾İ¶Î×î´óÎª 113
+	äº¤äº’æ•°æ®åŒ…æ‹¬ä¸€ä¸ªç»Ÿä¸€çš„æ•°æ®æ®µå¤´ç»“æ„ã€‚
+  æ•°æ®æ®µåŒ…å«äº†å†…å®¹IDï¼Œå‘é€è€…ä»¥åŠæ¥æ”¶è€…çš„IDå’Œå†…å®¹æ•°æ®æ®µï¼Œ
+  æ•´ä¸ªäº¤äº’æ•°æ®çš„åŒ…æ€»å…±é•¿æœ€å¤§ä¸º 128 ä¸ªå­—èŠ‚ï¼Œ
+  å‡å» frame_header,cmd_id å’Œ frame_tail å…± 9 ä¸ªå­—èŠ‚
+  ä»¥åŠæ•°æ®æ®µå¤´ç»“æ„çš„ 6 ä¸ªå­—èŠ‚ï¼Œæ•…è€Œå‘é€çš„å†…å®¹æ•°æ®æ®µæœ€å¤§ä¸º 113
 
-	»úÆ÷ÈË ID£º                                                                                                                                                                                                                                                                                                                                             
-	1£¬Ó¢ĞÛ(ºì)£»
-	2£¬¹¤³Ì(ºì)£»
-	3/4/5£¬²½±ø(ºì)£»
-	6£¬¿ÕÖĞ(ºì)£»
-	7£¬ÉÚ±ø(ºì)£»
-  9£¬À×´ïÕ¾£¨ºì£©
-	101£¬Ó¢ĞÛ(À¶)£»
-	102£¬¹¤³Ì(À¶)£»
-	103/104/105£¬²½±ø(À¶)£»
-	106£¬¿ÕÖĞ(À¶)£»
-	107£¬ÉÚ±ø(À¶)£º
-  109£¬À×´ïÕ¾£¨À¶£©	
+	æœºå™¨äºº IDï¼š                                                                                                                                                                                                                                                                                                                                             
+	1ï¼Œè‹±é›„(çº¢)ï¼›
+	2ï¼Œå·¥ç¨‹(çº¢)ï¼›
+	3/4/5ï¼Œæ­¥å…µ(çº¢)ï¼›
+	6ï¼Œç©ºä¸­(çº¢)ï¼›
+	7ï¼Œå“¨å…µ(çº¢)ï¼›
+  9ï¼Œé›·è¾¾ç«™ï¼ˆçº¢ï¼‰
+	101ï¼Œè‹±é›„(è“)ï¼›
+	102ï¼Œå·¥ç¨‹(è“)ï¼›
+	103/104/105ï¼Œæ­¥å…µ(è“)ï¼›
+	106ï¼Œç©ºä¸­(è“)ï¼›
+	107ï¼Œå“¨å…µ(è“)ï¼š
+  109ï¼Œé›·è¾¾ç«™ï¼ˆè“ï¼‰	
 	
-	¿Í»§¶Ë ID£º 
-	0x0101 ÎªÓ¢ĞÛ²Ù×÷ÊÖ¿Í»§¶Ë( ºì) £»
-	0x0102 £¬¹¤³Ì²Ù×÷ÊÖ¿Í»§¶Ë ((ºì )£»
-	0x0103/0x0104/0x0105£¬²½±ø²Ù×÷ÊÖ¿Í»§¶Ë(ºì)£»
-	0x0106£¬¿ÕÖĞ²Ù×÷ÊÖ¿Í»§¶Ë((ºì)£» 
-	0x0165£¬Ó¢ĞÛ²Ù×÷ÊÖ¿Í»§¶Ë(À¶)£»
-	0x0166£¬¹¤³Ì²Ù×÷ÊÖ¿Í»§¶Ë(À¶)£»
-	0x0167/0x0168/0x0169£¬²Ù×÷ÊÖ¿Í»§¶Ë²½±ø(À¶)£»
-	0x016A£¬¿ÕÖĞ²Ù×÷ÊÖ¿Í»§¶Ë(À¶)¡£ 
+	å®¢æˆ·ç«¯ IDï¼š 
+	0x0101 ä¸ºè‹±é›„æ“ä½œæ‰‹å®¢æˆ·ç«¯( çº¢) ï¼›
+	0x0102 ï¼Œå·¥ç¨‹æ“ä½œæ‰‹å®¢æˆ·ç«¯ ((çº¢ )ï¼›
+	0x0103/0x0104/0x0105ï¼Œæ­¥å…µæ“ä½œæ‰‹å®¢æˆ·ç«¯(çº¢)ï¼›
+	0x0106ï¼Œç©ºä¸­æ“ä½œæ‰‹å®¢æˆ·ç«¯((çº¢)ï¼› 
+	0x0165ï¼Œè‹±é›„æ“ä½œæ‰‹å®¢æˆ·ç«¯(è“)ï¼›
+	0x0166ï¼Œå·¥ç¨‹æ“ä½œæ‰‹å®¢æˆ·ç«¯(è“)ï¼›
+	0x0167/0x0168/0x0169ï¼Œæ“ä½œæ‰‹å®¢æˆ·ç«¯æ­¥å…µ(è“)ï¼›
+	0x016Aï¼Œç©ºä¸­æ“ä½œæ‰‹å®¢æˆ·ç«¯(è“)ã€‚ 
 */
 
-//Êı¾İÄÚÈİid
+//æ•°æ®å†…å®¹id
 enum
 {
-	//0x200-0x02ff 	¶ÓÎé×Ô¶¨ÒåÃüÁî ¸ñÊ½  INTERACT_ID_XXXX
-	INTERACT_ID_delete_graphic 			= 0x0100,	/*¿Í»§¶ËÉ¾³ıÍ¼ĞÎ*/
-	INTERACT_ID_draw_one_graphic 		= 0x0101,	/*¿Í»§¶Ë»æÖÆÒ»¸öÍ¼ĞÎ*/
-	INTERACT_ID_draw_two_graphic 		= 0x0102,	/*¿Í»§¶Ë»æÖÆ2¸öÍ¼ĞÎ*/
-	INTERACT_ID_draw_five_graphic 	= 0x0103,	/*¿Í»§¶Ë»æÖÆ5¸öÍ¼ĞÎ*/
-	INTERACT_ID_draw_seven_graphic 	= 0x0104,	/*¿Í»§¶Ë»æÖÆ7¸öÍ¼ĞÎ*/
-	INTERACT_ID_draw_char_graphic 	= 0x0110,	/*¿Í»§¶Ë»æÖÆ×Ö·ûÍ¼ĞÎ*/
+	//0x200-0x02ff 	é˜Ÿä¼è‡ªå®šä¹‰å‘½ä»¤ æ ¼å¼  INTERACT_ID_XXXX
+	INTERACT_ID_delete_graphic 			= 0x0100,	/*å®¢æˆ·ç«¯åˆ é™¤å›¾å½¢*/
+	INTERACT_ID_draw_one_graphic 		= 0x0101,	/*å®¢æˆ·ç«¯ç»˜åˆ¶ä¸€ä¸ªå›¾å½¢*/
+	INTERACT_ID_draw_two_graphic 		= 0x0102,	/*å®¢æˆ·ç«¯ç»˜åˆ¶2ä¸ªå›¾å½¢*/
+	INTERACT_ID_draw_five_graphic 	= 0x0103,	/*å®¢æˆ·ç«¯ç»˜åˆ¶5ä¸ªå›¾å½¢*/
+	INTERACT_ID_draw_seven_graphic 	= 0x0104,	/*å®¢æˆ·ç«¯ç»˜åˆ¶7ä¸ªå›¾å½¢*/
+	INTERACT_ID_draw_char_graphic 	= 0x0110,	/*å®¢æˆ·ç«¯ç»˜åˆ¶å­—ç¬¦å›¾å½¢*/
 	INTERACT_ID_bigbome_num					= 0x02ff
 };
 
-/* ½»»¥Êı¾İ¶ÎÍ·  */
+/* äº¤äº’æ•°æ®æ®µå¤´  */
 typedef __packed struct
 {
 uint16_t data_cmd_id;
@@ -438,17 +438,17 @@ uint16_t send_ID;
 uint16_t receiver_ID;
 }ext_student_interactive_header_data_t;
 
-/*¿Í»§¶ËÉ¾³ıÍ¼ĞÎ */
+/*å®¢æˆ·ç«¯åˆ é™¤å›¾å½¢ */
 typedef __packed struct
 {
 uint8_t operate_type;
 uint8_t layer;
 } ext_client_custom_graphic_delete_t;
 
-/*Í¼ĞÎÊı¾İ*/
+/*å›¾å½¢æ•°æ®*/
 typedef __packed struct
 {
-uint8_t graphic_name[3]; 		 //Í¼ĞÎÃû
+uint8_t graphic_name[3]; 		 //å›¾å½¢å
 uint32_t operate_tpye:3;
 uint32_t graphic_tpye:3;
 uint32_t layer:4;
@@ -464,50 +464,50 @@ uint32_t end_y:11;
 } graphic_data_struct_t;
 
 
-/*»æÖÆÍ¼ĞÎÀàĞÍ*/
+/*ç»˜åˆ¶å›¾å½¢ç±»å‹*/
 typedef enum
 {
-	LINE      = 0,//Ö±Ïß
-	RECTANGLE = 1,//¾ØĞÎ
-	CIRCLE    = 2,//ÕıÔ²
-	OVAL      = 3,//ÍÖÔ²
-	ARC       = 4,//Ô²»¡
-	FLOAT     = 5,//¸¡µãÊı
-	INT       = 6,//ÕûĞÍÊı
-	CHAR      = 7 //×Ö·û
+	LINE      = 0,//ç›´çº¿
+	RECTANGLE = 1,//çŸ©å½¢
+	CIRCLE    = 2,//æ­£åœ†
+	OVAL      = 3,//æ¤­åœ†
+	ARC       = 4,//åœ†å¼§
+	FLOAT     = 5,//æµ®ç‚¹æ•°
+	INT       = 6,//æ•´å‹æ•°
+	CHAR      = 7 //å­—ç¬¦
 }Graphic_Type;
 
-/*»æÖÆ×Ö·û´®*/
+/*ç»˜åˆ¶å­—ç¬¦ä¸²*/
 typedef __packed struct
 {
 	graphic_data_struct_t grapic_data_struct;
 	uint8_t data[30];
 } ext_client_string_t;
 
-/*¶ÔÍ¼ĞÎ½øĞĞ²Ù×÷*/
+/*å¯¹å›¾å½¢è¿›è¡Œæ“ä½œ*/
 typedef enum
 {
-	NONE   = 0,/*¿Õ²Ù×÷*/
-	ADD    = 1,/*Ôö¼ÓÍ¼²ã*/
-	MODIFY = 2,/*ĞŞ¸ÄÍ¼²ã*/
-	DELETE = 3,/*É¾³ıÍ¼²ã*/
+	NONE   = 0,/*ç©ºæ“ä½œ*/
+	ADD    = 1,/*å¢åŠ å›¾å±‚*/
+	MODIFY = 2,/*ä¿®æ”¹å›¾å±‚*/
+	DELETE = 3,/*åˆ é™¤å›¾å±‚*/
 }Graphic_Operate;
 
-/*Í¼ĞÎÑÕÉ«*/
+/*å›¾å½¢é¢œè‰²*/
 typedef enum
 {
-	RED_BLUE  = 0,//ºìÀ¶Ö÷É«	
+	RED_BLUE  = 0,//çº¢è“ä¸»è‰²	
 	YELLOW    = 1,
 	GREEN     = 2,
 	ORANGE    = 3,
-	FUCHSIA   = 4,	/*×ÏºìÉ«*/
+	FUCHSIA   = 4,	/*ç´«çº¢è‰²*/
 	PINK      = 5,
-	CYAN_BLUE = 6,	/*ÇàÉ«*/
+	CYAN_BLUE = 6,	/*é’è‰²*/
 	BLACK     = 7,
 	WHITE     = 8
 }Graphic_Color;
 
-/*»æÖÆ¸¡µãÊı*/
+/*ç»˜åˆ¶æµ®ç‚¹æ•°*/
 typedef __packed struct
 {                          
 	uint8_t graphic_name[3]; 
@@ -525,7 +525,7 @@ typedef __packed struct
 	uint32_t end_y:11; 
 } Float_data_struct_t;
 
-/*»æÖÆÕûĞÍÊı*/
+/*ç»˜åˆ¶æ•´å‹æ•°*/
 typedef __packed struct
 {                          
 	uint8_t graphic_name[3]; 
@@ -541,46 +541,46 @@ typedef __packed struct
   int number;       
 } Int_data_struct_t;
 
-/*  ÒÔÉÏÎªÊı¾İ¶Î½á¹¹Ìå
-    ÒÔÏÂÎªÍêÕûÊı¾İ°ü£¨Ö¡Í·+ÃüÁîÂë+Êı¾İ¶ÎÍ·½á¹¹+Êı¾İ¶Î+Ö¡Î²£©
+/*  ä»¥ä¸Šä¸ºæ•°æ®æ®µç»“æ„ä½“
+    ä»¥ä¸‹ä¸ºå®Œæ•´æ•°æ®åŒ…ï¼ˆå¸§å¤´+å‘½ä»¤ç +æ•°æ®æ®µå¤´ç»“æ„+æ•°æ®æ®µ+å¸§å°¾ï¼‰
 */
-//³µ¼äÍ¨ĞÅ
+//è½¦é—´é€šä¿¡
 typedef __packed struct
 {
 	float bullet;
 } robot_interactive_data_t;
 
-//½ÓÊÕ»úÆ÷ÈË½»»¥ĞÅÏ¢ 
+//æ¥æ”¶æœºå™¨äººäº¤äº’ä¿¡æ¯ 
 typedef __packed struct
 {
-	xFrameHeader   					txFrameHeader;//Ö¡Í·
-	uint16_t								CmdID;//ÃüÁîÂë
-	ext_student_interactive_header_data_t   dataFrameHeader;//Êı¾İ¶ÎÍ·½á¹¹
-	robot_interactive_data_t  interactData;//Êı¾İ¶Î
-	uint16_t		 						FrameTail;//Ö¡Î²
+	xFrameHeader   					txFrameHeader;//å¸§å¤´
+	uint16_t								CmdID;//å‘½ä»¤ç 
+	ext_student_interactive_header_data_t   dataFrameHeader;//æ•°æ®æ®µå¤´ç»“æ„
+	robot_interactive_data_t  interactData;//æ•°æ®æ®µ
+	uint16_t		 						FrameTail;//å¸§å°¾
 }ext_CommunatianData_t;
 
-//·¢ËÍ»úÆ÷ÈË½»»¥ĞÅÏ¢
+//å‘é€æœºå™¨äººäº¤äº’ä¿¡æ¯
 typedef __packed struct
 {
-	xFrameHeader   					txFrameHeader;//Ö¡Í·
-	uint16_t								CmdID;//ÃüÁîÂë
-	ext_student_interactive_header_data_t   dataFrameHeader;//Êı¾İ¶ÎÍ·½á¹¹
-	uint8_t data[10];         //Êı¾İ¶Î
-	uint16_t		 						FrameTail;//Ö¡Î²
+	xFrameHeader   					txFrameHeader;//å¸§å¤´
+	uint16_t								CmdID;//å‘½ä»¤ç 
+	ext_student_interactive_header_data_t   dataFrameHeader;//æ•°æ®æ®µå¤´ç»“æ„
+	uint8_t data[10];         //æ•°æ®æ®µ
+	uint16_t		 						FrameTail;//å¸§å°¾
 }ext_Communatian_send_Data_t;
 
-//¹Ì¶¨Êı¾İ¶Î³¤¶ÈÊı¾İ°ü
+//å›ºå®šæ•°æ®æ®µé•¿åº¦æ•°æ®åŒ…
 typedef __packed struct
 {
-	xFrameHeader txFrameHeader;			//Ö¡Í·
-	uint16_t  CmdID;										//ÃüÁîÂë
-	ext_student_interactive_header_data_t   dataFrameHeader;//Êı¾İ¶ÎÍ·½á¹¹
-	ext_client_string_t clientData;//Êı¾İ¶Î
-	uint16_t	FrameTail;								//Ö¡Î²
+	xFrameHeader txFrameHeader;			//å¸§å¤´
+	uint16_t  CmdID;										//å‘½ä»¤ç 
+	ext_student_interactive_header_data_t   dataFrameHeader;//æ•°æ®æ®µå¤´ç»“æ„
+	ext_client_string_t clientData;//æ•°æ®æ®µ
+	uint16_t	FrameTail;								//å¸§å°¾
 }ext_charstring_data_t;
 
-//É¾³ıÍ¼²ã
+//åˆ é™¤å›¾å±‚
 typedef __packed struct
 {
 	xFrameHeader txFrameHeader;			
@@ -590,17 +590,17 @@ typedef __packed struct
 	uint16_t	FrameTail;								
 }ext_deleteLayer_data_t;
 
-//¿Í»§¶Ë»æÖÆÒ»¸öÍ¼ĞÎ
+//å®¢æˆ·ç«¯ç»˜åˆ¶ä¸€ä¸ªå›¾å½¢
 typedef __packed struct
 {
-	xFrameHeader txFrameHeader;			//Ö¡Í·
-	uint16_t  CmdID;										//ÃüÁîÂë
-	ext_student_interactive_header_data_t   dataFrameHeader;//Êı¾İ¶ÎÍ·½á¹¹
-	graphic_data_struct_t clientData;		//Êı¾İ¶Î
-	uint16_t	FrameTail;								//Ö¡Î²
+	xFrameHeader txFrameHeader;			//å¸§å¤´
+	uint16_t  CmdID;										//å‘½ä»¤ç 
+	ext_student_interactive_header_data_t   dataFrameHeader;//æ•°æ®æ®µå¤´ç»“æ„
+	graphic_data_struct_t clientData;		//æ•°æ®æ®µ
+	uint16_t	FrameTail;								//å¸§å°¾
 }ext_graphic_one_data_t;
 
-//¿Í»§¶Ë»æÖÆÁ½¸öÍ¼ĞÎ
+//å®¢æˆ·ç«¯ç»˜åˆ¶ä¸¤ä¸ªå›¾å½¢
 typedef __packed struct
 {
 	xFrameHeader txFrameHeader;			
@@ -610,7 +610,7 @@ typedef __packed struct
 	uint16_t	FrameTail;								
 }ext_graphic_two_data_t;
 
-//¿Í»§¶Ë»æÖÆÎå¸öÍ¼ĞÎ
+//å®¢æˆ·ç«¯ç»˜åˆ¶äº”ä¸ªå›¾å½¢
 typedef __packed struct
 {
 	xFrameHeader txFrameHeader;			
@@ -620,7 +620,7 @@ typedef __packed struct
 	uint16_t	FrameTail;								
 }ext_graphic_five_data_t;
 
-//¿Í»§¶Ë»æÖÆÆß¸öÍ¼ĞÎ
+//å®¢æˆ·ç«¯ç»˜åˆ¶ä¸ƒä¸ªå›¾å½¢
 typedef __packed struct
 {
 	xFrameHeader txFrameHeader;			
@@ -630,7 +630,7 @@ typedef __packed struct
 	uint16_t	FrameTail;								
 }ext_graphic_seven_data_t;
 
-//¿Í»§¶Ë»æÖÆÁ½¸ö¸¡µãÊı
+//å®¢æˆ·ç«¯ç»˜åˆ¶ä¸¤ä¸ªæµ®ç‚¹æ•°
 typedef __packed struct
 {
 	xFrameHeader txFrameHeader;			
@@ -640,7 +640,7 @@ typedef __packed struct
 	uint16_t	FrameTail;								
 }ext_float_two_data_t;
 
-//¿Í»§¶Ë»æÖÆÁ½¸öÕûĞÍÊı
+//å®¢æˆ·ç«¯ç»˜åˆ¶ä¸¤ä¸ªæ•´å‹æ•°
 typedef __packed struct
 {
 	xFrameHeader txFrameHeader;			
@@ -650,26 +650,26 @@ typedef __packed struct
 	uint16_t	FrameTail;								
 }ext_int_two_data_t;
 
-/*ÒÔÉÏÎª0x0301ÓĞ¹Ø½á¹¹Ìå*/
+/*ä»¥ä¸Šä¸º0x0301æœ‰å…³ç»“æ„ä½“*/
 
 /*
-	×Ô¶¨Òå¿ØÖÆÆ÷Êı¾İ°üÀ¨Ò»¸öÍ³Ò»µÄÊı¾İ¶ÎÍ·½á¹¹¡£Êı¾İ¶ÎÎªÄÚÈİÊı¾İ¶Î£¬Õû¸ö½»»¥Êı¾İµÄ°ü×Ü¹²³¤×î´óÎª
-	39 ¸ö×Ö½Ú£¬¼õÈ¥ frame_header,cmd_id ºÍ frame_tail ¹² 9 ¸ö×Ö½Ú£¬¹Ê¶ø·¢ËÍµÄÄÚÈİÊı¾İ¶Î×î´óÎª 30 ×Ö
-	½Ú¡£Õû¸ö½»»¥Êı¾İ 0x0302 µÄ°üÏÂĞĞĞĞÆµÂÊÎª 30Hz¡£
+	è‡ªå®šä¹‰æ§åˆ¶å™¨æ•°æ®åŒ…æ‹¬ä¸€ä¸ªç»Ÿä¸€çš„æ•°æ®æ®µå¤´ç»“æ„ã€‚æ•°æ®æ®µä¸ºå†…å®¹æ•°æ®æ®µï¼Œæ•´ä¸ªäº¤äº’æ•°æ®çš„åŒ…æ€»å…±é•¿æœ€å¤§ä¸º
+	39 ä¸ªå­—èŠ‚ï¼Œå‡å» frame_header,cmd_id å’Œ frame_tail å…± 9 ä¸ªå­—èŠ‚ï¼Œæ•…è€Œå‘é€çš„å†…å®¹æ•°æ®æ®µæœ€å¤§ä¸º 30 å­—
+	èŠ‚ã€‚æ•´ä¸ªäº¤äº’æ•°æ® 0x0302 çš„åŒ…ä¸‹è¡Œè¡Œé¢‘ç‡ä¸º 30Hzã€‚
 */
 
-//½»»¥Êı¾İ½ÓÊÕĞÅÏ¢£º 0x0302¡£ ·¢ËÍÆµÂÊ£ºÉÏÏŞ 30Hz
+//äº¤äº’æ•°æ®æ¥æ”¶ä¿¡æ¯ï¼š 0x0302ã€‚ å‘é€é¢‘ç‡ï¼šä¸Šé™ 30Hz
 //typedef __packed struct
 //{
 //uint8_t data[9];
 //} robot_interactive_data_t;
 
 
-/*Ğ¡µØÍ¼½»»¥ĞÅÏ¢±êÊ¶£º 0x0303¡£ ·¢ËÍÆµÂÊ£º´¥·¢Ê±·¢ËÍ¡£
-		¿Í»§¶ËÏÂ·¢ĞÅÏ¢
-		»úÆ÷ÈË ID£º »úÆ÷ÈË ID£º 1£¬Ó¢ĞÛ(ºì)£» 2£¬¹¤³Ì(ºì)£» 3/4/5£¬²½±ø(ºì)£» 6£¬¿ÕÖĞ(ºì)£» 7£¬ÉÚ±ø(ºì)£» 9£¬À×
-		´ïÕ¾£¨ºì£©£» 10£¬Ç°ÉÚÕ¾£¨ºì£©£» 11£¬»ùµØ£¨ºì£©£» 101£¬Ó¢ĞÛ(À¶)£» 102£¬¹¤³Ì(À¶)£» 103/104/105£¬²½±ø
-		(À¶)£» 106£¬¿ÕÖĞ(À¶)£» 107£¬ÉÚ±ø(À¶)£» 109£¬À×´ïÕ¾£¨À¶£©£» 110£¬Ç°ÉÚÕ¾£¨À¶£©£» 111£¬»ùµØ£¨À¶£© ¡£
+/*å°åœ°å›¾äº¤äº’ä¿¡æ¯æ ‡è¯†ï¼š 0x0303ã€‚ å‘é€é¢‘ç‡ï¼šè§¦å‘æ—¶å‘é€ã€‚
+		å®¢æˆ·ç«¯ä¸‹å‘ä¿¡æ¯
+		æœºå™¨äºº IDï¼š æœºå™¨äºº IDï¼š 1ï¼Œè‹±é›„(çº¢)ï¼› 2ï¼Œå·¥ç¨‹(çº¢)ï¼› 3/4/5ï¼Œæ­¥å…µ(çº¢)ï¼› 6ï¼Œç©ºä¸­(çº¢)ï¼› 7ï¼Œå“¨å…µ(çº¢)ï¼› 9ï¼Œé›·
+		è¾¾ç«™ï¼ˆçº¢ï¼‰ï¼› 10ï¼Œå‰å“¨ç«™ï¼ˆçº¢ï¼‰ï¼› 11ï¼ŒåŸºåœ°ï¼ˆçº¢ï¼‰ï¼› 101ï¼Œè‹±é›„(è“)ï¼› 102ï¼Œå·¥ç¨‹(è“)ï¼› 103/104/105ï¼Œæ­¥å…µ
+		(è“)ï¼› 106ï¼Œç©ºä¸­(è“)ï¼› 107ï¼Œå“¨å…µ(è“)ï¼› 109ï¼Œé›·è¾¾ç«™ï¼ˆè“ï¼‰ï¼› 110ï¼Œå‰å“¨ç«™ï¼ˆè“ï¼‰ï¼› 111ï¼ŒåŸºåœ°ï¼ˆè“ï¼‰ ã€‚
 */
 typedef __packed struct
 {
@@ -680,34 +680,34 @@ uint8_t commd_keyboard;
 uint16_t target_robot_ID;
 } ext_robot_command_t;
 
-/*Í¼´«Ò£¿ØĞÅÏ¢±êÊ¶£º 0x0304¡£·¢ËÍÆµÂÊ£º 30Hz¡£
-   ¿Í»§¶ËÏÂ·¢ĞÅÏ¢
-   ×Ö½ÚÆ«ÒÆÁ¿      ´óĞ¡          		ËµÃ÷
-	  0			   2			Êó±ê X ÖáĞÅÏ¢
-	  2 		   2			Êó±ê Y ÖáĞÅÏ¢
-	  4			   2			Êó±ê¹öÂÖĞÅÏ¢
-	  6			   1			Êó±ê×ó¼ü
-	  7			   1     		Êó±êÓÒ¼ü°´ÏÂ
-	  8			   2			¼üÅÌĞÅÏ¢
-		bit 0£º¼üÅÌ W ÊÇ·ñ°´ÏÂ
-		bit 1£º¼üÅÌ S ÊÇ·ñ°´ÏÂ
-		bit 2£º¼üÅÌ A ÊÇ·ñ°´ÏÂ
-		bit 3£º¼üÅÌ D ÊÇ·ñ°´ÏÂ
-		bit 4£º¼üÅÌ SHIFT ÊÇ·ñ°´ÏÂ
-		bit 5£º¼üÅÌ CTRL ÊÇ·ñ°´ÏÂ
-		bit 6£º¼üÅÌ Q ÊÇ·ñ°´ÏÂ
-		bit 7£º¼üÅÌ E ÊÇ·ñ°´ÏÂ
-		bit 8£º¼üÅÌ R ÊÇ·ñ°´ÏÂ
-		bit 9£º¼üÅÌ F ÊÇ·ñ°´ÏÂ
-		bit 10£º¼üÅÌ G ÊÇ·ñ°´ÏÂ
-		bit 11£º¼üÅÌ Z ÊÇ·ñ°´ÏÂ
-		bit 12£º¼üÅÌ X ÊÇ·ñ°´ÏÂ
-		bit 13£º¼üÅÌ C ÊÇ·ñ°´ÏÂ
-		bit 14£º¼üÅÌ V ÊÇ·ñ°´ÏÂ
-		bit 15£º¼üÅÌ B ÊÇ·ñ°´ÏÂ
+/*å›¾ä¼ é¥æ§ä¿¡æ¯æ ‡è¯†ï¼š 0x0304ã€‚å‘é€é¢‘ç‡ï¼š 30Hzã€‚
+   å®¢æˆ·ç«¯ä¸‹å‘ä¿¡æ¯
+   å­—èŠ‚åç§»é‡      å¤§å°          		è¯´æ˜
+	  0			   2			é¼ æ ‡ X è½´ä¿¡æ¯
+	  2 		   2			é¼ æ ‡ Y è½´ä¿¡æ¯
+	  4			   2			é¼ æ ‡æ»šè½®ä¿¡æ¯
+	  6			   1			é¼ æ ‡å·¦é”®
+	  7			   1     		é¼ æ ‡å³é”®æŒ‰ä¸‹
+	  8			   2			é”®ç›˜ä¿¡æ¯
+		bit 0ï¼šé”®ç›˜ W æ˜¯å¦æŒ‰ä¸‹
+		bit 1ï¼šé”®ç›˜ S æ˜¯å¦æŒ‰ä¸‹
+		bit 2ï¼šé”®ç›˜ A æ˜¯å¦æŒ‰ä¸‹
+		bit 3ï¼šé”®ç›˜ D æ˜¯å¦æŒ‰ä¸‹
+		bit 4ï¼šé”®ç›˜ SHIFT æ˜¯å¦æŒ‰ä¸‹
+		bit 5ï¼šé”®ç›˜ CTRL æ˜¯å¦æŒ‰ä¸‹
+		bit 6ï¼šé”®ç›˜ Q æ˜¯å¦æŒ‰ä¸‹
+		bit 7ï¼šé”®ç›˜ E æ˜¯å¦æŒ‰ä¸‹
+		bit 8ï¼šé”®ç›˜ R æ˜¯å¦æŒ‰ä¸‹
+		bit 9ï¼šé”®ç›˜ F æ˜¯å¦æŒ‰ä¸‹
+		bit 10ï¼šé”®ç›˜ G æ˜¯å¦æŒ‰ä¸‹
+		bit 11ï¼šé”®ç›˜ Z æ˜¯å¦æŒ‰ä¸‹
+		bit 12ï¼šé”®ç›˜ X æ˜¯å¦æŒ‰ä¸‹
+		bit 13ï¼šé”®ç›˜ C æ˜¯å¦æŒ‰ä¸‹
+		bit 14ï¼šé”®ç›˜ V æ˜¯å¦æŒ‰ä¸‹
+		bit 15ï¼šé”®ç›˜ B æ˜¯å¦æŒ‰ä¸‹
 */
 
-//×Ô¼º¸ü¸Ä¹ı½á¹¹ÌåÃû³Æ	Ô­   ext_robot_command_t;
+//è‡ªå·±æ›´æ”¹è¿‡ç»“æ„ä½“åç§°	åŸ   ext_robot_command_t;
 typedef __packed struct
 {
 int16_t mouse_x;
@@ -719,8 +719,8 @@ uint16_t keyboard_value;
 uint16_t reserved;
 } ext_robot_command_t_change;
 
-/*Ğ¡µØÍ¼½ÓÊÕĞÅÏ¢±êÊ¶£º 0x0305¡£ ×î´ó½ÓÊÕÆµÂÊ£º 10Hz¡£
-	À×´ïÕ¾·¢ËÍµÄ×ø±êĞÅÏ¢¿ÉÒÔ±»ËùÓĞ¼º·½²Ù×÷ÊÖÔÚµÚÒ»ÊÓ½ÇĞ¡µØÍ¼¿´µ½
+/*å°åœ°å›¾æ¥æ”¶ä¿¡æ¯æ ‡è¯†ï¼š 0x0305ã€‚ æœ€å¤§æ¥æ”¶é¢‘ç‡ï¼š 10Hzã€‚
+	é›·è¾¾ç«™å‘é€çš„åæ ‡ä¿¡æ¯å¯ä»¥è¢«æ‰€æœ‰å·±æ–¹æ“ä½œæ‰‹åœ¨ç¬¬ä¸€è§†è§’å°åœ°å›¾çœ‹åˆ°
 */
 typedef __packed struct
 { 
@@ -729,9 +729,9 @@ float target_position_x;
 float target_position_y;
 } ext_client_map_command_t;
 
-/**********************ÒÔÉÏÎª²ÃÅĞÏµÍ³ÊÖ²áÌá¼°£¬Ê¹ÓÃµÄ½á¹¹Ìå**************************************************/
+/**********************ä»¥ä¸Šä¸ºè£åˆ¤ç³»ç»Ÿæ‰‹å†ŒæåŠï¼Œä½¿ç”¨çš„ç»“æ„ä½“**************************************************/
 
-//»úÆ÷ÈËidºÅĞÅÏ¢
+//æœºå™¨äººidå·ä¿¡æ¯
 typedef struct{
 	uint16_t teammate_hero;
 	uint16_t teammate_engineer;
@@ -749,123 +749,123 @@ typedef struct{
 	uint16_t client_plane;
 } ext_interact_id_t;
 
-//¼ÇÂ¼²ÃÅĞÏµÍ³Êı¾İ
+//è®°å½•è£åˆ¤ç³»ç»Ÿæ•°æ®
 typedef struct judge_info_struct {
-	xFrameHeader							FrameHeader;				// Ö¡Í·ĞÅÏ¢
+	xFrameHeader							FrameHeader;				// å¸§å¤´ä¿¡æ¯
 	
-	ext_game_status_t 							GameState;				// 0x0001           ±ÈÈü×´Ì¬Êı¾İ
-	ext_game_result_t 							GameResult;				// 0x0002         ±ÈÈü½á¹ûÊı¾İ
-	ext_game_robot_HP_t 						GameRobotHP;			// 0x0003         »úÆ÷ÈËÑªÁ¿Êı¾İ
-	ext_dart_status_t								GameRobotmissile;				// 0x0004         ·ÉïÚ·¢Éä×´Ì¬
-	ext_ICRA_buff_debuff_zone_status_t	Game_ICRA_buff;      //                ÈË¹¤ÖÇÄÜÌôÕ½Èü¼Ó³ÉÓë³Í·£Çø×´Ì¬
+	ext_game_status_t 							GameState;				// 0x0001           æ¯”èµ›çŠ¶æ€æ•°æ®
+	ext_game_result_t 							GameResult;				// 0x0002         æ¯”èµ›ç»“æœæ•°æ®
+	ext_game_robot_HP_t 						GameRobotHP;			// 0x0003         æœºå™¨äººè¡€é‡æ•°æ®
+	ext_dart_status_t								GameRobotmissile;				// 0x0004         é£é•–å‘å°„çŠ¶æ€
+	ext_ICRA_buff_debuff_zone_status_t	Game_ICRA_buff;      //                äººå·¥æ™ºèƒ½æŒ‘æˆ˜èµ›åŠ æˆä¸æƒ©ç½šåŒºçŠ¶æ€
 	
-	ext_event_data_t								EventData;					// 0x0101         ³¡µØÊÂ¼şÊı¾İ
-	ext_supply_projectile_action_t	SupplyProjectileAction;		// 0x0102 ²¹¸øÕ¾¶¯×÷±êÊ¶
-	ext_referee_warning_t						RefereeWarning;		// 0x0104         ²ÃÅĞ¾¯¸æĞÅÏ¢
-	ext_dart_remaining_time_t				dart_remaining_time;// 0x0105         ·ÉïÚ·¢Éä¿Úµ¹¼ÆÊ±
+	ext_event_data_t								EventData;					// 0x0101         åœºåœ°äº‹ä»¶æ•°æ®
+	ext_supply_projectile_action_t	SupplyProjectileAction;		// 0x0102 è¡¥ç»™ç«™åŠ¨ä½œæ ‡è¯†
+	ext_referee_warning_t						RefereeWarning;		// 0x0104         è£åˆ¤è­¦å‘Šä¿¡æ¯
+	ext_dart_remaining_time_t				dart_remaining_time;// 0x0105         é£é•–å‘å°„å£å€’è®¡æ—¶
 	
-	ext_game_robot_status_t					GameRobotStat;	// 0x0201         ±ÈÈü»úÆ÷ÈË×´Ì¬
-	ext_power_heat_data_t						PowerHeatData;		// 0x0202         ÊµÊ±¹¦ÂÊÈÈÁ¿Êı¾İ
-	ext_game_robot_pos_t						GameRobotPos;			// 0x0203         »úÆ÷ÈËÎ»ÖÃ
-	ext_buff_t											Buff;								// 0x0204     »úÆ÷ÈËÔöÒæ
-	aerial_robot_energy_t				    AerialRobotEnergy;// 0x0205             ¿ÕÖĞ»úÆ÷ÈËÄÜÁ¿×´Ì¬
-	ext_robot_hurt_t								RobotHurt;					// 0x0206         ÉËº¦×´Ì¬
-	ext_shoot_data_t								ShootData;					// 0x0207         ÊµÊ±Éä»÷ĞÅÏ¢(ÉäÆµ  ÉäËÙ  ×Óµ¯ĞÅÏ¢)
-	ext_bullet_remaining_t					bullet_remaining;		// 0x0208	        ×Óµ¯Ê£Óà·¢ÉäÊı
-	ext_rfid_status_t								rfid_status;				// 0x0209	        RFIDĞÅÏ¢
-	ext_dart_client_cmd_t           dart_client;        // 0x020A         ·ÉïÚ¿Í»§¶Ë
+	ext_game_robot_status_t					GameRobotStat;	// 0x0201         æ¯”èµ›æœºå™¨äººçŠ¶æ€
+	ext_power_heat_data_t						PowerHeatData;		// 0x0202         å®æ—¶åŠŸç‡çƒ­é‡æ•°æ®
+	ext_game_robot_pos_t						GameRobotPos;			// 0x0203         æœºå™¨äººä½ç½®
+	ext_buff_t											Buff;								// 0x0204     æœºå™¨äººå¢ç›Š
+	aerial_robot_energy_t				    AerialRobotEnergy;// 0x0205             ç©ºä¸­æœºå™¨äººèƒ½é‡çŠ¶æ€
+	ext_robot_hurt_t								RobotHurt;					// 0x0206         ä¼¤å®³çŠ¶æ€
+	ext_shoot_data_t								ShootData;					// 0x0207         å®æ—¶å°„å‡»ä¿¡æ¯(å°„é¢‘  å°„é€Ÿ  å­å¼¹ä¿¡æ¯)
+	ext_bullet_remaining_t					bullet_remaining;		// 0x0208	        å­å¼¹å‰©ä½™å‘å°„æ•°
+	ext_rfid_status_t								rfid_status;				// 0x0209	        RFIDä¿¡æ¯
+	ext_dart_client_cmd_t           dart_client;        // 0x020A         é£é•–å®¢æˆ·ç«¯
 	
-	ext_interact_id_t								ids;								//Óë±¾»ú½»»¥µÄ»úÆ÷ÈËid
-	uint16_t                        self_client;        //±¾»ú¿Í»§¶Ë
+	ext_interact_id_t								ids;								//ä¸æœ¬æœºäº¤äº’çš„æœºå™¨äººid
+	uint16_t                        self_client;        //æœ¬æœºå®¢æˆ·ç«¯
 	bool	 		IF_REF_ONL;
 
 } Referee_info_t;
 
 
 
-  bool Judge_Read_Data(uint8_t *ReadFormUsart);//Ö÷Ñ­»·4msµ÷ÓÃÒ»´Î
+  bool Judge_Read_Data(uint8_t *ReadFormUsart);//ä¸»å¾ªç¯4msè°ƒç”¨ä¸€æ¬¡
 	void JUDGE_Show_Data(void);
 	void Send_to_Teammate(void);
 	bool is_red_or_blue(void);
-	void Determine_ID(void);//ÅĞ¶Ï×Ô¼ºÊÇÄÄ¸ö¶ÓÎé
+	void Determine_ID(void);//åˆ¤æ–­è‡ªå·±æ˜¯å“ªä¸ªé˜Ÿä¼
 	bool Judge_If_Chassis(void);
 
-	/*****²ÃÅĞÊı¾İ¸¨ÖúÅĞ¶Ïº¯Êı********/
-	bool JUDGE_sGetDataState(void);    //ÅĞ¶ÏÊÇ·ñ½ÓÊÜµ½²ÃÅĞÏµÍ³
+	/*****è£åˆ¤æ•°æ®è¾…åŠ©åˆ¤æ–­å‡½æ•°********/
+	bool JUDGE_sGetDataState(void);    //åˆ¤æ–­æ˜¯å¦æ¥å—åˆ°è£åˆ¤ç³»ç»Ÿ
 	float JUDGE_fGetChassisPower(void);
 	uint16_t JUDGE_fGetRemainEnergy(void);
 	uint8_t JUDGE_ucGetRobotLevel(void);
 	
-	//¸÷Ç¹¿ÚÈÈÁ¿¶ÁÈ¡Ç¹¿ÚÈÈÁ¿
+	//å„æªå£çƒ­é‡è¯»å–æªå£çƒ­é‡
 	uint16_t JUDGE_usGetRemoteHeat_id1_17mm(void);
 	uint16_t JUDGE_usGetRemoteHeat_id2_17mm(void);
 	uint16_t JUDGE_usGetRemoteHeat_id1_42mm(void);
 	
-	//¶ÁÈ¡ÉäËÙ
+	//è¯»å–å°„é€Ÿ
 	float JUDGE_usGetSpeedHeat(void);
 	
-	//Í³¼Æ·¢µ¯Á¿
-	//ATTENTION£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡Ë«Ç¹¹Ü¿ÉÄÜ»á³ö´í£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡
+	//ç»Ÿè®¡å‘å¼¹é‡
+	//ATTENTIONï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼åŒæªç®¡å¯èƒ½ä¼šå‡ºé”™ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼
 	void JUDGE_ShootNumCount_17mm(void);
 	void JUDGE_ShootNumCount_42mm(void);
-	//¶ÁÈ¡·¢µ¯Á¿
-	//ATTENTION£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡Ë«Ç¹¹Ü¿ÉÄÜ»á³ö´í£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡
+	//è¯»å–å‘å¼¹é‡
+	//ATTENTIONï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼åŒæªç®¡å¯èƒ½ä¼šå‡ºé”™ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼
 	uint16_t JUDGE_usGetShootNum_17mm(void);
 	uint16_t JUDGE_usGetShootNum_42mm(void);
-	//·¢µ¯Á¿ÇåÁã
-	//ATTENTION£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡Ë«Ç¹¹Ü¿ÉÄÜ»á³ö´í£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡
+	//å‘å¼¹é‡æ¸…é›¶
+	//ATTENTIONï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼åŒæªç®¡å¯èƒ½ä¼šå‡ºé”™ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼
 	void JUDGE_ShootNum_Clear_17mm(void);
 	void JUDGE_ShootNum_Clear_42mm(void);
-	//¸÷Ç¹¿ÚÈÈÁ¿¶ÁÈ¡Ç¹¿ÚÈÈÁ¿ÉÏÏŞ
+	//å„æªå£çƒ­é‡è¯»å–æªå£çƒ­é‡ä¸Šé™
 	uint16_t JUDGE_usGetHeatLimit_id1_17mm(void);
 	uint16_t JUDGE_usGetHeatLimit_id2_17mm(void);
 	uint16_t JUDGE_usGetHeatLimit_id1_42mm(void);
-	//¸÷Ç¹¿ÚÈÈÁ¿¶ÁÈ¡Ç¹¿ÚÈÈÁ¿Ã¿ÃëÀäÈ´Öµ
+	//å„æªå£çƒ­é‡è¯»å–æªå£çƒ­é‡æ¯ç§’å†·å´å€¼
 	uint16_t JUDGE_usGetShootCold_id1_17mm(void);
 	uint16_t JUDGE_usGetShootCold_id2_17mm(void);
 	uint16_t JUDGE_usGetShootCold_id1_42mm(void);
 
 	uint16_t JUDGE_usGetSpeedLimit(void);
-	//²¹¸øÕ¾¿Ú
+	//è¡¥ç»™ç«™å£
 	uint8_t JUDGE_usGetSupply_Id(void);
-	//²¹¸ø»úÆ÷ÈË ID
+	//è¡¥ç»™æœºå™¨äºº ID
 	uint8_t JUDGE_usGetSupply_Robo_Id(void);
-	//³öµ¯¿Ú¿ª±Õ×´Ì¬ 
+	//å‡ºå¼¹å£å¼€é—­çŠ¶æ€ 
 	uint8_t JUDGE_usGetSupply_Mode(void);
-	//·µ»Øµ±Ç°²¹µ¯ÊıÁ¿£¨Îª×Ö·ûĞÍ±äÁ¿£©
+	//è¿”å›å½“å‰è¡¥å¼¹æ•°é‡ï¼ˆä¸ºå­—ç¬¦å‹å˜é‡ï¼‰
 	uint8_t JUDGE_usGetSupply_Num(void);
-	//Ğ¡µØÍ¼½ÓÊÕĞÅÏ¢Ä¿±ê»úÆ÷ÈË ID(À×´ïÕ¾)
+	//å°åœ°å›¾æ¥æ”¶ä¿¡æ¯ç›®æ ‡æœºå™¨äºº ID(é›·è¾¾ç«™)
 	uint16_t JUDGE_usGetRadar_Station_to_robo_ID(void);
-	//Ğ¡µØÍ¼½ÓÊÕĞÅÏ¢Ä¿±ê»úÆ÷ÈË x Î»ÖÃ×ø±ê
+	//å°åœ°å›¾æ¥æ”¶ä¿¡æ¯ç›®æ ‡æœºå™¨äºº x ä½ç½®åæ ‡
 	float JUDGE_usGetRadar_Station_to_robo_posX(void);
-	//Ğ¡µØÍ¼½ÓÊÕĞÅÏ¢Ä¿±ê»úÆ÷ÈË y Î»ÖÃ×ø±ê
+	//å°åœ°å›¾æ¥æ”¶ä¿¡æ¯ç›®æ ‡æœºå™¨äºº y ä½ç½®åæ ‡
 	float JUDGE_usGetRadar_Station_to_robo_posy(void);
 
-	//µ±Ç°»úÆ÷ÈËÑªÁ¿
+	//å½“å‰æœºå™¨äººè¡€é‡
 	uint16_t JUDGE_usGetRadar_Robo_HP(void);
-	//µ±Ç°»úÆ÷ÈË×î´óÑªÁ¿
+	//å½“å‰æœºå™¨äººæœ€å¤§è¡€é‡
 	uint16_t JUDGE_usGetRadar_Robo_Max_HP(void);
-	//17mm ×Óµ¯Ê£Óà·¢ÉäÊıÁ¿
+	//17mm å­å¼¹å‰©ä½™å‘å°„æ•°é‡
 	uint16_t JUDGE_usGetRadar_Robo_remain_17mm(void);
-	//shooterµçÔ´Êä³ö
+	//shooterç”µæºè¾“å‡º
 	uint8_t JUDGE_usGetJudge_shooter_Power(void);
 	float JUDGE_fGetChassisVolt(void);
 
 	bool JUDGE_IfArmorHurt(void);
 	bool Judge_If_Death(void);
 
-	//µ×ÅÌ¹¦ÂÊº¯Êı
-	uint16_t JUDGE_usGetChassisPowerLimit(void);//»ñÈ¡µ±Ç°µÈ¼¶µ×ÅÌ¹¦ÂÊÉÏÏŞ
-	uint8_t JUDGE_ucRobotLevel(void);//»ñÈ¡»úÆ÷ÈËµÈ¼¶Êı¾İ
+	//åº•ç›˜åŠŸç‡å‡½æ•°
+	uint16_t JUDGE_usGetChassisPowerLimit(void);//è·å–å½“å‰ç­‰çº§åº•ç›˜åŠŸç‡ä¸Šé™
+	uint8_t JUDGE_ucRobotLevel(void);//è·å–æœºå™¨äººç­‰çº§æ•°æ®
 
-	uint8_t Judge_armor_id(void);//×°¼×°åÊÜ´ò»÷ID
-	uint8_t Judge_hurt_mode(void);//ÉËº¦ÀàĞÍ
-	void JUDGE_Show_Graph(void); //ÉÏ´«¿Í»§¶ËÍ¼ĞÎ
+	uint8_t Judge_armor_id(void);//è£…ç”²æ¿å—æ‰“å‡»ID
+	uint8_t Judge_hurt_mode(void);//ä¼¤å®³ç±»å‹
+	void JUDGE_Show_Graph(void); //ä¸Šä¼ å®¢æˆ·ç«¯å›¾å½¢
 
   extern Referee_info_t 	REF;
 	void Client_graphic_Init(void);
 	void Client_graphic_Info_update(void);
-	//Ó¢ĞÛ
+	//è‹±é›„
 	void Client_aim_line(void);//
 	void _high_aim_(void);
 	void _lowshort_aim_2(void);
@@ -874,12 +874,12 @@ typedef struct judge_info_struct {
 	void _lowshortstem_aim_4(void);
 	void _lowlong_aim_(void);
 
-	void Client_aim_update(void);//×¼ĞÄ
-	void Client_supercapacitor_update(void);//³¬¼¶µçÈİ
-	void Client_gimbal_angle_update(void);//µõÉä½Ç¶È
-	void Client_bullet_int_update(void);//µ¯ÍèĞÅÏ¢
+	void Client_aim_update(void);//å‡†å¿ƒ
+	void Client_supercapacitor_update(void);//è¶…çº§ç”µå®¹
+	void Client_gimbal_angle_update(void);//åŠå°„è§’åº¦
+	void Client_bullet_int_update(void);//å¼¹ä¸¸ä¿¡æ¯
 
-void Char_Graphic(ext_client_string_t* graphic,//×îÖÕÒª·¢³öÈ¥µÄÊı×éÖĞµÄÊı¾İ¶ÎÄÚÈİ
+void Char_Graphic(ext_client_string_t* graphic,//æœ€ç»ˆè¦å‘å‡ºå»çš„æ•°ç»„ä¸­çš„æ•°æ®æ®µå†…å®¹
 									const char* name,
 									uint32_t operate_tpye,
 									
@@ -893,10 +893,10 @@ void Char_Graphic(ext_client_string_t* graphic,//×îÖÕÒª·¢³öÈ¥µÄÊı×éÖĞµÄÊı¾İ¶ÎÄÚÈ
 									
 									const char *character);
 									
-void Figure_Graphic(graphic_data_struct_t* graphic,//×îÖÕÒª·¢³öÈ¥µÄÊı×éµÄÊı¾İ¶ÎÄÚÈİ
+void Figure_Graphic(graphic_data_struct_t* graphic,//æœ€ç»ˆè¦å‘å‡ºå»çš„æ•°ç»„çš„æ•°æ®æ®µå†…å®¹
 									const char* name,
 									uint32_t operate_tpye,
-									uint32_t graphic_tpye,//»æÖÆÊ²Ã´Í¼Ïñ
+									uint32_t graphic_tpye,//ç»˜åˆ¶ä»€ä¹ˆå›¾åƒ
 									uint32_t layer,
 									uint32_t color,
 									uint32_t start_angle,
@@ -908,10 +908,10 @@ void Figure_Graphic(graphic_data_struct_t* graphic,//×îÖÕÒª·¢³öÈ¥µÄÊı×éµÄÊı¾İ¶ÎÄ
 									uint32_t end_x,
 									uint32_t end_y);
 
-void Float_Graphic(Float_data_struct_t* graphic,//×îÖÕÒª·¢³öÈ¥µÄÊı×éµÄÊı¾İ¶ÎÄÚÈİ
+void Float_Graphic(Float_data_struct_t* graphic,//æœ€ç»ˆè¦å‘å‡ºå»çš„æ•°ç»„çš„æ•°æ®æ®µå†…å®¹
 									const char* name,
 									uint32_t operate_tpye,
-									uint32_t graphic_tpye,//»æÖÆÊ²Ã´Í¼Ïñ
+									uint32_t graphic_tpye,//ç»˜åˆ¶ä»€ä¹ˆå›¾åƒ
 									uint32_t layer,
 									uint32_t color,
 									uint32_t size,
@@ -921,10 +921,10 @@ void Float_Graphic(Float_data_struct_t* graphic,//×îÖÕÒª·¢³öÈ¥µÄÊı×éµÄÊı¾İ¶ÎÄÚÈİ
 									uint32_t start_y,
 									float number);
 
-void Int_Graphic(Int_data_struct_t* graphic,//×îÖÕÒª·¢³öÈ¥µÄÊı×éµÄÊı¾İ¶ÎÄÚÈİ
+void Int_Graphic(Int_data_struct_t* graphic,//æœ€ç»ˆè¦å‘å‡ºå»çš„æ•°ç»„çš„æ•°æ®æ®µå†…å®¹
 									const char* name,
 									uint32_t operate_tpye,
-									uint32_t graphic_tpye,//»æÖÆÊ²Ã´Í¼Ïñ
+									uint32_t graphic_tpye,//ç»˜åˆ¶ä»€ä¹ˆå›¾åƒ
 									uint32_t layer,
 									uint32_t color,
 									uint32_t size,

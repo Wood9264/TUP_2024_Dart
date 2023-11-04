@@ -3,7 +3,7 @@
   * @file       detect_task.c/h
   * @brief      detect error task, judged by receiving data time. provide detect
                 hook function, error exist function.
-  *             ¼ì²â´íÎóÈÎÎñ£¬ Í¨¹ı½ÓÊÕÊı¾İÊ±¼äÀ´ÅĞ¶Ï.Ìá¹© ¼ì²â¹³×Óº¯Êı,´íÎó´æÔÚº¯Êı.
+  *             æ£€æµ‹é”™è¯¯ä»»åŠ¡ï¼Œ é€šè¿‡æ¥æ”¶æ•°æ®æ—¶é—´æ¥åˆ¤æ–­.æä¾› æ£€æµ‹é’©å­å‡½æ•°,é”™è¯¯å­˜åœ¨å‡½æ•°.
   * @note       
   * @history
   *  Version    Date            Author          Modification
@@ -29,22 +29,22 @@
     3. if XXX_TOE has data_is_error_fun ,solve_lost_fun,solve_data_error_fun function, 
         please assign to function pointer.
     4. when XXX_TOE sensor data come, add the function detect_hook(XXX_TOE) function.
-    Èç¹ûÒªÌí¼ÓÒ»¸öĞÂÉè±¸
-    1.µÚÒ»²½ÔÚdetect_task.h£¬Ìí¼ÓÉè±¸Ãû×ÖÔÚerrorListµÄ×îºó£¬Ïñ
+    å¦‚æœè¦æ·»åŠ ä¸€ä¸ªæ–°è®¾å¤‡
+    1.ç¬¬ä¸€æ­¥åœ¨detect_task.hï¼Œæ·»åŠ è®¾å¤‡åå­—åœ¨errorListçš„æœ€åï¼Œåƒ
     enum errorList
     {
         ...
-        XXX_TOE,    //ĞÂÉè±¸
+        XXX_TOE,    //æ–°è®¾å¤‡
         ERROR_LIST_LENGHT,
     };
-    2.ÔÚdetect_initº¯Êı,Ìí¼ÓofflineTime, onlinetime, priority²ÎÊı
+    2.åœ¨detect_initå‡½æ•°,æ·»åŠ offlineTime, onlinetime, priorityå‚æ•°
         uint16_t set_item[ERROR_LIST_LENGHT][3] =
         {
             ...
             {n,n,n}, //XX_TOE
         };
-    3.Èç¹ûÓĞdata_is_error_fun ,solve_lost_fun,solve_data_error_funº¯Êı£¬¸³Öµµ½º¯ÊıÖ¸Õë
-    4.ÔÚXXX_TOEÉè±¸Êı¾İÀ´µÄÊ±ºò, Ìí¼Óº¯Êıdetect_hook(XXX_TOE).
+    3.å¦‚æœæœ‰data_is_error_fun ,solve_lost_fun,solve_data_error_funå‡½æ•°ï¼Œèµ‹å€¼åˆ°å‡½æ•°æŒ‡é’ˆ
+    4.åœ¨XXX_TOEè®¾å¤‡æ•°æ®æ¥çš„æ—¶å€™, æ·»åŠ å‡½æ•°detect_hook(XXX_TOE).
   ==============================================================================
   @endverbatim
   ****************************(C) COPYRIGHT 2019 DJI****************************
@@ -62,7 +62,7 @@ extern "C"{
 #define DETECT_TASK_INIT_TIME 57
 #define DETECT_CONTROL_TIME 10
 
-//´íÎóÂëÒÔ¼°¶ÔÓ¦Éè±¸Ë³Ğò
+//é”™è¯¯ç ä»¥åŠå¯¹åº”è®¾å¤‡é¡ºåº
 enum errorList
 {
     DBUS_TOE = 0,
@@ -109,7 +109,7 @@ typedef __packed struct
   * @retval         none
   */
 /**
-  * @brief          ¼ì²âÈÎÎñ
+  * @brief          æ£€æµ‹ä»»åŠ¡
   * @param[in]      pvParameters: NULL
   * @retval         none
   */
@@ -121,9 +121,9 @@ extern void detect_task(void const *pvParameters);
   * @retval         true (eror) or false (no error)
   */
 /**
-  * @brief          »ñÈ¡Éè±¸¶ÔÓ¦µÄ´íÎó×´Ì¬
-  * @param[in]      toe:Éè±¸Ä¿Â¼
-  * @retval         true(´íÎó) »òÕßfalse(Ã»´íÎó)
+  * @brief          è·å–è®¾å¤‡å¯¹åº”çš„é”™è¯¯çŠ¶æ€
+  * @param[in]      toe:è®¾å¤‡ç›®å½•
+  * @retval         true(é”™è¯¯) æˆ–è€…false(æ²¡é”™è¯¯)
   */
 extern bool_t toe_is_error(uint8_t err);
 
@@ -133,8 +133,8 @@ extern bool_t toe_is_error(uint8_t err);
   * @retval         none
   */
 /**
-  * @brief          ¼ÇÂ¼Ê±¼ä
-  * @param[in]      toe:Éè±¸Ä¿Â¼
+  * @brief          è®°å½•æ—¶é—´
+  * @param[in]      toe:è®¾å¤‡ç›®å½•
   * @retval         none
   */
 extern void detect_hook(uint8_t toe);
@@ -145,9 +145,9 @@ extern void detect_hook(uint8_t toe);
   * @retval         the point of error_list
   */
 /**
-  * @brief          µÃµ½´íÎóÁĞ±í
+  * @brief          å¾—åˆ°é”™è¯¯åˆ—è¡¨
   * @param[in]      none
-  * @retval         error_listµÄÖ¸Õë
+  * @retval         error_listçš„æŒ‡é’ˆ
   */
 extern const error_t *get_error_list_point(void);
 

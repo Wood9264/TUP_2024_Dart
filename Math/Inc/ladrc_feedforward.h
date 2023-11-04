@@ -28,10 +28,10 @@ class	LADRC_FDW_t:public LADRC_t
 	  differ_type_def differ2;
 	  fp32 dif1;
 	  fp32 dif2; 
-	  fp32 own_w;//前馈带宽
-	  fp32 own_gain;//前馈增益
+	  fp32 own_w;//鍓嶉甯﹀
+	  fp32 own_gain;//鍓嶉澧炵泭
 	
-	  //输入
+	  //杈撳叆
 	  fp32 own_set_last;
 	public:
 		void init(fp32 wc, fp32 b0 ,fp32 wo,fp32 max_out,fp32 w,fp32 gain);

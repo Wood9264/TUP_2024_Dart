@@ -11,7 +11,7 @@ Vision_process_t *Vision_process_point(void)
 	return &Vision_process;
 }
 /**
-  * @brief          ÊÓ¾õ½»Á÷ÈÎÎñ
+  * @brief          è§†è§‰äº¤æµä»»åŠ¡
   * @param[in]      null
   */
 void communi_task(void const *pvParameters)
@@ -29,7 +29,7 @@ void communi_task(void const *pvParameters)
 }
 
 /**
-  * @brief          ¹¹Ôìº¯Êý³õÊ¼»¯
+  * @brief          æž„é€ å‡½æ•°åˆå§‹åŒ–
   * @param[in]      null
   */
 Vision_process_t::Vision_process_t()
@@ -38,16 +38,16 @@ Vision_process_t::Vision_process_t()
 	accel_queue.queueLength = 60;
 	dis_queue.queueLength = 60;
 	vision_mode=1;
-	//Ïà»ú½¹¾à²ÎÊý
+	//ç›¸æœºç„¦è·å‚æ•°
 	fx = 883.3170;
 	fy = 882.6257;
-	//Ïà»ú¹âÐÄ×ø±ê
+	//ç›¸æœºå…‰å¿ƒåæ ‡
 	cx = 960;
 	cy = 530;
 	f=sqrt(fx*fx+fy*fy);
 }
 /**
-  * @brief          ×ÔÃéUI·´À¡¼ÆËã
+  * @brief          è‡ªçž„UIåé¦ˆè®¡ç®—
   * @param[in]      null
   */
 void Vision_process_t::Ui_follow_calc()
@@ -61,32 +61,32 @@ void Vision_process_t::Ui_follow_calc()
 	if(isinf(follow_radius)) follow_radius = 0;
 }
 /**
-  * @brief          ×ÔÃéÄ£Ê½ÇÐ»»
+  * @brief          è‡ªçž„æ¨¡å¼åˆ‡æ¢
   * @param[in]      null
   */
 void Vision_process_t::Transmit_info()
 {
-    if(IF_KEY_PRESSED_F)  //×ÔÃé
+    if(IF_KEY_PRESSED_F)  //è‡ªçž„
 {
 			vision_mode = 1;
 			vision_mode_ui=1;
 }
-		if(IF_KEY_PRESSED_C)  //Ð¡·û
+		if(IF_KEY_PRESSED_C)  //å°ç¬¦
 {
 			vision_mode = 3;
 			vision_mode_ui=3;
 }
-		if(IF_KEY_PRESSED_V)  //´ó·û
+		if(IF_KEY_PRESSED_V)  //å¤§ç¬¦
 {
 			vision_mode =4;
 			vision_mode_ui=4;
 }
-		if(IF_KEY_PRESSED_R)  //Ç°ÉÚÕ¾
+		if(IF_KEY_PRESSED_R)  //å‰å“¨ç«™
 {
 		  vision_mode = 5;
 			vision_mode_ui=5;
 }
-		if(IF_KEY_PRESSED_X)  //¹Ø±ÕÔ¤²â
+		if(IF_KEY_PRESSED_X)  //å…³é—­é¢„æµ‹
 {
 		  vision_mode = 0;
 			vision_mode_ui=0;
@@ -99,12 +99,12 @@ void Vision_process_t::Transmit_info()
 
 }
 /**
-  * @brief          ¶ÁÈ¡ÊÓ¾õÊý¾Ý
+  * @brief          è¯»å–è§†è§‰æ•°æ®
   * @param[in]      null
   */
 void Vision_process_t::Get_info()
 {
-  //»ñÈ¡Ô­Ê¼Êý¾Ý
+  //èŽ·å–åŽŸå§‹æ•°æ®
 	Yaw_error=vision_info_point()->Vision_Error_Angle_Yaw(&(gimbal_point()->gimbal_kalman.Auto_Error_Yaw[NOW]));
   Pitch_error=vision_info_point()->Vision_Error_Angle_Pitch(&(gimbal_point()->gimbal_kalman.Auto_Error_Pitch[NOW]));
 	vision_info_point()->Vision_Get_Distance(&(gimbal_point()->gimbal_kalman.Auto_Distance));
@@ -112,7 +112,7 @@ void Vision_process_t::Get_info()
 	vision_info_point()->Vision_Get_coordinate_system(&x_value,&y_value,&z_value);
 	vision_info_point()->Vision_Get_predict_coordinate(&predict_x_value,&predict_y_value,&predict_z_value);
 
-	data_kal.YawGet_KF = gimbal_point()->gimbal_kalman.Yaw_Error_Vis_Kalman.KalmanFilter(gimbal_point()->gimbal_kalman.Auto_Error_Yaw[NOW]); 	/*¶ÔÊÓ¾õ½Ç¶ÈÊý¾Ý×ö¿¨¶ûÂüÂË²¨*/
+	data_kal.YawGet_KF = gimbal_point()->gimbal_kalman.Yaw_Error_Vis_Kalman.KalmanFilter(gimbal_point()->gimbal_kalman.Auto_Error_Yaw[NOW]); 	/*å¯¹è§†è§‰è§’åº¦æ•°æ®åšå¡å°”æ›¼æ»¤æ³¢*/
   data_kal.PitchGet_KF = gimbal_point()->gimbal_kalman.Pitch_Error_Vis_Kalman.KalmanFilter(gimbal_point()->gimbal_kalman.Auto_Error_Pitch[NOW]);
 	data_kal.DistanceGet_KF =gimbal_point()->gimbal_kalman.Vision_Distance_Kalman.KalmanFilter(gimbal_point()->gimbal_kalman.Auto_Distance);
 
@@ -128,7 +128,7 @@ void Vision_process_t::Get_info()
 
 
 /**
-  * @brief          ÊÓ¾õÔ¤²â
+  * @brief          è§†è§‰é¢„æµ‹
   * @param[in]      null
   */
 void Vision_process_t::Pridict_info()
@@ -137,21 +137,21 @@ void Vision_process_t::Pridict_info()
   static float predic_use = 0.6f;
   float dir_factor;
  
-	//¶ÔÊÓ¾õ·¢ËÍµÄaddÖµ+µç»úlastangle  ½øÐÐÊý¾ÝÍÆÑÝ
+	//å¯¹è§†è§‰å‘é€çš„addå€¼+ç”µæœºlastangle  è¿›è¡Œæ•°æ®æŽ¨æ¼”
 	
-	//ËÙ¶ÈÍÆÑÝ
+	//é€Ÿåº¦æŽ¨æ¼”
 	speed_get = Get_Diff(3,&speed_queue,YawTarget_now);//20
-  speed_get = 20 * (speed_get/vision_info_point()->Fir_State.rx_time_fps); //Ã¿ºÁÃë
+  speed_get = 20 * (speed_get/vision_info_point()->Fir_State.rx_time_fps); //æ¯æ¯«ç§’
   speed_get = gimbal_point()->gimbal_kalman.Gimbal_Yaw_Gyro_Kalman.KalmanFilter(speed_get);
 // speed_get = DeathZoom(speed_get,0,1);
   speed_get = fp32_constrain(speed_get, -0.030, 0.030);
-  //¼ÓËÙ¶ÈÍÆÑÝ
-  accel_get = Get_Diff(5,&accel_queue,speed_get);	 /*ÐÂ°æ»ñÈ¡¼ÓËÙ¶È10*/
-  accel_get = 10 * (accel_get/vision_info_point()->Fir_State.rx_time_fps);//Ã¿ºÁÃë//fpsÎª0Ê±½âÎöÊý¾ÝÖ±½ÓÎªnan
+  //åŠ é€Ÿåº¦æŽ¨æ¼”
+  accel_get = Get_Diff(5,&accel_queue,speed_get);	 /*æ–°ç‰ˆèŽ·å–åŠ é€Ÿåº¦10*/
+  accel_get = 10 * (accel_get/vision_info_point()->Fir_State.rx_time_fps);//æ¯æ¯«ç§’//fpsä¸º0æ—¶è§£æžæ•°æ®ç›´æŽ¥ä¸ºnan
   accel_get = gimbal_point()->gimbal_kalman.Gimbal_Yaw_Accle_Kalman.KalmanFilter(accel_get);
-// accel_get = DeathZoom(accel_get,0,0.1);		/*ËÀÇø´¦Àí - ÂË³ý0µã¸½½üµÄÔëÉù*/
+// accel_get = DeathZoom(accel_get,0,0.1);		/*æ­»åŒºå¤„ç† - æ»¤é™¤0ç‚¹é™„è¿‘çš„å™ªå£°*/
   accel_get = fp32_constrain(Vision_process.accel_get, -0.023, 0.023);
-  //ËÙ¶ÈÍÆÑÝ
+  //é€Ÿåº¦æŽ¨æ¼”
   distend_get =  Get_Diff(5,&dis_queue,data_kal.DistanceGet_KF);
 	
 	 if( (speed_get * accel_get)>=0 )
@@ -163,7 +163,7 @@ void Vision_process_t::Pridict_info()
     dir_factor= 1.0f;//1.5  4
   }
 
-  feedforwaurd_angle = acc_use * accel_get;  	//¼ÆËãÇ°À¡½Ç
+  feedforwaurd_angle = acc_use * accel_get;  	//è®¡ç®—å‰é¦ˆè§’
 
   predict_angle = predic_use * (1.1f * speed_get * data_kal.DistanceGet_KF
 												      + 1.5f * dir_factor * feedforwaurd_angle * data_kal.DistanceGet_KF);
@@ -174,14 +174,14 @@ void Vision_process_t::Pridict_info()
 
 void Vision_process_t::Control()
 {
-  //²»¸øÔ¤²â
+  //ä¸ç»™é¢„æµ‹
  data_kal.YawTarget_KF=gimbal_point()->gimbal_kalman.Yaw_Set_Gim_Kalman.KalmanFilter(YawTarget_now);
  data_kal.PitchTarget_KF=gimbal_point()->gimbal_kalman.Pitch_Set_Gim_Kalman.KalmanFilter(PitchTarget_now);
  data_kal.YawTarget_KF=gimbal_point()->gimbal_kalman.Yaw_Set_Gim_Kalman.KalmanFilter(data_kal.YawTarget_KF);
  //data_kal.PitchTarget_KF=gimbal_point()->gimbal_kalman.Pitch_Set_Gim_Kalman.KalmanFilter(data_kal.PitchTarget_KF);
 
 
-//  //¸øÔ¤²â
+//  //ç»™é¢„æµ‹
 //	data_kal.YawTarget_KF=YawTarget_now+Vision_process.predict_angle;
 //  data_kal.YawTarget_KF=gimbal_point()->gimbal_kalman.Yaw_Set_Gim_Kalman.KalmanFilter(data_kal.YawTarget_KF);	
 //  data_kal.PitchTarget_KF= gimbal_point()->gimbal_kalman.Pitch_Set_Gim_Kalman.KalmanFilter(PitchTarget_now);

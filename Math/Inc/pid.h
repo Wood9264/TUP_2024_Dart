@@ -20,16 +20,16 @@ class PID_t
 		fp32 own_Kp;
 	  fp32 own_Ki;
 	  fp32 own_Kd;
-	  fp32 own_max_out;  //×î´óÊä³ö
-	  fp32 own_max_iout; //×î´ó»ı·ÖÊä³ö
-    fp32 own_set; //Éè¶¨Öµ
-    fp32 own_fdb; //µ±Ç°Öµ
+	  fp32 own_max_out;  //æœ€å¤§è¾“å‡º
+	  fp32 own_max_iout; //æœ€å¤§ç§¯åˆ†è¾“å‡º
+    fp32 own_set; //è®¾å®šå€¼
+    fp32 own_fdb; //å½“å‰å€¼
     fp32 out;
     fp32 Pout;
     fp32 Iout;
     fp32 Dout;
-    fp32 Dbuf[3];  //Î¢·ÖÏî 0×îĞÂ 1ÉÏÒ»´Î 2ÉÏÉÏ´Î
-    fp32 error[3]; //Îó²îÏî 0×îĞÂ 1ÉÏÒ»´Î 2ÉÏÉÏ´Î
+    fp32 Dbuf[3];  //å¾®åˆ†é¡¹ 0æœ€æ–° 1ä¸Šä¸€æ¬¡ 2ä¸Šä¸Šæ¬¡
+    fp32 error[3]; //è¯¯å·®é¡¹ 0æœ€æ–° 1ä¸Šä¸€æ¬¡ 2ä¸Šä¸Šæ¬¡
 	  
 		void init(uint8_t mode,const fp32 PID[3],fp32 max_out,fp32 max_iout);
 	  fp32 calc(fp32 ref,fp32 set);

@@ -14,7 +14,7 @@ void SPI1_DMA_init(uint32_t tx_buf, uint32_t rx_buf, uint16_t num)
 
 
     //disable DMA
-    //Ê§Ğ§DMA
+    //å¤±æ•ˆDMA
     __HAL_DMA_DISABLE(&hdma_spi1_rx);
     
     while(hdma_spi1_rx.Instance->CR & DMA_SxCR_EN)
@@ -26,17 +26,17 @@ void SPI1_DMA_init(uint32_t tx_buf, uint32_t rx_buf, uint16_t num)
 
     hdma_spi1_rx.Instance->PAR = (uint32_t) & (SPI1->DR);
     //memory buffer 1
-    //ÄÚ´æ»º³åÇø1
+    //å†…å­˜ç¼“å†²åŒº1
     hdma_spi1_rx.Instance->M0AR = (uint32_t)(rx_buf);
     //data length
-    //Êı¾İ³¤¶È
+    //æ•°æ®é•¿åº¦
     __HAL_DMA_SET_COUNTER(&hdma_spi1_rx, num);
 
     __HAL_DMA_ENABLE_IT(&hdma_spi1_rx, DMA_IT_TC);
 
 
     //disable DMA
-    //Ê§Ğ§DMA
+    //å¤±æ•ˆDMA
     __HAL_DMA_DISABLE(&hdma_spi1_tx);
     
     while(hdma_spi1_tx.Instance->CR & DMA_SxCR_EN)
@@ -49,10 +49,10 @@ void SPI1_DMA_init(uint32_t tx_buf, uint32_t rx_buf, uint16_t num)
 
     hdma_spi1_tx.Instance->PAR = (uint32_t) & (SPI1->DR);
     //memory buffer 1
-    //ÄÚ´æ»º³åÇø1
+    //å†…å­˜ç¼“å†²åŒº1
     hdma_spi1_tx.Instance->M0AR = (uint32_t)(tx_buf);
     //data length
-    //Êı¾İ³¤¶È
+    //æ•°æ®é•¿åº¦
     __HAL_DMA_SET_COUNTER(&hdma_spi1_tx, num);
 
 

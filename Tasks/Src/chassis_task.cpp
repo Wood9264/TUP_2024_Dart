@@ -19,9 +19,9 @@
 
 // /***************************************/
 // /**
-//   * @brief          µ×ÅÌÀàÖ¸Õë
+//   * @brief          åº•ç›˜ç±»æŒ‡é’ˆ
 //   * @param[in]      null
-//   * @retval         µ×ÅÌ¶ÔÏó
+//   * @retval         åº•ç›˜å¯¹è±¡
 //   */
 
 // chassis_t* chassispoint(void)
@@ -30,21 +30,21 @@
 // }
 
 // /**
-//   * @brief          µ×ÅÌÈÎÎñ
+//   * @brief          åº•ç›˜ä»»åŠ¡
 //   * @param[in]      none
 //   * @retval         none
 //   */
 // void chassis_task(void const * pvParameters)
 // {
-// 	 //¿ÕÏĞÒ»¶ÎÊ±¼ä
+// 	 //ç©ºé—²ä¸€æ®µæ—¶é—´
 //   vTaskDelay(CHASSIS_TASK_INIT_TIME);
 // 	uint32_t currentTime;
 // 	while(1)
 // 	{
-// 		currentTime = xTaskGetTickCount();//µ±Ç°ÏµÍ³Ê±¼ä
+// 		currentTime = xTaskGetTickCount();//å½“å‰ç³»ç»Ÿæ—¶é—´
 //     chassis_move.Get_info();
 // 	  chassis_move.Control();
-//     CAN_CMD_CAP(chassis_move.chassis_max_power*100);//³¬¼¶µçÈİÊä³ö¹¦ÂÊ
+//     CAN_CMD_CAP(chassis_move.chassis_max_power*100);//è¶…çº§ç”µå®¹è¾“å‡ºåŠŸç‡
 //  g_power_set=chassis_move.chassis_max_power*100;
 // 		CAN1_200_cmd_motor(chassis_move.chassis_motor[0].give_current,chassis_move.chassis_motor[1].give_current,
 // 		                      chassis_move.chassis_motor[2].give_current,chassis_move.chassis_motor[3].give_current);
@@ -55,13 +55,13 @@
 
 
 // /**
-//   * @brief          ¹¹Ôìº¯Êı³õÊ¼»¯
+//   * @brief          æ„é€ å‡½æ•°åˆå§‹åŒ–
 //   * @param[in]      none
 //   * @retval         none
 //   */
 // chassis_t::chassis_t()
 // {
-//   //³õÊ¼»¯µ×ÅÌµç»úpid Ğı×ª»·pid
+//   //åˆå§‹åŒ–åº•ç›˜ç”µæœºpid æ—‹è½¬ç¯pid
 // 	fp32 chassis_yaw_pid[3] = {CHASSIS_MOTOR_YAW_PID_KP,CHASSIS_MOTOR_YAW_PID_KI,CHASSIS_MOTOR_YAW_PID_KD}; 
 // 	fp32 chassis_yaw_spin_pid[3]={-10,0,-5};
 
@@ -91,7 +91,7 @@
 // //	chassis_current_pid[3].init(PID_POSITION,motor_current_pid,30000, 1000);
 
 
-// 	//ÉèÖÃvxvy×î´ó×îĞ¡ËÙ¶È
+// 	//è®¾ç½®vxvyæœ€å¤§æœ€å°é€Ÿåº¦
 // 	vx_max_speed = NORMAL_MAX_CHASSIS_SPEED_X;
 // 	vx_min_speed = -NORMAL_MAX_CHASSIS_SPEED_X;
 // 	vy_max_speed = NORMAL_MAX_CHASSIS_SPEED_Y;
@@ -102,26 +102,26 @@
 // }
 
 // /**
-//   * @brief          µ×ÅÌÊı¾İ¶ÁÈ¡
+//   * @brief          åº•ç›˜æ•°æ®è¯»å–
 //   * @param[in]      none
 //   * @retval         none
 //   */
 // void chassis_t::Get_info()
 // {
-// 	  //»ñÈ¡µ±Ç°Ä£Ê½
+// 	  //è·å–å½“å‰æ¨¡å¼
 //     chassis_mode=syspoint()->sys_mode;
-// 	 //»ñÈ¡ÔÆÌ¨µç»úÊı¾İÖ¸Õë
+// 	 //è·å–äº‘å°ç”µæœºæ•°æ®æŒ‡é’ˆ
 // 	  chassis_yaw_motor = gimbal_point()->Yaw_motor;
 // 		ina226_data.BusV = INA226_getBusV(&hi2c2,INA226_ADDRESS)/1000;
 // 		ina226_data.Current = INA226_getCurrent(&hi2c2,INA226_ADDRESS)/1000;
 // 		ina226_data.Power = INA226_getPower(&hi2c2,INA226_ADDRESS)/1000;
 
-// 	  //»ñÈ¡µç»úËÙ¶È£¬½«µç»úµÄ·´À¡µÄËÙ¶È»»Ëã³Éµ×ÅÌµÄËÙ¶È
+// 	  //è·å–ç”µæœºé€Ÿåº¦ï¼Œå°†ç”µæœºçš„åé¦ˆçš„é€Ÿåº¦æ¢ç®—æˆåº•ç›˜çš„é€Ÿåº¦
 // 	   for ( int i = 0; i <= 3; i++)
 //     {
 // 			chassis_motor[i].speed = CHASSIS_MOTOR_RPM_TO_VECTOR_SEN *chassis_motor[i].chassis_motor_measure->speed_rpm;	   
 // 		}
-//     //»ñÈ¡µ×ÅÌÇ°½øËÙ¶È x£¬ Æ½ÒÆËÙ¶Èy£¬Ğı×ªËÙ¶Èwz£¬×ø±êÏµÎªÓÒÊÖÏµ
+//     //è·å–åº•ç›˜å‰è¿›é€Ÿåº¦ xï¼Œ å¹³ç§»é€Ÿåº¦yï¼Œæ—‹è½¬é€Ÿåº¦wzï¼Œåæ ‡ç³»ä¸ºå³æ‰‹ç³»
 //     vx = (-chassis_motor[0].speed +chassis_motor[1].speed 
 // 		                           + chassis_motor[2].speed - chassis_motor[3].speed) * MOTOR_SPEED_TO_CHASSIS_SPEED_VX;
 //     vy = (-chassis_motor[0].speed - chassis_motor[1].speed 
@@ -138,7 +138,7 @@
 
 
 // /**
-//   * @brief          µ×ÅÌ¿ØÖÆÁ¿ÉèÖÃÓë¼ÆËã
+//   * @brief          åº•ç›˜æ§åˆ¶é‡è®¾ç½®ä¸è®¡ç®—
 //   * @param[in]      none
 //   * @retval         none
 //   */
@@ -161,7 +161,7 @@
 	
 // }
 // /**
-//   * @brief          µ×ÅÌÎŞÁ¦Ä£Ê½¿ØÖÆÁ¿ÉèÖÃ
+//   * @brief          åº•ç›˜æ— åŠ›æ¨¡å¼æ§åˆ¶é‡è®¾ç½®
 //   * @param[in]      none
 //   * @retval         none
 //   */
@@ -175,7 +175,7 @@
 // }
 
 // /**
-//   * @brief          µ×ÅÌ¸úËæÔÆÌ¨Ä£Ê½¿ØÖÆÁ¿ÉèÖÃ
+//   * @brief          åº•ç›˜è·Ÿéšäº‘å°æ¨¡å¼æ§åˆ¶é‡è®¾ç½®
 //   * @param[in]      none
 //   * @retval         none
 //   */
@@ -186,25 +186,25 @@
 //     vx_follow_set=syspoint()->chassis_vx_set_temp;
 // 	  vy_follow_set=syspoint()->chassis_vy_set_temp;
 //     fp32 sin_yaw = 0.0f, cos_yaw = 0.0f;
-// 		//Ğı×ª¿ØÖÆµ×ÅÌËÙ¶È·½Ïò£¬±£Ö¤Ç°½ø·½ÏòÊÇÔÆÌ¨·½Ïò£¬ÓĞÀûÓÚÔË¶¯Æ½ÎÈ
+// 		//æ—‹è½¬æ§åˆ¶åº•ç›˜é€Ÿåº¦æ–¹å‘ï¼Œä¿è¯å‰è¿›æ–¹å‘æ˜¯äº‘å°æ–¹å‘ï¼Œæœ‰åˆ©äºè¿åŠ¨å¹³ç¨³
 // 		sin_yaw = arm_sin_f32(-chassis_yaw_motor.relative_angle);
 // 		cos_yaw = arm_cos_f32(-chassis_yaw_motor.relative_angle);
 // 		vx_set = (cos_yaw * vx_follow_set + sin_yaw * vy_follow_set)*scale_k;
 // 		vy_set = (-sin_yaw * vx_follow_set + cos_yaw * vy_follow_set)*scale_k;
-// 		//ÉèÖÃ¿ØÖÆÏà¶ÔÔÆÌ¨½Ç¶È
+// 		//è®¾ç½®æ§åˆ¶ç›¸å¯¹äº‘å°è§’åº¦
 // 	  angle_set=0;
 // 		chassis_relative_angle_set = rad_format(angle_set);
 //     chassis_angle_pid.out=chassis_angle_pid.calc(chassis_yaw_motor.relative_angle,chassis_relative_angle_set);
 // 		wz_set=chassis_angle_pid.out*scale_k;
 
-// 		//ËÙ¶ÈÏŞ·ù
+// 		//é€Ÿåº¦é™å¹…
 // 		vx_set = fp32_constrain(vx_set, vx_min_speed, vx_max_speed);
 // 		vy_set = fp32_constrain(vy_set, vy_min_speed, vy_max_speed);
     
 // }
 
 // /**
-//   * @brief          µ×ÅÌ²»¸úËæÔÆÌ¨¿ØÖÆÁ¿ÉèÖÃ
+//   * @brief          åº•ç›˜ä¸è·Ÿéšäº‘å°æ§åˆ¶é‡è®¾ç½®
 //   * @param[in]      none
 //   * @retval         none
 //   */
@@ -216,14 +216,14 @@
 // 	  angle_set= -CHASSIS_WZ_RC_SEN * syspoint()->system_rc_ctrl->rc.ch[CHASSIS_WZ_CHANNEL];
 
 // 	  wz_set=angle_set*scale_k;
-// 		//ËÙ¶ÈÏŞ·ù
+// 		//é€Ÿåº¦é™å¹…
 //     vx_set = fp32_constrain(vx_set, vx_min_speed, vx_max_speed);
 // 		vy_set = fp32_constrain(vy_set, vy_min_speed, vy_max_speed);
 
 // }
 
 // /**
-//   * @brief          µ×ÅÌĞ¡ÍÓÂİÄ£Ê½¿ØÖÆÁ¿ÉèÖÃ 
+//   * @brief          åº•ç›˜å°é™€èºæ¨¡å¼æ§åˆ¶é‡è®¾ç½® 
 //   * @param[in]      none
 //   * @retval         none
 //   */
@@ -236,10 +236,10 @@
 //     syspoint()->Chassis_value_calc();
 //     vx_follow_set=syspoint()->chassis_vx_set_temp;
 // 	  vy_follow_set=syspoint()->chassis_vy_set_temp;
-//     angle_set = 1.5f * (8 - fabs(vx_follow_set)- fabs(vy_follow_set));  //±äËÙÄ£Ê½
+//     angle_set = 1.5f * (8 - fabs(vx_follow_set)- fabs(vy_follow_set));  //å˜é€Ÿæ¨¡å¼
 	
 //   	fp32 sin_yaw = 0.0f, cos_yaw = 0.0f;
-// 		//Ğı×ª¿ØÖÆµ×ÅÌËÙ¶È·½Ïò£¬±£Ö¤Ç°½ø·½ÏòÊÇÔÆÌ¨·½Ïò£¬ÓĞÀûÓÚÔË¶¯Æ½ÎÈ
+// 		//æ—‹è½¬æ§åˆ¶åº•ç›˜é€Ÿåº¦æ–¹å‘ï¼Œä¿è¯å‰è¿›æ–¹å‘æ˜¯äº‘å°æ–¹å‘ï¼Œæœ‰åˆ©äºè¿åŠ¨å¹³ç¨³
 // 		sin_yaw = arm_sin_f32(-chassis_yaw_motor.relative_angle);
 // 		cos_yaw = arm_cos_f32(-chassis_yaw_motor.relative_angle); 
 
@@ -247,14 +247,14 @@
 // 		vy_set = (-sin_yaw * vx_follow_set + cos_yaw * vy_follow_set)*scale_k;
 	
 // 		wz_set = angle_set*scale_k;
-// 	   //ËÙ¶ÈÏŞ·ù
+// 	   //é€Ÿåº¦é™å¹…
 // 		vx_set = fp32_constrain(vx_set, vx_min_speed, vx_max_speed);
 // 		vy_set = fp32_constrain(vy_set, vy_min_speed, vy_max_speed);
 // }
 
 
 // /**
-//   * @brief          µ×ÅÌ¿ØÖÆÁ¿¼ÆËã
+//   * @brief          åº•ç›˜æ§åˆ¶é‡è®¡ç®—
 //   * @param[in]      none
 //   * @retval         none
 //   */
@@ -272,7 +272,7 @@
 // 			 return;
 // 		}
 // 		chassis_vector_to_mecanum_wheel_speed(vx_set,vy_set,wz_set,wheel_speed);
-// 		//¼ÆËãÂÖ×Ó¿ØÖÆ×î´óËÙ¶È£¬²¢ÏŞÖÆÆä×î´óËÙ¶Èi
+// 		//è®¡ç®—è½®å­æ§åˆ¶æœ€å¤§é€Ÿåº¦ï¼Œå¹¶é™åˆ¶å…¶æœ€å¤§é€Ÿåº¦i
 // 		for (int i = 0; i <= 3; i++)
 // 		{
 // 				chassis_motor[i].speed_set = wheel_speed[i];
@@ -299,7 +299,7 @@
 //    //chassis_motor_speed_pid[2].out=chassis_motor_speed_pid[2].calc( chassis_motor[2].speed,chassis_motor[2].speed_set*0.78);		
     
 //      chassis_power_limit();
-// 		//¸³ÖµµçÁ÷Öµ
+// 		//èµ‹å€¼ç”µæµå€¼
 //     for (int i = 0; i <= 3; i++)
 //     {
 //          chassis_motor[i].give_current = (int16_t)( chassis_motor_speed_pid[i].out);
@@ -308,7 +308,7 @@
 // }
 
 // /**
-//   * @brief          ÂóÂÖÊı¾İ½âËã
+//   * @brief          éº¦è½®æ•°æ®è§£ç®—
 //   * @param[in]      none
 //   * @retval         none
 //   */
@@ -323,13 +323,13 @@
 	
 // }
 // /**
-//   * @brief          µ×ÅÌ¹¦ÂÊÏŞÖÆ
+//   * @brief          åº•ç›˜åŠŸç‡é™åˆ¶
 //   * @param[in]      none
 //   * @retval         none
 // 	*
-// 				³¬¼¶µçÈİ·ÖÎª³¬¼¶µçÈİ¹ÜÀí°å¡¢µçÈİ×é¡¢µçÈİ²ÃÅĞÈı¸öÖ÷Òª²¿·Ö£¬
-// 		¹ÜÀí°å¿ÉÒÔ¿ØÖÆµç¹Ü¸øµÄ¹¦ÂÊ¼´µçÈİ×éµÄÊäÈë¹¦ÂÊ¡¢²ÃÅĞÏµÍ³ÏÔÊ¾µÄµ×ÅÌ¹¦ÂÊ£¬
-// 		±£Ö¤µ×ÅÌ²»»á³¬¹¦ÂÊ¡£ÒÔÏÂÖ÷ÒªÈÎÎñÊÇºÏÀí·ÖÅä·Åµç²ßÂÔ£¬¾¡¿ÉÄÜµØ´ïµ½³ä·ÅÆ½ºâ
+// 				è¶…çº§ç”µå®¹åˆ†ä¸ºè¶…çº§ç”µå®¹ç®¡ç†æ¿ã€ç”µå®¹ç»„ã€ç”µå®¹è£åˆ¤ä¸‰ä¸ªä¸»è¦éƒ¨åˆ†ï¼Œ
+// 		ç®¡ç†æ¿å¯ä»¥æ§åˆ¶ç”µç®¡ç»™çš„åŠŸç‡å³ç”µå®¹ç»„çš„è¾“å…¥åŠŸç‡ã€è£åˆ¤ç³»ç»Ÿæ˜¾ç¤ºçš„åº•ç›˜åŠŸç‡ï¼Œ
+// 		ä¿è¯åº•ç›˜ä¸ä¼šè¶…åŠŸç‡ã€‚ä»¥ä¸‹ä¸»è¦ä»»åŠ¡æ˜¯åˆç†åˆ†é…æ”¾ç”µç­–ç•¥ï¼Œå°½å¯èƒ½åœ°è¾¾åˆ°å……æ”¾å¹³è¡¡
 // 	*
 //   */
 
@@ -342,13 +342,13 @@
 // 	fp32 cap_v_out;
 // 	fp32 cap_i_out;
 
-// //»ñÈ¡²ÃÅĞÏµÍ³ĞÅÏ¢
-//   chassis_power          		=    JUDGE_usGetChassisPowerLimit();   //»ñÈ¡¹¦ÂÊÏŞÖÆ
-//   chassis_power_buffer   		=    JUDGE_fGetRemainEnergy();         //»ñÈ¡»º³åÄÜÁ¿
-// 	real_power_chassis     		=    JUDGE_fGetChassisPower();				 //»ñÈ¡µ×ÅÌ¹¦ÂÊ
+// //è·å–è£åˆ¤ç³»ç»Ÿä¿¡æ¯
+//   chassis_power          		=    JUDGE_usGetChassisPowerLimit();   //è·å–åŠŸç‡é™åˆ¶
+//   chassis_power_buffer   		=    JUDGE_fGetRemainEnergy();         //è·å–ç¼“å†²èƒ½é‡
+// 	real_power_chassis     		=    JUDGE_fGetChassisPower();				 //è·å–åº•ç›˜åŠŸç‡
 //   chassis_max_power_limit		=    JUDGE_usGetChassisPowerLimit();		
 
-// //·ÖÅä³äµç¹¦ÂÊÉÏÏŞ
+// //åˆ†é…å……ç”µåŠŸç‡ä¸Šé™
 // 	if((IF_KEY_PRESSED_SHIFT||rc_ctrl.rc.ch[4]>=630)&&IF_SUPER_OK)
 // 	{
 // 			chassis_power=chassis_max_power_limit;
@@ -365,7 +365,7 @@
 
 // 	chassis_max_power =chassis_power;
 
-// //¶ÁÈ¡³¬µç¹ÜÀíÄ£¿é
+// //è¯»å–è¶…ç”µç®¡ç†æ¨¡å—
 // 	cap_v_out = chassis_cap_masure->Cap_voltage;
 // 	cap_i_out = chassis_cap_masure->Cap_current;
 // 	cap_power_fdb=cap_i_out*cap_v_out;
@@ -374,7 +374,7 @@
 // 	temp_real_power=cap_v_out*chassis_cap_masure->Cap_current;
 //   temp_error_power=temp_real_power-real_power_chassis;
 
-// //µÍµçÑ¹±£»¤
+// //ä½ç”µå‹ä¿æŠ¤
 // if(chassis_cap_masure->Cap_voltage>=19)										
 // {
 // 			IF_SUPER_OK=1;
@@ -384,13 +384,13 @@
 // 			}
 
 
-// //¿ªÆô³¬¼¶µçÈİ
+// //å¼€å¯è¶…çº§ç”µå®¹
 //   if((IF_KEY_PRESSED_SHIFT||rc_ctrl.rc.ch[4]>=630))
 // 	{
-// 			//scale_k ÓÃÀ´¿ØÖÆÊä³öµçÁ÷
+// 			//scale_k ç”¨æ¥æ§åˆ¶è¾“å‡ºç”µæµ
 // 			scale_k = (a/b)*((120+chassis_max_power)/120.0f);
 // 			temp_k=scale_k;
-// 			if(syspoint()->sys_mode==SPIN||syspoint()->sys_mode==SPIN_AUTO)//Ğ¡ÍÓÂİ¹¦ÂÊÏŞÖÆ£¬È«ÏòÂÖÖ»ÓĞÔÚĞ¡ÍÓÂİÊ±²ÅÊÇÕæÕıµÄÈ«¹¦ÂÊÊä³ö
+// 			if(syspoint()->sys_mode==SPIN||syspoint()->sys_mode==SPIN_AUTO)//å°é™€èºåŠŸç‡é™åˆ¶ï¼Œå…¨å‘è½®åªæœ‰åœ¨å°é™€èºæ—¶æ‰æ˜¯çœŸæ­£çš„å…¨åŠŸç‡è¾“å‡º
 // 			{
 // 				  scale_k=temp_k*1.1f;
 // 			}
@@ -401,13 +401,13 @@
 // 			shift_flag=0;
 //   }
 
-// //ÁÙÊ±¹¦ÂÊÏŞÖÆ  Èç¹ûÃ»ÓĞ³¬¼¶µçÈİ¾Í´ò¿ª
+// //ä¸´æ—¶åŠŸç‡é™åˆ¶  å¦‚æœæ²¡æœ‰è¶…çº§ç”µå®¹å°±æ‰“å¼€
 // 			//scale_k=1;
 // }
 
 
 // /**
-//   * @brief          Ò»¼üC°åÖØÆô
+//   * @brief          ä¸€é”®Cæ¿é‡å¯
 //   * @param[in]      none
 //   * @retval         none
 //   */
@@ -417,7 +417,7 @@
 // {
 // if ( IF_KEY_PRESSED_B)//
 // 		{				
-// 				if(rc_keyB_time<500)//Ä£Ê½×ª»»Ê±¼ä
+// 				if(rc_keyB_time<500)//æ¨¡å¼è½¬æ¢æ—¶é—´
 // 				 {
 // 					 rc_keyB_time++;
 					 

@@ -13,16 +13,16 @@ extern uint8_t Judge_Buffer[JUDGE_BUFFER_LEN];
 void usart1_init()
 {
 
-    //Ê¹ÄÜ DMA ´®¿Ú½ÓÊÕ
+    //ä½¿èƒ½ DMA ä¸²å£æŽ¥æ”¶
     SET_BIT(huart1.Instance->CR3, USART_CR3_DMAR);
     SET_BIT(huart1.Instance->CR3, USART_CR3_DMAT);
 
     
-    //Ê¹ÄÜ¿ÕÏÐÖÐ¶Ï
+    //ä½¿èƒ½ç©ºé—²ä¸­æ–­
     __HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);
 	
   	//enable DMA
-    //Ê§Ð§DMA
+    //å¤±æ•ˆDMA
     __HAL_DMA_DISABLE(&hdma_usart1_rx);
 	
    while(hdma_usart1_rx.Instance->CR & DMA_SxCR_EN)

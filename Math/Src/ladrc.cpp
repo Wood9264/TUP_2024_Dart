@@ -25,7 +25,7 @@ void LADRC_t::init(fp32 wc,fp32 b0,fp32 wo,fp32 max_out)
 	own_max_out = max_out;
 	own_fdb = u = own_set = own_gyro = 0.0f;
 	z1 = z2 = 0.0f;
-	time_cons = 0.002;//²ÉÑùÂÊ
+	time_cons = 0.002;//é‡‡æ ·ç‡
 }		
 
 fp32 LADRC_t::calc(fp32 ref, fp32 set, fp32 gyro)
@@ -38,7 +38,7 @@ fp32 LADRC_t::calc(fp32 ref, fp32 set, fp32 gyro)
 	own_err = rad_format(err);
 	own_gyro = gyro;
 	
-	//Áã½×±£³Ö·¨ÀëÉ¢»¯»ı·ÖÆ÷
+	//é›¶é˜¶ä¿æŒæ³•ç¦»æ•£åŒ–ç§¯åˆ†å™¨
   z2 += time_cons * (own_wo * own_wo) * (own_gyro - z1);
 	z1 += time_cons * ((own_b0 * u) + z2 + (2 * own_wo) * (own_gyro - z1));
 	u = (own_wc * own_wc * own_err - 2 * own_wc * z1 - z2) / own_b0;

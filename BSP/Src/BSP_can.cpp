@@ -44,8 +44,8 @@ void can_filter_init(void)
 }
 
 /**
- * @brief          hal¿âCAN»Øµ÷º¯Êı,½ÓÊÕµç»úÊı¾İ
- * @param[in]      hcan:CAN¾ä±úÖ¸Õë
+ * @brief          halåº“CANå›è°ƒå‡½æ•°,æ¥æ”¶ç”µæœºæ•°æ®
+ * @param[in]      hcan:CANå¥æŸ„æŒ‡é’ˆ
  * @retval         none
  */
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
@@ -114,13 +114,13 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 	}
 }
 
-//¿ØÖÆCAN1ID:1-4
+//æ§åˆ¶CAN1ID:1-4
 /**
- * @brief          ·¢ËÍµç»ú¿ØÖÆµçÁ÷£¨¿ØÖÆCAN1 ID:1-4£©
- * @param[in]      can1_motor1: (0x201) 3508µç»ú¿ØÖÆµçÁ÷, ·¶Î§ [-16384,16384]
- * @param[in]      can1_motor2: (0x202) 3508µç»ú¿ØÖÆµçÁ÷, ·¶Î§ [-16384,16384]
- * @param[in]      can1_motor3: (0x203) 3508µç»ú¿ØÖÆµçÁ÷, ·¶Î§ [-16384,16384]
- * @param[in]      can1_motor4: (0x204) 3508µç»ú¿ØÖÆµçÁ÷, ·¶Î§ [-16384,16384]
+ * @brief          å‘é€ç”µæœºæ§åˆ¶ç”µæµï¼ˆæ§åˆ¶CAN1 ID:1-4ï¼‰
+ * @param[in]      can1_motor1: (0x201) 3508ç”µæœºæ§åˆ¶ç”µæµ, èŒƒå›´ [-16384,16384]
+ * @param[in]      can1_motor2: (0x202) 3508ç”µæœºæ§åˆ¶ç”µæµ, èŒƒå›´ [-16384,16384]
+ * @param[in]      can1_motor3: (0x203) 3508ç”µæœºæ§åˆ¶ç”µæµ, èŒƒå›´ [-16384,16384]
+ * @param[in]      can1_motor4: (0x204) 3508ç”µæœºæ§åˆ¶ç”µæµ, èŒƒå›´ [-16384,16384]
  * @retval         none
  */
 void CAN1_200_cmd_motor(int16_t can1_motor1, int16_t can1_motor2, int16_t can1_motor3, int16_t can1_motor4)
@@ -141,14 +141,14 @@ void CAN1_200_cmd_motor(int16_t can1_motor1, int16_t can1_motor2, int16_t can1_m
 	HAL_CAN_AddTxMessage(&CHASSIS_CAN, &CAN1_200_tx_message, CAN1_200_send_data, &send_mail_box);
 }
 
-//¿ØÖÆCAN1ID:5-8
+//æ§åˆ¶CAN1ID:5-8
 /**
  * @apply          can1_motor5:YAW  can1_motor6:PITCH
- * @brief          ·¢ËÍµç»ú¿ØÖÆµçÁ÷£¨¿ØÖÆCAN1 ID:5-8£©
- * @param[in]      can1_motor5: (0x205) 3508µç»ú¿ØÖÆµçÁ÷, ·¶Î§ [-16384,16384]
- * @param[in]      can1_motor6: (0x206) 3508µç»ú¿ØÖÆµçÁ÷, ·¶Î§ [-16384,16384]
- * @param[in]      can1_motor7: (0x207) 3508µç»ú¿ØÖÆµçÁ÷, ·¶Î§ [-16384,16384]
- * @param[in]      can1_motor8: (0x208) 3508µç»ú¿ØÖÆµçÁ÷, ·¶Î§ [-16384,16384]
+ * @brief          å‘é€ç”µæœºæ§åˆ¶ç”µæµï¼ˆæ§åˆ¶CAN1 ID:5-8ï¼‰
+ * @param[in]      can1_motor5: (0x205) 3508ç”µæœºæ§åˆ¶ç”µæµ, èŒƒå›´ [-16384,16384]
+ * @param[in]      can1_motor6: (0x206) 3508ç”µæœºæ§åˆ¶ç”µæµ, èŒƒå›´ [-16384,16384]
+ * @param[in]      can1_motor7: (0x207) 3508ç”µæœºæ§åˆ¶ç”µæµ, èŒƒå›´ [-16384,16384]
+ * @param[in]      can1_motor8: (0x208) 3508ç”µæœºæ§åˆ¶ç”µæµ, èŒƒå›´ [-16384,16384]
  * @retval         none
  */
 void CAN1_1FF_cmd_motor(int16_t can1_motor5, int16_t can1_motor6, int16_t can1_motor7, int16_t can1_motor8)
@@ -169,14 +169,14 @@ void CAN1_1FF_cmd_motor(int16_t can1_motor5, int16_t can1_motor6, int16_t can1_m
 	HAL_CAN_AddTxMessage(&CHASSIS_CAN, &CAN1_1FF_tx_message, CAN1_1FF_send_data, &send_mail_box);
 }
 
-//¿ØÖÆCAN2ID:1-4
+//æ§åˆ¶CAN2ID:1-4
 /**
  * @apply          can2_motor1:FireL  can2_motor2:FireR
- * @brief          ·¢ËÍµç»ú¿ØÖÆµçÁ÷£¨¿ØÖÆCAN2 ID:1-4£©
- * @param[in]      can2_motor1: (0x201) 3508µç»ú¿ØÖÆµçÁ÷, ·¶Î§ [-16384,16384]
- * @param[in]      can2_motor2: (0x202) 3508µç»ú¿ØÖÆµçÁ÷, ·¶Î§ [-16384,16384]
- * @param[in]      can2_motor3: (0x203) 3508µç»ú¿ØÖÆµçÁ÷, ·¶Î§ [-16384,16384]
- * @param[in]      can2_motor4: (0x204) 3508µç»ú¿ØÖÆµçÁ÷, ·¶Î§ [-16384,16384]
+ * @brief          å‘é€ç”µæœºæ§åˆ¶ç”µæµï¼ˆæ§åˆ¶CAN2 ID:1-4ï¼‰
+ * @param[in]      can2_motor1: (0x201) 3508ç”µæœºæ§åˆ¶ç”µæµ, èŒƒå›´ [-16384,16384]
+ * @param[in]      can2_motor2: (0x202) 3508ç”µæœºæ§åˆ¶ç”µæµ, èŒƒå›´ [-16384,16384]
+ * @param[in]      can2_motor3: (0x203) 3508ç”µæœºæ§åˆ¶ç”µæµ, èŒƒå›´ [-16384,16384]
+ * @param[in]      can2_motor4: (0x204) 3508ç”µæœºæ§åˆ¶ç”µæµ, èŒƒå›´ [-16384,16384]
  * @retval         none
  */
 void CAN2_200_cmd_motor(int16_t can2_motor1, int16_t can2_motor2, int16_t can2_motor3, int16_t can2_motor4)
@@ -199,12 +199,12 @@ void CAN2_200_cmd_motor(int16_t can2_motor1, int16_t can2_motor2, int16_t can2_m
 
 // c
 /**
- * @apply          ÔİÎ´Ê¹ÓÃ
- * @brief          ·¢ËÍµç»ú¿ØÖÆµçÁ÷£¨¿ØÖÆCAN2 ID:5-8£©
- * @param[in]      can2_motor5: (0x205) 3508µç»ú¿ØÖÆµçÁ÷, ·¶Î§ [-16384,16384]
- * @param[in]      can2_motor6: (0x206) 3508µç»ú¿ØÖÆµçÁ÷, ·¶Î§ [-16384,16384]
- * @param[in]      can2_motor7: (0x207) 3508µç»ú¿ØÖÆµçÁ÷, ·¶Î§ [-16384,16384]
- * @param[in]      can2_motor8: (0x208) 3508µç»ú¿ØÖÆµçÁ÷, ·¶Î§ [-16384,16384]
+ * @apply          æš‚æœªä½¿ç”¨
+ * @brief          å‘é€ç”µæœºæ§åˆ¶ç”µæµï¼ˆæ§åˆ¶CAN2 ID:5-8ï¼‰
+ * @param[in]      can2_motor5: (0x205) 3508ç”µæœºæ§åˆ¶ç”µæµ, èŒƒå›´ [-16384,16384]
+ * @param[in]      can2_motor6: (0x206) 3508ç”µæœºæ§åˆ¶ç”µæµ, èŒƒå›´ [-16384,16384]
+ * @param[in]      can2_motor7: (0x207) 3508ç”µæœºæ§åˆ¶ç”µæµ, èŒƒå›´ [-16384,16384]
+ * @param[in]      can2_motor8: (0x208) 3508ç”µæœºæ§åˆ¶ç”µæµ, èŒƒå›´ [-16384,16384]
  * @retval         none
  */
 void CAN2_1FF_cmd_motor(int16_t can2_motor5, int16_t can2_motor6, int16_t can2_motor7, int16_t can2_motor8)
@@ -225,14 +225,14 @@ void CAN2_1FF_cmd_motor(int16_t can2_motor5, int16_t can2_motor6, int16_t can2_m
 	HAL_CAN_AddTxMessage(&GIMBAL_CAN, &CAN2_1FF_tx_message, CAN2_1FF_send_data, &send_mail_box);
 }
 
-//·µ»Ø¶ÔÓ¦µç»úµØÖ·
+//è¿”å›å¯¹åº”ç”µæœºåœ°å€
 const motor_t *get_motor_measure_class(uint16_t type)
 {
 	return &motor[type];
 }
 
 /**
- * @brief          ·¢ËÍIDÎª0x700µÄCAN°ü,Ëü»áÉèÖÃ3508µç»ú½øÈë¿ìËÙÉèÖÃID
+ * @brief          å‘é€IDä¸º0x700çš„CANåŒ…,å®ƒä¼šè®¾ç½®3508ç”µæœºè¿›å…¥å¿«é€Ÿè®¾ç½®ID
  * @param[in]      none
  * @retval         none
  */

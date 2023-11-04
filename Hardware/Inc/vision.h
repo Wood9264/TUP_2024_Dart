@@ -7,30 +7,30 @@
 #include "arm_math.h"
 #include "gimbal_task.h"
 
-/*--------------------------------Ôİ¶¨Ğ­Òé-------------------------------------*/
+/*--------------------------------æš‚å®šåè®®-------------------------------------*/
 
-#define    VISION_LENGTH        22     		 //Ôİ¶¨22×Ö½Ú,Í·3×Ö½Ú,Êı¾İ17×Ö½Ú,Î²2×Ö½Ú
+#define    VISION_LENGTH        22     		 //æš‚å®š22å­—èŠ‚,å¤´3å­—èŠ‚,æ•°æ®17å­—èŠ‚,å°¾2å­—èŠ‚
 
-//ÆğÊ¼×Ö½Ú,Ğ­Òé¹Ì¶¨Îª0xA5
+//èµ·å§‹å­—èŠ‚,åè®®å›ºå®šä¸º0xA5
 #define    VISION_SOF         (0xA5)
 #define    VISION_SENTRY1_SOF         (0xB5)
 #define    VISION_SENTRY2_SOF         (0xC5)
 
-//³¤¶È¸ù¾İĞ­Òé¶¨Òå,Êı¾İ¶Î³¤¶ÈÎªnĞèÒª¸ù¾İÖ¡Í·µÚ¶ş×Ö½ÚÀ´»ñÈ¡
-#define    VISION_LEN_HEADER    3         //Ö¡Í·³¤
-#define    VISION_LEN_DATA      59       //Êı¾İ¶Î³¤¶È
-#define    VISION_LEN_TAIL      2	      //Ö¡Î²CRC16
-#define    VISION_LEN_PACKED    64        //Êı¾İ°ü³¤¶È
+//é•¿åº¦æ ¹æ®åè®®å®šä¹‰,æ•°æ®æ®µé•¿åº¦ä¸ºnéœ€è¦æ ¹æ®å¸§å¤´ç¬¬äºŒå­—èŠ‚æ¥è·å–
+#define    VISION_LEN_HEADER    3         //å¸§å¤´é•¿
+#define    VISION_LEN_DATA      59       //æ•°æ®æ®µé•¿åº¦
+#define    VISION_LEN_TAIL      2	      //å¸§å°¾CRC16
+#define    VISION_LEN_PACKED    64        //æ•°æ®åŒ…é•¿åº¦
 
 #define    VISION_OFF         		(0x00)
 #define    VISION_RED           	(0x01)
 #define    VISION_BLUE          	(0x02)
-#define    VISION_RBUFF_ANTI   	 	(0x03)//ºìÄæ´ó·û
-#define    VISION_BBUFF_ANTI   		(0x04)//À¶Äæ´ó·û
-#define    VISION_RBUFF_CLOCKWISE   (0x05)//ºìË³´ó·û
-#define    VISION_BBUFF_CLOCKWISE   (0x06)//À¶Ë³´ó·û
-#define    VISION_RBUFF_STAND   	(0x07)//ºìĞ¡·û
-#define    VISION_BBUFF_STAND   	(0x08)//À¶Ğ¡·û
+#define    VISION_RBUFF_ANTI   	 	(0x03)//çº¢é€†å¤§ç¬¦
+#define    VISION_BBUFF_ANTI   		(0x04)//è“é€†å¤§ç¬¦
+#define    VISION_RBUFF_CLOCKWISE   (0x05)//çº¢é¡ºå¤§ç¬¦
+#define    VISION_BBUFF_CLOCKWISE   (0x06)//è“é¡ºå¤§ç¬¦
+#define    VISION_RBUFF_STAND   	(0x07)//çº¢å°ç¬¦
+#define    VISION_BBUFF_STAND   	(0x08)//è“å°ç¬¦
 
 #define NOW  0
 #define LAST 1
@@ -44,14 +44,14 @@ extern "C"{
 
 	typedef struct
 {
-	uint8_t   SOF;			//Ö¡Í·ÆğÊ¼Î»,Ôİ¶¨0xA5
-	uint8_t   CmdID;		//Ö¸Áî
-	uint8_t   CRC8;			//Ö¡Í·CRCĞ£Ñé,±£Ö¤·¢ËÍµÄÖ¸ÁîÊÇÕıÈ·µÄ
+	uint8_t   SOF;			//å¸§å¤´èµ·å§‹ä½,æš‚å®š0xA5
+	uint8_t   CmdID;		//æŒ‡ä»¤
+	uint8_t   CRC8;			//å¸§å¤´CRCæ ¡éªŒ,ä¿è¯å‘é€çš„æŒ‡ä»¤æ˜¯æ­£ç¡®çš„
 }extVisionSendhand_t;
-//STM32·¢ËÍ
+//STM32å‘é€
 typedef struct
 {
-		/* Êı¾İ */
+		/* æ•°æ® */
 	float    INS_quat_send[4];
 	float    INS_gyro_send[3];
 	float    INS_accel_send[3];
@@ -62,9 +62,9 @@ typedef struct
   //float    firc_speed;
 
 
-	uint16_t   Vision_empty_time;		//Ô¤Áô
+	uint16_t   Vision_empty_time;		//é¢„ç•™
 	
-	/* Î² */
+	/* å°¾ */
 	uint16_t  CRC16;
 	
 }extVisionSendDataFir_t;
@@ -72,9 +72,9 @@ typedef struct
 
 typedef struct
 {
-	/* Êı¾İ */
+	/* æ•°æ® */
 	float		robots_position[14];
-	/* Î² */
+	/* å°¾ */
 	uint16_t  CRC16;
 	
 }extVisionSendDataSed_t;
@@ -82,86 +82,86 @@ typedef struct
 
 typedef struct
 {
-	/* Êı¾İ */
+	/* æ•°æ® */
 	float		robots_position[6];
   uint16_t robots_hp[10];
 	uint16_t stage_remain_time;
-	/* Î² */
+	/* å°¾ */
 	uint16_t  CRC16;
 	
 }extVisionSendDataThi_t;
 
 
 
-//STM32½ÓÊÕ
+//STM32æ¥æ”¶
 typedef __packed struct
 {
-	/* Í· */
-	uint8_t   SOF;			//Ö¡Í·ÆğÊ¼Î»,Ôİ¶¨0xA5
-	uint8_t   CmdID;		//Ö¸Áî
-	uint8_t   CRC8;			//Ö¡Í·CRCĞ£Ñé,±£Ö¤·¢ËÍµÄÖ¸ÁîÊÇÕıÈ·µÄ
+	/* å¤´ */
+	uint8_t   SOF;			//å¸§å¤´èµ·å§‹ä½,æš‚å®š0xA5
+	uint8_t   CmdID;		//æŒ‡ä»¤
+	uint8_t   CRC8;			//å¸§å¤´CRCæ ¡éªŒ,ä¿è¯å‘é€çš„æŒ‡ä»¤æ˜¯æ­£ç¡®çš„
 	
-	/* Êı¾İ */
+	/* æ•°æ® */
 	float     pitch_angle;
 	float     yaw_angle;
-	float     distance;			//¾àÀë
+	float     distance;			//è·ç¦»
 	uint8_t   is_switched;
 	uint8_t   is_findtarget;
 	uint8_t   is_spinning;
 	uint8_t   is_predictl;
-  uint8_t   is_shooting;//È¡¾öÓÚÊÓ¾õÄÇ±ßÊÇ·ñ¼ÓÈë×Ô¶¯¿ª»ğ±êÖ¾Î»
-	float     x_info;  //ÈıÖáÊı¾İ
+  uint8_t   is_shooting;//å–å†³äºè§†è§‰é‚£è¾¹æ˜¯å¦åŠ å…¥è‡ªåŠ¨å¼€ç«æ ‡å¿—ä½
+	float     x_info;  //ä¸‰è½´æ•°æ®
 	float     y_info;
 	float     z_info;
-	float     predict_x_info;  //Ô¤²âÈıÖáÊı¾İ
+	float     predict_x_info;  //é¢„æµ‹ä¸‰è½´æ•°æ®
 	float     predict_y_info;
 	float     predict_z_info;
 //	uint8_t   is_middle;
 	
 	
-	/* Î² */
+	/* å°¾ */
 	uint16_t  CRC16;  
 }extVisionRecvDataFir_t;	
 
 typedef __packed struct
 {
-	/* Í· */
-	uint8_t   SOF;			//Ö¡Í·ÆğÊ¼Î»,Ôİ¶¨0xA5
-	uint8_t   CmdID;		//Ö¸Áî
-	uint8_t   CRC8;			//Ö¡Í·CRCĞ£Ñé,±£Ö¤·¢ËÍµÄÖ¸ÁîÊÇÕıÈ·µÄ
+	/* å¤´ */
+	uint8_t   SOF;			//å¸§å¤´èµ·å§‹ä½,æš‚å®š0xA5
+	uint8_t   CmdID;		//æŒ‡ä»¤
+	uint8_t   CRC8;			//å¸§å¤´CRCæ ¡éªŒ,ä¿è¯å‘é€çš„æŒ‡ä»¤æ˜¯æ­£ç¡®çš„
 	
-	/* Êı¾İ */
+	/* æ•°æ® */
 	float     target_linear[3];
 	float     target_angular[3];
 	
-	/* Î² */
+	/* å°¾ */
 	uint16_t  CRC16;       
 	
 }extVisionRecvDataSed_t;	
 
 typedef __packed struct
 {
-	/* Í· */
-	uint8_t   SOF;			//Ö¡Í·ÆğÊ¼Î»,Ôİ¶¨0xA5
-	uint8_t   CmdID;		//Ö¸Áî
-	uint8_t   CRC8;			//Ö¡Í·CRCĞ£Ñé,±£Ö¤·¢ËÍµÄÖ¸ÁîÊÇÕıÈ·µÄ
+	/* å¤´ */
+	uint8_t   SOF;			//å¸§å¤´èµ·å§‹ä½,æš‚å®š0xA5
+	uint8_t   CmdID;		//æŒ‡ä»¤
+	uint8_t   CRC8;			//å¸§å¤´CRCæ ¡éªŒ,ä¿è¯å‘é€çš„æŒ‡ä»¤æ˜¯æ­£ç¡®çš„
 	
-	/* Êı¾İ */
+	/* æ•°æ® */
 	float     theta_gimbal;
 	float     theta_chassis;
 	
-	/* Î² */
+	/* å°¾ */
 	uint16_t  CRC16;       
 	
 }extVisionRecvDataThi_t;	
 	
-//¼ÆËãÖ¡ÂÊ
+//è®¡ç®—å¸§ç‡
 typedef struct
 {
-	bool		    rx_data_update;		// ½ÓÊÕÊı¾İÊÇ·ñ¸üĞÂ
-	uint32_t 		rx_time_prev;		// ½ÓÊÕÊı¾İµÄÇ°Ò»Ê±¿Ì
-	uint32_t 		rx_time_now;		// ½ÓÊÕÊı¾İµÄµ±Ç°Ê±¿Ì
-	uint16_t 		rx_time_fps;		// Ö¡ÂÊ
+	bool		    rx_data_update;		// æ¥æ”¶æ•°æ®æ˜¯å¦æ›´æ–°
+	uint32_t 		rx_time_prev;		// æ¥æ”¶æ•°æ®çš„å‰ä¸€æ—¶åˆ»
+	uint32_t 		rx_time_now;		// æ¥æ”¶æ•°æ®çš„å½“å‰æ—¶åˆ»
+	uint16_t 		rx_time_fps;		// å¸§ç‡
 
 } Vision_State_t;
 
@@ -172,8 +172,8 @@ class vision_info_t
 	  extVisionRecvDataSed_t   RxPacketSed;
 	  extVisionRecvDataThi_t   RxPacketThi;
 	
-    extVisionSendDataFir_t   TxPacketFir;  //ÍÓÂİÒÇ£¬µ¯ËÙ£¬yaw
-	  extVisionSendDataSed_t   TxPacketSed;	 //»úÆ÷ÈËÎ»ÖÃ£¨ÉÚ±ø£©
+    extVisionSendDataFir_t   TxPacketFir;  //é™€èºä»ªï¼Œå¼¹é€Ÿï¼Œyaw
+	  extVisionSendDataSed_t   TxPacketSed;	 //æœºå™¨äººä½ç½®ï¼ˆå“¨å…µï¼‰
     extVisionSendDataThi_t   TxPacketThi;
 	
 	  extVisionSendhand_t TxHandFir;

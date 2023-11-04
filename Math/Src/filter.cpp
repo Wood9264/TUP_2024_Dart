@@ -1,4 +1,4 @@
-//From ÄäÃûËÄÖá
+//From åŒ¿åå››è½´
 #include "filter.h"
 //#include "mymath.h"
 
@@ -8,13 +8,13 @@
 
 void anotc_filter_1(float base_hz,float gain_hz,float dT,float in,_filter_1_st *f1)
 {
-	LPF_1_(gain_hz,dT,(in - f1->out),f1->a); //µÍÍ¨ºóµÄ±ä»¯Á¿
+	LPF_1_(gain_hz,dT,(in - f1->out),f1->a); //ä½é€šåçš„å˜åŒ–é‡
 
 	f1->b = my_pow(in - f1->out);
 
-	f1->e_nr = LIMIT(safe_div(my_pow(f1->a),((f1->b) + my_pow(f1->a)),0),0,1); //±ä»¯Á¿µÄÓĞĞ§ÂÊ
+	f1->e_nr = LIMIT(safe_div(my_pow(f1->a),((f1->b) + my_pow(f1->a)),0),0,1); //å˜åŒ–é‡çš„æœ‰æ•ˆç‡
 	
-	LPF_1_(base_hz *f1->e_nr,dT,in,f1->out); //µÍÍ¨¸ú×Ù
+	LPF_1_(base_hz *f1->e_nr,dT,in,f1->out); //ä½é€šè·Ÿè¸ª
 }
 
 
@@ -35,7 +35,7 @@ void anotc_filter_1(float base_hz,float gain_hz,float dT,float in,_filter_1_st *
 	moavarray[ *fil_cnt ] = in;
 	
 	*out += ( in - ( last  ) )/(float)( width_num ) ;
-	*out += 0.00001f *(in - *out);  //´ÎÒªĞŞÕı
+	*out += 0.00001f *(in - *out);  //æ¬¡è¦ä¿®æ­£
 	
 }
 
@@ -62,7 +62,7 @@ int32_t Moving_Median(int32_t moavarray[],uint16_t len ,uint16_t *fil_p,int32_t 
 	
 	moavarray[ *fil_p ] = in;
 	
-	if(now_p<width_num-1) //±£Ö¤±È½Ï²»Ô½½ç
+	if(now_p<width_num-1) //ä¿è¯æ¯”è¾ƒä¸è¶Šç•Œ
 	{
 		while(moavarray[now_p] > moavarray[now_p + 1])
 		{
@@ -78,7 +78,7 @@ int32_t Moving_Median(int32_t moavarray[],uint16_t len ,uint16_t *fil_p,int32_t 
 		}
 	}
 	
-	if(now_p>0)  //±£Ö¤±È½Ï²»Ô½½ç
+	if(now_p>0)  //ä¿è¯æ¯”è¾ƒä¸è¶Šç•Œ
 	{
 		while(moavarray[now_p] < moavarray[now_p - 1])
 		{
@@ -118,14 +118,14 @@ int32_t Moving_Median(int32_t moavarray[],uint16_t len ,uint16_t *fil_p,int32_t 
 
 
 
-float debug_speed;//×óÕıÓÒ¸º,Ò»°ã¶¼ÔÚ1×óÓÒ,debug¿´
+float debug_speed;//å·¦æ­£å³è´Ÿ,ä¸€èˆ¬éƒ½åœ¨1å·¦å³,debugçœ‹
 float Target_Speed_Calc(speed_calc_data_t *S, uint32_t time, float position)
 {
 	S->delay_cnt++;
 
 	if (time != S->last_time)
 	{
-		S->speed = (position - S->last_position) / (time - S->last_time) * 2;//¼ÆËãËÙ¶È
+		S->speed = (position - S->last_position) / (time - S->last_time) * 2;//è®¡ç®—é€Ÿåº¦
 
 		S->processed_speed = S->speed;
 
@@ -137,10 +137,10 @@ float Target_Speed_Calc(speed_calc_data_t *S, uint32_t time, float position)
 
 	if(S->delay_cnt > 300/*100*/) // delay 200ms speed = 0
 	{
-		S->processed_speed = 0;//Ê±¼ä¹ı³¤ÔòÈÏÎªËÙ¶È²»±ä
+		S->processed_speed = 0;//æ—¶é—´è¿‡é•¿åˆ™è®¤ä¸ºé€Ÿåº¦ä¸å˜
 	}
 	debug_speed = S->processed_speed;
-	return S->processed_speed;//¼ÆËã³öµÄËÙ¶È
+	return S->processed_speed;//è®¡ç®—å‡ºçš„é€Ÿåº¦
 }
 
 

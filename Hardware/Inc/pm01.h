@@ -2,10 +2,10 @@
  *
  * pm01_api.h
  *
- * Created on: 2021Äê07ÔÂ08ÈÕ
+ * Created on: 2021å¹´07æœˆ08æ—¥
  *     Author: hepeng
  *
- * Copyright (c) 2021, ÁøÖİÆôÃ÷µçÆø¿Æ¼¼ÓĞÏŞ¹«Ë¾ All rights reserved. 
+ * Copyright (c) 2021, æŸ³å·å¯æ˜ç”µæ°”ç§‘æŠ€æœ‰é™å…¬å¸ All rights reserved. 
  *
  */
  
@@ -21,37 +21,37 @@ typedef union
 
   uint16_t all;
   struct {
-      uint16_t rdy:   1;  /*!< bit0    ¾ÍĞ÷     */
-      uint16_t run:   1;  /*!< bit1    ÔËĞĞ     */
-      uint16_t alm:   1;  /*!< bit2    ±¨¾¯     */
-      uint16_t pwr:   1;  /*!< bit3    µçÔ´¿ª¹Ø */
-      uint16_t load:  1;  /*!< bit4    ¸ºÔØ¿ª¹Ø */
-      uint16_t cc:    1;  /*!< bit5    ºãÁ÷     */
-      uint16_t cv:    1;  /*!< bit6    ºãÑ¹     */
-      uint16_t cw:    1;  /*!< bit7    ºã¹¦ÂÊ   */
-      uint16_t revd:  7;  /*!< bit8-14 ±£Áô     */
-      uint16_t flt:   1;  /*!< bit15   ¹ÊÕÏ     */
+      uint16_t rdy:   1;  /*!< bit0    å°±ç»ª     */
+      uint16_t run:   1;  /*!< bit1    è¿è¡Œ     */
+      uint16_t alm:   1;  /*!< bit2    æŠ¥è­¦     */
+      uint16_t pwr:   1;  /*!< bit3    ç”µæºå¼€å…³ */
+      uint16_t load:  1;  /*!< bit4    è´Ÿè½½å¼€å…³ */
+      uint16_t cc:    1;  /*!< bit5    æ’æµ     */
+      uint16_t cv:    1;  /*!< bit6    æ’å‹     */
+      uint16_t cw:    1;  /*!< bit7    æ’åŠŸç‡   */
+      uint16_t revd:  7;  /*!< bit8-14 ä¿ç•™     */
+      uint16_t flt:   1;  /*!< bit15   æ•…éšœ     */
   }bit;
 
 }csr_t;
 
 typedef struct mb_reg_type{
 
-   uint16_t ccr;         /*!< 8000H ¿ØÖÆ¼Ä´æÆ÷     */
-   uint16_t p_set;       /*!< 8001H ÊäÈë¹¦ÂÊÏŞÖÆ   */  
-   uint16_t v_set;       /*!< 8002H Êä³öµçÑ¹ÉèÖÃ   */
-   uint16_t i_set;       /*!< 8003H Êä³öµçÁ÷ÏŞÖÆ   */
-   csr_t    sta_code;    /*!< 8100H ×´Ì¬±êÖ¾Î»     */  
-   uint16_t err_code;    /*!< 8101H ¹ÊÕÏ´úÂë       */
-   int16_t  v_in;        /*!< 8102H ÊäÈëµçÑ¹       */
-   int16_t  i_in;        /*!< 8103H ÊäÈëµçÁ÷       */
-   int16_t  p_in;        /*!< 8104H ÊäÈë¹¦ÂÊ       */
-   int16_t  v_out;       /*!< 8105H Êä³öµçÑ¹       */
-   int16_t  i_out;       /*!< 8106H Êä³öµçÁ÷       */
-   int16_t  p_out;       /*!< 8107H Êä³ö¹¦ÂÊ       */
-   int16_t  temp;        /*!< 8108H ÎÂ¶È           */
-   uint16_t total_time;  /*!< 8109H ÀÛ¼ÆÊ±¼ä       */
-   uint16_t run_time;    /*!< 810AH ÔËĞĞÊ±¼ä       */
+   uint16_t ccr;         /*!< 8000H æ§åˆ¶å¯„å­˜å™¨     */
+   uint16_t p_set;       /*!< 8001H è¾“å…¥åŠŸç‡é™åˆ¶   */  
+   uint16_t v_set;       /*!< 8002H è¾“å‡ºç”µå‹è®¾ç½®   */
+   uint16_t i_set;       /*!< 8003H è¾“å‡ºç”µæµé™åˆ¶   */
+   csr_t    sta_code;    /*!< 8100H çŠ¶æ€æ ‡å¿—ä½     */  
+   uint16_t err_code;    /*!< 8101H æ•…éšœä»£ç        */
+   int16_t  v_in;        /*!< 8102H è¾“å…¥ç”µå‹       */
+   int16_t  i_in;        /*!< 8103H è¾“å…¥ç”µæµ       */
+   int16_t  p_in;        /*!< 8104H è¾“å…¥åŠŸç‡       */
+   int16_t  v_out;       /*!< 8105H è¾“å‡ºç”µå‹       */
+   int16_t  i_out;       /*!< 8106H è¾“å‡ºç”µæµ       */
+   int16_t  p_out;       /*!< 8107H è¾“å‡ºåŠŸç‡       */
+   int16_t  temp;        /*!< 8108H æ¸©åº¦           */
+   uint16_t total_time;  /*!< 8109H ç´¯è®¡æ—¶é—´       */
+   uint16_t run_time;    /*!< 810AH è¿è¡Œæ—¶é—´       */
 	
 }pm01_od_t;
 extern void pm01_cmd_send         ( uint16_t new_cmd, uint8_t save_flg );

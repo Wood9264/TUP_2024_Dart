@@ -32,68 +32,68 @@
 	ext_rfid_status_t                   Rfid_status;                 //0x0209
 	ext_dart_client_cmd_t               Dart_client_cmd;             //0x020A
 	ext_CommunatianData_t           		CommunatianData_cmd;         //0x0301
-																													         //0x0302 ×Ô¶¨ÒåÒ£¿ØÆ÷
+																													         //0x0302 è‡ªå®šä¹‰é¥æ§å™¨
 	ext_robot_command_t					        Minimap_robot_command;	     //0x0303
 	ext_robot_command_t_change			    Transfer_image_robot_command;//0x0304
 	ext_client_map_command_t			      Client_map_command_t;        //0x0305
 
-	xFrameHeader                        FrameHeader;//·¢ËÍÖ¡Í·ĞÅÏ¢
+	xFrameHeader                        FrameHeader;//å‘é€å¸§å¤´ä¿¡æ¯
   Referee_info_t                      REF;
 	
 	
 /****************************************************/
-bool Judge_Data_TF = FALSE;//²ÃÅĞÊı¾İÊÇ·ñ¿ÉÓÃ,¸¨Öúº¯Êıµ÷ÓÃ
-uint8_t Judge_Self_ID;//µ±Ç°»úÆ÷ÈËµÄID
-uint16_t Judge_SelfClient_ID;//·¢ËÍÕß»úÆ÷ÈË¶ÔÓ¦µÄ¿Í»§¶ËID
+bool Judge_Data_TF = FALSE;//è£åˆ¤æ•°æ®æ˜¯å¦å¯ç”¨,è¾…åŠ©å‡½æ•°è°ƒç”¨
+uint8_t Judge_Self_ID;//å½“å‰æœºå™¨äººçš„ID
+uint16_t Judge_SelfClient_ID;//å‘é€è€…æœºå™¨äººå¯¹åº”çš„å®¢æˆ·ç«¯ID
 
-/**************²ÃÅĞÏµÍ³Êı¾İ¸¨Öú****************/
-uint16_t ShootNum_17mm;//Í³¼Æ·¢µ¯Á¿,0x0003´¥·¢Ò»´ÎÔòÈÏÎª·¢ÉäÁËÒ»¿Å
-uint16_t ShootNum_42mm;//Í³¼Æ·¢µ¯Á¿,0x0003´¥·¢Ò»´ÎÔòÈÏÎª·¢ÉäÁËÒ»¿Å
-bool Hurt_Data_Update = FALSE;//×°¼×°åÉËº¦Êı¾İÊÇ·ñ¸üĞÂ,Ã¿ÊÜÒ»´ÎÉËº¦ÖÃTRUE,È»ºóÁ¢¼´ÖÃFALSE,¸øµ×ÅÌÉÁ±ÜÓÃ
+/**************è£åˆ¤ç³»ç»Ÿæ•°æ®è¾…åŠ©****************/
+uint16_t ShootNum_17mm;//ç»Ÿè®¡å‘å¼¹é‡,0x0003è§¦å‘ä¸€æ¬¡åˆ™è®¤ä¸ºå‘å°„äº†ä¸€é¢—
+uint16_t ShootNum_42mm;//ç»Ÿè®¡å‘å¼¹é‡,0x0003è§¦å‘ä¸€æ¬¡åˆ™è®¤ä¸ºå‘å°„äº†ä¸€é¢—
+bool Hurt_Data_Update = FALSE;//è£…ç”²æ¿ä¼¤å®³æ•°æ®æ˜¯å¦æ›´æ–°,æ¯å—ä¸€æ¬¡ä¼¤å®³ç½®TRUE,ç„¶åç«‹å³ç½®FALSE,ç»™åº•ç›˜é—ªé¿ç”¨
 
 
 
 
 /**
-  * @brief  ¶ÁÈ¡²ÃÅĞÊı¾İ,loopÖĞÑ­»·µ÷ÓÃ´Ëº¯ÊıÀ´¶ÁÈ¡Êı¾İ
-  * @param  »º´æÊı¾İ
-  * @retval ÊÇ·ñ¶ÔÕıÎóÅĞ¶Ï×ö´¦Àí
-  * @attention  ÔÚ´ËÅĞ¶ÏÖ¡Í·ºÍCRCĞ£Ñé,ÎŞÎóÔÙĞ´ÈëÊı¾İ
+  * @brief  è¯»å–è£åˆ¤æ•°æ®,loopä¸­å¾ªç¯è°ƒç”¨æ­¤å‡½æ•°æ¥è¯»å–æ•°æ®
+  * @param  ç¼“å­˜æ•°æ®
+  * @retval æ˜¯å¦å¯¹æ­£è¯¯åˆ¤æ–­åšå¤„ç†
+  * @attention  åœ¨æ­¤åˆ¤æ–­å¸§å¤´å’ŒCRCæ ¡éªŒ,æ— è¯¯å†å†™å…¥æ•°æ®
   */
 bool Judge_Read_Data(uint8_t *ReadFromUsart)
 {
-	bool retval_tf = FALSE;//Êı¾İÕıÈ·Óë·ñ±êÖ¾,Ã¿´Îµ÷ÓÃ¶ÁÈ¡²ÃÅĞÏµÍ³Êı¾İº¯Êı¶¼ÏÈÄ¬ÈÏÎª´íÎó
+	bool retval_tf = FALSE;//æ•°æ®æ­£ç¡®ä¸å¦æ ‡å¿—,æ¯æ¬¡è°ƒç”¨è¯»å–è£åˆ¤ç³»ç»Ÿæ•°æ®å‡½æ•°éƒ½å…ˆé»˜è®¤ä¸ºé”™è¯¯
 	
-	uint16_t judge_length;//Í³¼ÆÒ»Ö¡Êı¾İ³¤¶È 
+	uint16_t judge_length;//ç»Ÿè®¡ä¸€å¸§æ•°æ®é•¿åº¦ 
 	
-	int CmdID = 0;//Êı¾İÃüÁîÂë½âÎö
+	int CmdID = 0;//æ•°æ®å‘½ä»¤ç è§£æ
 	
 	/***------------------*****/
-	//ÎŞÊı¾İ°ü£¬Ôò²»×÷ÈÎºÎ´¦Àí
+	//æ— æ•°æ®åŒ…ï¼Œåˆ™ä¸ä½œä»»ä½•å¤„ç†
 	if (ReadFromUsart == NULL)
 	{
 		return -1;
 	}
 	
-	//Ğ´ÈëÖ¡Í·Êı¾İ,ÓÃÓÚÅĞ¶ÏÊÇ·ñ¿ªÊ¼´æ´¢²ÃÅĞÊı¾İ
+	//å†™å…¥å¸§å¤´æ•°æ®,ç”¨äºåˆ¤æ–­æ˜¯å¦å¼€å§‹å­˜å‚¨è£åˆ¤æ•°æ®
 	memcpy(&FrameHeader, ReadFromUsart, LEN_HEADER);
-	memcpy(&REF.FrameHeader,ReadFromUsart,LEN_HEADER);   //´¢´æÖ¡Í·Êı¾İ
+	memcpy(&REF.FrameHeader,ReadFromUsart,LEN_HEADER);   //å‚¨å­˜å¸§å¤´æ•°æ®
 	
-		//ÅĞ¶ÏÖ¡Í·Êı¾İÊÇ·ñÎª0xA5
+		//åˆ¤æ–­å¸§å¤´æ•°æ®æ˜¯å¦ä¸º0xA5
 	if(ReadFromUsart[ SOF ] == JUDGE_FRAME_HEADER)
 	{
-		//Ö¡Í·CRC8Ğ£Ñé
+		//å¸§å¤´CRC8æ ¡éªŒ
 		if (verify_CRC8_check_sum( ReadFromUsart, LEN_HEADER ) == TRUE)
 		{
-			//Í³¼ÆÒ»Ö¡Êı¾İ³¤¶È,ÓÃÓÚCR16Ğ£Ñé
+			//ç»Ÿè®¡ä¸€å¸§æ•°æ®é•¿åº¦,ç”¨äºCR16æ ¡éªŒ
 			judge_length = ReadFromUsart[ DATA_LENGTH ] + LEN_HEADER + LEN_CMDID + LEN_TAIL;
 			
-			//Ö¡Î²CRC16Ğ£Ñé
+			//å¸§å°¾CRC16æ ¡éªŒ
 			if(verify_CRC16_check_sum(ReadFromUsart,judge_length) == TRUE)
 			{
-				retval_tf = TRUE;//¶¼Ğ£Ñé¹ıÁËÔòËµÃ÷Êı¾İ¿ÉÓÃ
+				retval_tf = TRUE;//éƒ½æ ¡éªŒè¿‡äº†åˆ™è¯´æ˜æ•°æ®å¯ç”¨
 				CmdID = (ReadFromUsart[6] << 8 | ReadFromUsart[5]);
-				//½âÎöÊı¾İÃüÁîÂë,½«Êı¾İ¿½±´µ½ÏàÓ¦½á¹¹ÌåÖĞ(×¢Òâ¿½±´Êı¾İµÄ³¤¶È)
+				//è§£ææ•°æ®å‘½ä»¤ç ,å°†æ•°æ®æ‹·è´åˆ°ç›¸åº”ç»“æ„ä½“ä¸­(æ³¨æ„æ‹·è´æ•°æ®çš„é•¿åº¦)
 			
 				switch(CmdID)
 				{
@@ -171,14 +171,14 @@ bool Judge_Read_Data(uint8_t *ReadFromUsart)
 					case ID_robot_hurt:      //0x0206
 						memcpy(&Robot_hurt, (ReadFromUsart + DATA), LEN_robot_hurt);
 						memcpy(&REF.RobotHurt, (ReadFromUsart + DATA), LEN_robot_hurt);
-					  if(Robot_hurt.hurt_type == 0)//·Ç×°¼×°åÀëÏßÔì³ÉÉËº¦
-						{	Hurt_Data_Update = TRUE;	}//×°¼×Êı¾İÃ¿¸üĞÂÒ»´ÎÔòÅĞ¶¨ÎªÊÜµ½Ò»´ÎÉËº¦
+					  if(Robot_hurt.hurt_type == 0)//éè£…ç”²æ¿ç¦»çº¿é€ æˆä¼¤å®³
+						{	Hurt_Data_Update = TRUE;	}//è£…ç”²æ•°æ®æ¯æ›´æ–°ä¸€æ¬¡åˆ™åˆ¤å®šä¸ºå—åˆ°ä¸€æ¬¡ä¼¤å®³
 					break;
 					
 					case ID_shoot_data:      //0x0207
 						memcpy(&Shoot_data, (ReadFromUsart + DATA), LEN_shoot_data);
-					    JUDGE_ShootNumCount_17mm();//·¢µ¯Á¿Í³¼Æ,²»ÊÊÓÃÓÚË«Ç¹¹Ü,²»×¼
-//					    JUDGE_ShootNumCount_42mm();//·¢µ¯Á¿Í³¼Æ,²»ÊÊÓÃÓÚË«Ç¹¹Ü,²»×¼
+					    JUDGE_ShootNumCount_17mm();//å‘å¼¹é‡ç»Ÿè®¡,ä¸é€‚ç”¨äºåŒæªç®¡,ä¸å‡†
+//					    JUDGE_ShootNumCount_42mm();//å‘å¼¹é‡ç»Ÿè®¡,ä¸é€‚ç”¨äºåŒæªç®¡,ä¸å‡†
 					break;
 					
 					case ID_bullet_remaining:      //0x0208
@@ -213,10 +213,10 @@ bool Judge_Read_Data(uint8_t *ReadFromUsart)
 					
 				}
 				
-				//Ê×µØÖ·¼ÓÖ¡³¤¶È,Ö¸ÏòCRC16ÏÂÒ»×Ö½Ú,ÓÃÀ´ÅĞ¶ÏÊÇ·ñÎª0xA5,ÓÃÀ´ÅĞ¶ÏÒ»¸öÊı¾İ°üÊÇ·ñÓĞ¶àÖ¡Êı¾İ
+				//é¦–åœ°å€åŠ å¸§é•¿åº¦,æŒ‡å‘CRC16ä¸‹ä¸€å­—èŠ‚,ç”¨æ¥åˆ¤æ–­æ˜¯å¦ä¸º0xA5,ç”¨æ¥åˆ¤æ–­ä¸€ä¸ªæ•°æ®åŒ…æ˜¯å¦æœ‰å¤šå¸§æ•°æ®
 				if(*(ReadFromUsart + sizeof(xFrameHeader) + LEN_CMDID + FrameHeader.DataLength + LEN_TAIL) == 0xA5)
 				{
-					//Èç¹ûÒ»¸öÊı¾İ°ü³öÏÖÁË¶àÖ¡Êı¾İ,ÔòÔÙ´Î¶ÁÈ¡
+					//å¦‚æœä¸€ä¸ªæ•°æ®åŒ…å‡ºç°äº†å¤šå¸§æ•°æ®,åˆ™å†æ¬¡è¯»å–
 					Judge_Read_Data(ReadFromUsart + sizeof(xFrameHeader) + LEN_CMDID + FrameHeader.DataLength + LEN_TAIL);
 				}
 			}					
@@ -224,27 +224,27 @@ bool Judge_Read_Data(uint8_t *ReadFromUsart)
 	}
 	if (retval_tf == TRUE)
 	{
-		Judge_Data_TF = TRUE;//¸¨Öúº¯ÊıÓÃ
+		Judge_Data_TF = TRUE;//è¾…åŠ©å‡½æ•°ç”¨
 	}
-	else		//Ö»ÒªCRC16Ğ£Ñé²»Í¨¹ı¾ÍÎªFALSE
+	else		//åªè¦CRC16æ ¡éªŒä¸é€šè¿‡å°±ä¸ºFALSE
 	{
-		Judge_Data_TF = FALSE;//¸¨Öúº¯ÊıÓÃ
+		Judge_Data_TF = FALSE;//è¾…åŠ©å‡½æ•°ç”¨
 	}
 
-	return retval_tf;//¶ÔÊı¾İÕıÎó×ö´¦Àí	
+	return retval_tf;//å¯¹æ•°æ®æ­£è¯¯åšå¤„ç†	
 
 }
 
 /**
-  * @brief  ÅĞ¶Ï×Ô¼ººìÀ¶·½
+  * @brief  åˆ¤æ–­è‡ªå·±çº¢è“æ–¹
   * @param  void
   * @retval RED   BLUE
-  * @attention  Êı¾İ´ò°ü,´ò°üÍê³ÉºóÍ¨¹ı´®¿Ú·¢ËÍµ½²ÃÅĞÏµÍ³
+  * @attention  æ•°æ®æ‰“åŒ…,æ‰“åŒ…å®Œæˆåé€šè¿‡ä¸²å£å‘é€åˆ°è£åˆ¤ç³»ç»Ÿ
   */
 bool Color;
 bool  is_red_or_blue(void)
 {
-	Judge_Self_ID = Robot_status.robot_id;//¶ÁÈ¡µ±Ç°»úÆ÷ÈËID
+	Judge_Self_ID = Robot_status.robot_id;//è¯»å–å½“å‰æœºå™¨äººID
 	
 	if(Robot_status.robot_id > 10)
 	{
@@ -257,14 +257,14 @@ bool  is_red_or_blue(void)
 }
 
 /**
-  * @brief  ÅĞ¶Ï×ÔÉíID£¬Ñ¡Ôñ¿Í»§¶ËID
+  * @brief  åˆ¤æ–­è‡ªèº«IDï¼Œé€‰æ‹©å®¢æˆ·ç«¯ID
   * @param  void
   * @retval RED   BLUE
-  * @attention  Êı¾İ´ò°ü,´ò°üÍê³ÉºóÍ¨¹ı´®¿Ú·¢ËÍµ½²ÃÅĞÏµÍ³
+  * @attention  æ•°æ®æ‰“åŒ…,æ‰“åŒ…å®Œæˆåé€šè¿‡ä¸²å£å‘é€åˆ°è£åˆ¤ç³»ç»Ÿ
   */
-void  Determine_ID(void)//ÅĞ¶Ï×Ô¼ºÊÇÄÄ¸ö¶ÓÎé
+void  Determine_ID(void)//åˆ¤æ–­è‡ªå·±æ˜¯å“ªä¸ªé˜Ÿä¼
 {
-	if(REF.GameRobotStat.robot_id < 10)//±¾»úÆ÷ÈËµÄID£¬ºì·½
+	if(REF.GameRobotStat.robot_id < 10)//æœ¬æœºå™¨äººçš„IDï¼Œçº¢æ–¹
 	{ 
 		REF.ids.teammate_hero 		 	= 1;
 		REF.ids.teammate_engineer  = 2;
@@ -281,7 +281,7 @@ void  Determine_ID(void)//ÅĞ¶Ï×Ô¼ºÊÇÄÄ¸ö¶ÓÎé
 		REF.ids.client_infantry5 = 0x0105;
 		REF.ids.client_plane			= 0x0106;
 		
-		if     (REF.GameRobotStat.robot_id == hero_red)//²»¶ÏË¢ĞÂ·ÅÖÃÔÚ±ÈÈüÖĞ¸ü¸ÄÑÕÉ«
+		if     (REF.GameRobotStat.robot_id == hero_red)//ä¸æ–­åˆ·æ–°æ”¾ç½®åœ¨æ¯”èµ›ä¸­æ›´æ”¹é¢œè‰²
 			REF.self_client = REF.ids.client_hero;
 		else if(REF.GameRobotStat.robot_id == engineer_red)
 			REF.self_client = REF.ids.client_engineer;
@@ -294,7 +294,7 @@ void  Determine_ID(void)//ÅĞ¶Ï×Ô¼ºÊÇÄÄ¸ö¶ÓÎé
 		else if(REF.GameRobotStat.robot_id == plane_red)
 			REF.self_client = REF.ids.client_plane;
 	}
-	else //À¶·½
+	else //è“æ–¹
 	{
 		REF.ids.teammate_hero 		 	= 101;
 		REF.ids.teammate_engineer  = 102;
@@ -328,12 +328,12 @@ void  Determine_ID(void)//ÅĞ¶Ï×Ô¼ºÊÇÄÄ¸ö¶ÓÎé
 
 }
 
-/********************²ÃÅĞÊı¾İ¸¨ÖúÅĞ¶Ïº¯Êı***************************/
+/********************è£åˆ¤æ•°æ®è¾…åŠ©åˆ¤æ–­å‡½æ•°***************************/
 /**
-  * @brief  Êı¾İÊÇ·ñ¿ÉÓÃ
+  * @brief  æ•°æ®æ˜¯å¦å¯ç”¨
   * @param  void
-  * @retval  TRUE¿ÉÓÃ   FALSE²»¿ÉÓÃ
-  * @attention  ÔÚ²ÃÅĞ¶ÁÈ¡º¯ÊıÖĞÊµÊ±¸Ä±ä·µ»ØÖµ
+  * @retval  TRUEå¯ç”¨   FALSEä¸å¯ç”¨
+  * @attention  åœ¨è£åˆ¤è¯»å–å‡½æ•°ä¸­å®æ—¶æ”¹å˜è¿”å›å€¼
   */
 bool JUDGE_sGetDataState(void)
 {
@@ -341,9 +341,9 @@ bool JUDGE_sGetDataState(void)
 }
 
 /**
-  * @brief  ¶ÁÈ¡Ë²Ê±¹¦ÂÊ
+  * @brief  è¯»å–ç¬æ—¶åŠŸç‡
   * @param  void
-  * @retval ÊµÊ±¹¦ÂÊÖµ
+  * @retval å®æ—¶åŠŸç‡å€¼
   * @attention  
   */
 float  JUDGE_fGetChassisPower(void)
@@ -357,9 +357,9 @@ float JUDGE_fGetChassisVolt(void)
 	return (Power_heat_data.chassis_volt);
 }
 /**
-  * @brief  ¶ÁÈ¡Ê£Óà½¹¶úÄÜÁ¿
+  * @brief  è¯»å–å‰©ä½™ç„¦è€³èƒ½é‡
   * @param  void
-  * @retval Ê£Óà»º³å½¹¶úÄÜÁ¿(×î´ó60)
+  * @retval å‰©ä½™ç¼“å†²ç„¦è€³èƒ½é‡(æœ€å¤§60)
   * @attention  
   */
 uint16_t JUDGE_fGetRemainEnergy(void)
@@ -367,9 +367,9 @@ uint16_t JUDGE_fGetRemainEnergy(void)
 	return (Power_heat_data.chassis_power_buffer);
 }
 /**
-  * @brief  ¶ÁÈ¡µ±Ç°µÈ¼¶
+  * @brief  è¯»å–å½“å‰ç­‰çº§
   * @param  void
-  * @retval µ±Ç°µÈ¼¶
+  * @retval å½“å‰ç­‰çº§
   * @attention  
   */
 uint8_t  JUDGE_ucGetRobotLevel(void)
@@ -377,7 +377,7 @@ uint8_t  JUDGE_ucGetRobotLevel(void)
     return	Robot_status.robot_level;
 }
 /**
-  * @brief  ¶ÁÈ¡id1_17mmÇ¹¿ÚÈÈÁ¿
+  * @brief  è¯»å–id1_17mmæªå£çƒ­é‡
   * @param  void
   * @retval 17mm
   * @attention  
@@ -388,7 +388,7 @@ uint16_t JUDGE_usGetRemoteHeat_id1_17mm(void)
 }
 
 /**
-  * @brief  ¶ÁÈ¡id2_17mmÇ¹¿ÚÈÈÁ¿
+  * @brief  è¯»å–id2_17mmæªå£çƒ­é‡
   * @param  void
   * @retval 17mm
   * @attention  
@@ -399,7 +399,7 @@ uint16_t  JUDGE_usGetRemoteHeat_id2_17mm(void)
 }
 
 /**
-  * @brief  ¶ÁÈ¡id1_42mmÇ¹¿ÚÈÈÁ¿
+  * @brief  è¯»å–id1_42mmæªå£çƒ­é‡
   * @param  void
   * @retval 42mm
   * @attention  
@@ -411,10 +411,10 @@ uint16_t JUDGE_usGetRemoteHeat_id1_42mm(void)
 
 
 /**
-  * @brief  ¶ÁÈ¡ÉäËÙ
+  * @brief  è¯»å–å°„é€Ÿ
   * @param  void
   * @retval 17mm
-  * @attention  ÊµÊ±ËÙ¶È
+  * @attention  å®æ—¶é€Ÿåº¦
   */
 float JUDGE_usGetSpeedHeat(void)
 {
@@ -429,65 +429,65 @@ uint16_t  JUDGE_usGetSpeedLimit(void)
 }
 
 /**
-  * @brief  Í³¼Æ17mm·¢µ¯Á¿
+  * @brief  ç»Ÿè®¡17mmå‘å¼¹é‡
   * @param  void
   * @retval void
   * @attention  
   */
-portTickType shoot_time_17mm;//·¢ÉäÑÓÊ±²âÊÔ
-portTickType shoot_ping_17mm;//¼ÆËã³öµÄ×îÖÕ·¢µ¯ÑÓ³Ù
+portTickType shoot_time_17mm;//å‘å°„å»¶æ—¶æµ‹è¯•
+portTickType shoot_ping_17mm;//è®¡ç®—å‡ºçš„æœ€ç»ˆå‘å¼¹å»¶è¿Ÿ
 
 float Shoot_Speed_Now_17mm = 0;
 float Shoot_Speed_Last_17mm = 0;
 
 void   JUDGE_ShootNumCount_17mm(void)
 {
-	//¼ì²âµ½ÊÇĞ¡µ¯Íè  bullet_type==1
+	//æ£€æµ‹åˆ°æ˜¯å°å¼¹ä¸¸  bullet_type==1
 	if(Shoot_data.bullet_type == 1)
 	{
 	Shoot_Speed_Now_17mm = Shoot_data.bullet_speed;
-	if(Shoot_Speed_Last_17mm != Shoot_Speed_Now_17mm)//ÒòÎªÊÇfloatĞÍ£¬¼¸ºõ²»¿ÉÄÜÍêÈ«ÏàµÈ,ËùÒÔËÙ¶È²»µÈÊ±ËµÃ÷·¢ÉäÁËÒ»¿Åµ¯
+	if(Shoot_Speed_Last_17mm != Shoot_Speed_Now_17mm)//å› ä¸ºæ˜¯floatå‹ï¼Œå‡ ä¹ä¸å¯èƒ½å®Œå…¨ç›¸ç­‰,æ‰€ä»¥é€Ÿåº¦ä¸ç­‰æ—¶è¯´æ˜å‘å°„äº†ä¸€é¢—å¼¹
 	{
 		ShootNum_17mm++;
 		Shoot_Speed_Last_17mm = Shoot_Speed_Now_17mm;
 	}
-	shoot_time_17mm = xTaskGetTickCount();//»ñÈ¡µ¯Íè·¢ÉäÊ±µÄÏµÍ³Ê±¼ä
-//	shoot_ping_17mm = shoot_time_17mm - REVOL_uiGetRevolTime();//¼ÆËãÑÓ³Ù
+	shoot_time_17mm = xTaskGetTickCount();//è·å–å¼¹ä¸¸å‘å°„æ—¶çš„ç³»ç»Ÿæ—¶é—´
+//	shoot_ping_17mm = shoot_time_17mm - REVOL_uiGetRevolTime();//è®¡ç®—å»¶è¿Ÿ
 	}
 }
 
 /**
-  * @brief  Í³¼Æ42mm·¢µ¯Á¿
+  * @brief  ç»Ÿè®¡42mmå‘å¼¹é‡
   * @param  void
   * @retval void
   * @attention  
   */
-portTickType shoot_time_42mm;//·¢ÉäÑÓÊ±²âÊÔ
-portTickType shoot_ping_42mm;//¼ÆËã³öµÄ×îÖÕ·¢µ¯ÑÓ³Ù
+portTickType shoot_time_42mm;//å‘å°„å»¶æ—¶æµ‹è¯•
+portTickType shoot_ping_42mm;//è®¡ç®—å‡ºçš„æœ€ç»ˆå‘å¼¹å»¶è¿Ÿ
 
 float Shoot_Speed_Now_42mm = 0;
 float Shoot_Speed_Last_42mm = 0;
 
 void JUDGE_ShootNumCount_42mm(void)
 {
-	//¼ì²âµ½ÊÇ´óµ¯Íè  bullet_type==2
+	//æ£€æµ‹åˆ°æ˜¯å¤§å¼¹ä¸¸  bullet_type==2
 	if(Shoot_data.bullet_type == 2)
 	{
 	Shoot_Speed_Now_42mm = Shoot_data.bullet_speed;
-	if(Shoot_Speed_Last_42mm != Shoot_Speed_Now_42mm)//ÒòÎªÊÇfloatĞÍ£¬¼¸ºõ²»¿ÉÄÜÍêÈ«ÏàµÈ,ËùÒÔËÙ¶È²»µÈÊ±ËµÃ÷·¢ÉäÁËÒ»¿Åµ¯
+	if(Shoot_Speed_Last_42mm != Shoot_Speed_Now_42mm)//å› ä¸ºæ˜¯floatå‹ï¼Œå‡ ä¹ä¸å¯èƒ½å®Œå…¨ç›¸ç­‰,æ‰€ä»¥é€Ÿåº¦ä¸ç­‰æ—¶è¯´æ˜å‘å°„äº†ä¸€é¢—å¼¹
 	{
 		ShootNum_42mm++;
 		Shoot_Speed_Last_42mm = Shoot_Speed_Now_42mm;
 	}
-	shoot_time_42mm = xTaskGetTickCount();//»ñÈ¡µ¯Íè·¢ÉäÊ±µÄÏµÍ³Ê±¼ä
-//	shoot_ping_42mm = shoot_time_42mm - REVOL_uiGetRevolTime();//¼ÆËãÑÓ³Ù
+	shoot_time_42mm = xTaskGetTickCount();//è·å–å¼¹ä¸¸å‘å°„æ—¶çš„ç³»ç»Ÿæ—¶é—´
+//	shoot_ping_42mm = shoot_time_42mm - REVOL_uiGetRevolTime();//è®¡ç®—å»¶è¿Ÿ
 	}
 }
 /**
-  * @brief  ¶ÁÈ¡17mm·¢µ¯Á¿
+  * @brief  è¯»å–17mmå‘å¼¹é‡
   * @param  void
-  * @retval ·¢µ¯Á¿
-  * @attention ²»ÊÊÓÃÓÚË«Ç¹¹Ü
+  * @retval å‘å¼¹é‡
+  * @attention ä¸é€‚ç”¨äºåŒæªç®¡
   */
 uint16_t  JUDGE_usGetShootNum_17mm(void)
 {
@@ -495,17 +495,17 @@ uint16_t  JUDGE_usGetShootNum_17mm(void)
 }
 
 /**
-  * @brief  ¶ÁÈ¡42mm·¢µ¯Á¿
+  * @brief  è¯»å–42mmå‘å¼¹é‡
   * @param  void
-  * @retval ·¢µ¯Á¿
-  * @attention ²»ÊÊÓÃÓÚË«Ç¹¹Ü
+  * @retval å‘å¼¹é‡
+  * @attention ä¸é€‚ç”¨äºåŒæªç®¡
   */
 uint16_t  JUDGE_usGetShootNum_42mm(void)
 {
 	return ShootNum_42mm;
 }
 /**
-  * @brief  17mm·¢µ¯Á¿ÇåÁã
+  * @brief  17mmå‘å¼¹é‡æ¸…é›¶
   * @param  void
   * @retval void
   * @attention 
@@ -515,7 +515,7 @@ void JUDGE_ShootNum_Clear_17mm(void)
 	ShootNum_17mm = 0;
 }
 /**
-  * @brief  42mm·¢µ¯Á¿ÇåÁã
+  * @brief  42mmå‘å¼¹é‡æ¸…é›¶
   * @param  void
   * @retval void
   * @attention 
@@ -526,9 +526,9 @@ void   JUDGE_ShootNum_Clear_42mm(void)
 }
 
 /**
-  * @brief  ¶ÁÈ¡id1_17mmÇ¹¿ÚÈÈÁ¿
+  * @brief  è¯»å–id1_17mmæªå£çƒ­é‡
   * @param  void
-  * @retval µ±Ç°µÈ¼¶17mmÈÈÁ¿ÉÏÏŞ
+  * @retval å½“å‰ç­‰çº§17mmçƒ­é‡ä¸Šé™
   * @attention  
   */
 uint16_t  JUDGE_usGetHeatLimit_id1_17mm(void)
@@ -537,9 +537,9 @@ uint16_t  JUDGE_usGetHeatLimit_id1_17mm(void)
 }
 
 /**
-  * @brief  ¶ÁÈ¡id2_17mmÇ¹¿ÚÈÈÁ¿
+  * @brief  è¯»å–id2_17mmæªå£çƒ­é‡
   * @param  void
-  * @retval µ±Ç°µÈ¼¶17mmÈÈÁ¿ÉÏÏŞ
+  * @retval å½“å‰ç­‰çº§17mmçƒ­é‡ä¸Šé™
   * @attention  
   */
 uint16_t  JUDGE_usGetHeatLimit_id2_17mm(void)
@@ -548,9 +548,9 @@ uint16_t  JUDGE_usGetHeatLimit_id2_17mm(void)
 }
 
 /**
-  * @brief  ¶ÁÈ¡id1_42mmÇ¹¿ÚÈÈÁ¿
+  * @brief  è¯»å–id1_42mmæªå£çƒ­é‡
   * @param  void
-  * @retval µ±Ç°µÈ¼¶42mmÈÈÁ¿ÉÏÏŞ
+  * @retval å½“å‰ç­‰çº§42mmçƒ­é‡ä¸Šé™
   * @attention  
   */
 uint16_t  JUDGE_usGetHeatLimit_id1_42mm(void)
@@ -558,9 +558,9 @@ uint16_t  JUDGE_usGetHeatLimit_id1_42mm(void)
 	return Robot_status.shooter_id1_42mm_cooling_limit;
 }
 /**
-  * @brief  ¶ÁÈ¡µ×ÅÌ¹¦ÂÊ×î´óÖµ
+  * @brief  è¯»å–åº•ç›˜åŠŸç‡æœ€å¤§å€¼
   * @param  void
-  * @retval µ±Ç°µÈ¼¶µ×ÅÌ¹¦ÂÊÉÏÏŞ
+  * @retval å½“å‰ç­‰çº§åº•ç›˜åŠŸç‡ä¸Šé™
   * @attention  
   */
 uint16_t  JUDGE_usGetChassisPowerLimit(void)
@@ -569,7 +569,7 @@ uint16_t  JUDGE_usGetChassisPowerLimit(void)
 }
 
 /**
-  * @brief  ¶ÁÈ¡»úÆ÷ÈËµÈ¼¶
+  * @brief  è¯»å–æœºå™¨äººç­‰çº§
   * @param  void
   * @retval 
   * @attention  
@@ -581,9 +581,9 @@ uint8_t  JUDGE_ucRobotLevel(void)
 
 
 /**
-  * @brief  µ±Ç°µÈ¼¶id1_17mm¶ÔÓ¦µÄÇ¹¿ÚÃ¿ÃëÀäÈ´Öµ
+  * @brief  å½“å‰ç­‰çº§id1_17mmå¯¹åº”çš„æªå£æ¯ç§’å†·å´å€¼
   * @param  void
-  * @retval µ±Ç°µÈ¼¶17mmÀäÈ´ËÙ¶È
+  * @retval å½“å‰ç­‰çº§17mmå†·å´é€Ÿåº¦
   * @attention  
   */
 uint16_t  JUDGE_usGetShootCold_id1_17mm(void)
@@ -591,9 +591,9 @@ uint16_t  JUDGE_usGetShootCold_id1_17mm(void)
 	return Robot_status. shooter_id1_17mm_cooling_rate;
 }
 /**
-  * @brief  µ±Ç°µÈ¼¶id2_17mm¶ÔÓ¦µÄÇ¹¿ÚÃ¿ÃëÀäÈ´Öµ
+  * @brief  å½“å‰ç­‰çº§id2_17mmå¯¹åº”çš„æªå£æ¯ç§’å†·å´å€¼
   * @param  void
-  * @retval µ±Ç°µÈ¼¶17mmÀäÈ´ËÙ¶È
+  * @retval å½“å‰ç­‰çº§17mmå†·å´é€Ÿåº¦
   * @attention  
   */
 uint16_t  JUDGE_usGetShootCold_id2_17mm(void)
@@ -602,9 +602,9 @@ uint16_t  JUDGE_usGetShootCold_id2_17mm(void)
 }
 
 /**
-  * @brief  µ±Ç°µÈ¼¶id1_42mm¶ÔÓ¦µÄÇ¹¿ÚÃ¿ÃëÀäÈ´Öµ
+  * @brief  å½“å‰ç­‰çº§id1_42mmå¯¹åº”çš„æªå£æ¯ç§’å†·å´å€¼
   * @param  void
-  * @retval µ±Ç°µÈ¼¶17mmÀäÈ´ËÙ¶È
+  * @retval å½“å‰ç­‰çº§17mmå†·å´é€Ÿåº¦
   * @attention  
   */
 uint16_t  JUDGE_usGetShootCold_id1_42mm(void)
@@ -613,12 +613,12 @@ uint16_t  JUDGE_usGetShootCold_id1_42mm(void)
 }
 
 /**
-  * @brief  ²¹¸øÕ¾¿Ú ID£º
+  * @brief  è¡¥ç»™ç«™å£ IDï¼š
   * @param  void
-  * @retval µ±Ç°²¹¸øÕ¾¿Ú ID£º
-  * @attention  Îª×Ö·ûĞÍ±äÁ¿
-	1£º 1 ºÅ²¹¸ø¿Ú
-	2£º 2 ºÅ²¹¸ø¿Ú
+  * @retval å½“å‰è¡¥ç»™ç«™å£ IDï¼š
+  * @attention  ä¸ºå­—ç¬¦å‹å˜é‡
+	1ï¼š 1 å·è¡¥ç»™å£
+	2ï¼š 2 å·è¡¥ç»™å£
   */
 uint8_t  JUDGE_usGetSupply_Id(void)
 {
@@ -626,13 +626,13 @@ uint8_t  JUDGE_usGetSupply_Id(void)
 }
 
 /**
-  * @brief  ²¹¸ø»úÆ÷ÈË ID£º
+  * @brief  è¡¥ç»™æœºå™¨äºº IDï¼š
   * @param  void
-  * @retval µ±Ç°Ğè²¹¸ø»úÆ÷ÈË ID£º
-  * @attention  Îª×Ö·ûĞÍ±äÁ¿
-	²¹µ¯»úÆ÷ÈË ID£º 0 Îªµ±Ç°ÎŞ»úÆ÷ÈË²¹µ¯£¬ 1 Îªºì·½Ó¢ĞÛ»úÆ÷ÈË²¹µ¯£¬ 2 Îªºì·½¹¤³Ì»ú
-	Æ÷ÈË²¹µ¯£¬ 3/4/5 Îªºì·½²½±ø»úÆ÷ÈË²¹µ¯£¬ 101 ÎªÀ¶·½Ó¢ĞÛ»úÆ÷ÈË²¹µ¯£¬ 102 ÎªÀ¶·½¹¤
-	³Ì»úÆ÷ÈË²¹µ¯£¬ 103/104/105 ÎªÀ¶·½²½±ø»úÆ÷ÈË²¹µ¯
+  * @retval å½“å‰éœ€è¡¥ç»™æœºå™¨äºº IDï¼š
+  * @attention  ä¸ºå­—ç¬¦å‹å˜é‡
+	è¡¥å¼¹æœºå™¨äºº IDï¼š 0 ä¸ºå½“å‰æ— æœºå™¨äººè¡¥å¼¹ï¼Œ 1 ä¸ºçº¢æ–¹è‹±é›„æœºå™¨äººè¡¥å¼¹ï¼Œ 2 ä¸ºçº¢æ–¹å·¥ç¨‹æœº
+	å™¨äººè¡¥å¼¹ï¼Œ 3/4/5 ä¸ºçº¢æ–¹æ­¥å…µæœºå™¨äººè¡¥å¼¹ï¼Œ 101 ä¸ºè“æ–¹è‹±é›„æœºå™¨äººè¡¥å¼¹ï¼Œ 102 ä¸ºè“æ–¹å·¥
+	ç¨‹æœºå™¨äººè¡¥å¼¹ï¼Œ 103/104/105 ä¸ºè“æ–¹æ­¥å…µæœºå™¨äººè¡¥å¼¹
   */
 uint8_t  JUDGE_usGetSupply_Robo_Id(void)
 {
@@ -641,13 +641,13 @@ uint8_t  JUDGE_usGetSupply_Robo_Id(void)
 
 
 /**
-  * @brief  ³öµ¯¿Ú¿ª±Õ×´Ì¬ 
+  * @brief  å‡ºå¼¹å£å¼€é—­çŠ¶æ€ 
   * @param  void
-  * @retval ³öµ¯¿Ú¿ª±Õ×´Ì¬ 
-  * @attention  Îª×Ö·ûĞÍ±äÁ¿
-	0 Îª¹Ø±Õ£¬
-	1 Îª×Óµ¯×¼±¸ÖĞ£¬
-	2 Îª×Óµ¯ÏÂÂä
+  * @retval å‡ºå¼¹å£å¼€é—­çŠ¶æ€ 
+  * @attention  ä¸ºå­—ç¬¦å‹å˜é‡
+	0 ä¸ºå…³é—­ï¼Œ
+	1 ä¸ºå­å¼¹å‡†å¤‡ä¸­ï¼Œ
+	2 ä¸ºå­å¼¹ä¸‹è½
   */
 uint8_t  JUDGE_usGetSupply_Mode(void)
 {
@@ -656,14 +656,14 @@ uint8_t  JUDGE_usGetSupply_Mode(void)
 
 
 /**
-  * @brief  µ±Ç°²¹µ¯ÊıÁ¿
+  * @brief  å½“å‰è¡¥å¼¹æ•°é‡
   * @param  void
-  * @retval µ±Ç°²¹µ¯ÊıÁ¿
-  * @attention Îª×Ö·ûĞÍ±äÁ¿
-	50£º 50 ¿Å×Óµ¯£»
-	100£º 100 ¿Å×Óµ¯£»
-	150£º 150 ¿Å×Óµ¯£»
-	200£º 200 ¿Å×Óµ¯
+  * @retval å½“å‰è¡¥å¼¹æ•°é‡
+  * @attention ä¸ºå­—ç¬¦å‹å˜é‡
+	50ï¼š 50 é¢—å­å¼¹ï¼›
+	100ï¼š 100 é¢—å­å¼¹ï¼›
+	150ï¼š 150 é¢—å­å¼¹ï¼›
+	200ï¼š 200 é¢—å­å¼¹
 */ 
 
 uint8_t  JUDGE_usGetSupply_Num(void)
@@ -672,9 +672,9 @@ uint8_t  JUDGE_usGetSupply_Num(void)
 }
 
 /**
-  * @brief  Ğ¡µØÍ¼½ÓÊÕĞÅÏ¢Ä¿±ê»úÆ÷ÈË ID(À×´ïÕ¾)
+  * @brief  å°åœ°å›¾æ¥æ”¶ä¿¡æ¯ç›®æ ‡æœºå™¨äºº ID(é›·è¾¾ç«™)
   * @param  void
-  * @retval µ±Ç°²¹µ¯ÊıÁ¿
+  * @retval å½“å‰è¡¥å¼¹æ•°é‡
   * @attention 
 
 */ 
@@ -684,10 +684,10 @@ uint16_t   JUDGE_usGetRadar_Station_to_robo_ID(void)
 }
 
 /**
-  * @brief  Ğ¡µØÍ¼½ÓÊÕĞÅÏ¢Ä¿±ê»úÆ÷ÈË x Î»ÖÃ×ø±ê£¬µ¥Î» m µ± x,y ³¬³ö½çÏŞÊ±Ôò²»ÏÔÊ¾
-			(À×´ïÕ¾)
+  * @brief  å°åœ°å›¾æ¥æ”¶ä¿¡æ¯ç›®æ ‡æœºå™¨äºº x ä½ç½®åæ ‡ï¼Œå•ä½ m å½“ x,y è¶…å‡ºç•Œé™æ—¶åˆ™ä¸æ˜¾ç¤º
+			(é›·è¾¾ç«™)
   * @param  void
-  * @retval µ±Ç°²¹µ¯ÊıÁ¿
+  * @retval å½“å‰è¡¥å¼¹æ•°é‡
   * @attention 
 
 */ 
@@ -697,10 +697,10 @@ float  JUDGE_usGetRadar_Station_to_robo_posX(void)
 }
 
 /**
-  * @brief  Ğ¡µØÍ¼½ÓÊÕĞÅÏ¢Ä¿±ê»úÆ÷ÈË y Î»ÖÃ×ø±ê£¬µ¥Î» m µ± x,y ³¬³ö½çÏŞÊ±Ôò²»ÏÔÊ¾
-			(À×´ïÕ¾)
+  * @brief  å°åœ°å›¾æ¥æ”¶ä¿¡æ¯ç›®æ ‡æœºå™¨äºº y ä½ç½®åæ ‡ï¼Œå•ä½ m å½“ x,y è¶…å‡ºç•Œé™æ—¶åˆ™ä¸æ˜¾ç¤º
+			(é›·è¾¾ç«™)
   * @param  void
-  * @retval µ±Ç°²¹µ¯ÊıÁ¿
+  * @retval å½“å‰è¡¥å¼¹æ•°é‡
   * @attention 
 
 */ 
@@ -710,9 +710,9 @@ float  JUDGE_usGetRadar_Station_to_robo_posy(void)
 }
 
 /**
-  * @brief  µ±Ç°»úÆ÷ÈËÑªÁ¿			
+  * @brief  å½“å‰æœºå™¨äººè¡€é‡			
   * @param  void
-  * @retval µ±Ç°»úÆ÷ÈËÑªÁ¿
+  * @retval å½“å‰æœºå™¨äººè¡€é‡
   * @attention 
 
 */
@@ -722,9 +722,9 @@ uint16_t  JUDGE_usGetRadar_Robo_HP(void)
 }
 
 /**
-  * @brief  µ±Ç°»úÆ÷ÈË×î´óÑªÁ¿			
+  * @brief  å½“å‰æœºå™¨äººæœ€å¤§è¡€é‡			
   * @param  void
-  * @retval µ±Ç°»úÆ÷ÈËÑªÁ¿
+  * @retval å½“å‰æœºå™¨äººè¡€é‡
   * @attention 
 
 */
@@ -734,18 +734,18 @@ uint16_t  JUDGE_usGetRadar_Robo_Max_HP(void)
 }
 
 /**
-  * @brief  µ±Ç°»úÆ÷ÈË17mm ×Óµ¯Ê£Óà·¢ÉäÊıÁ¿			
+  * @brief  å½“å‰æœºå™¨äºº17mm å­å¼¹å‰©ä½™å‘å°„æ•°é‡			
   * @param  void
-  * @retval µ±Ç°»úÆ÷17mm ×Óµ¯Ê£Óà·¢ÉäÊıÁ¿
+  * @retval å½“å‰æœºå™¨17mm å­å¼¹å‰©ä½™å‘å°„æ•°é‡
   * @attention 
-17mm ×Óµ¯Ê£Óà·¢ÉäÊıÁ¿
-º¬ÒåËµÃ÷
-					ÁªÃËÈü 														¶Ô¿¹Èü
-²½±ø»úÆ÷ÈË 			È«¶Ó²½±øÓëÓ¢ĞÛÊ£Óà¿É·¢Éä 17mm µ¯Íè×ÜÁ¿			È«¶Ó 17mm µ¯ÍèÊ£Óà¿É¶Ò»»ÊıÁ¿
+17mm å­å¼¹å‰©ä½™å‘å°„æ•°é‡
+å«ä¹‰è¯´æ˜
+					è”ç›Ÿèµ› 														å¯¹æŠ—èµ›
+æ­¥å…µæœºå™¨äºº 			å…¨é˜Ÿæ­¥å…µä¸è‹±é›„å‰©ä½™å¯å‘å°„ 17mm å¼¹ä¸¸æ€»é‡			å…¨é˜Ÿ 17mm å¼¹ä¸¸å‰©ä½™å¯å…‘æ¢æ•°é‡
 
-Ó¢ĞÛ»úÆ÷ÈË 			È«¶Ó²½±øÓëÓ¢ĞÛÊ£Óà¿É·¢Éä 17mm µ¯Íè×ÜÁ¿			È«¶Ó 17mm µ¯ÍèÊ£Óà¿É¶Ò»»ÊıÁ¿
+è‹±é›„æœºå™¨äºº 			å…¨é˜Ÿæ­¥å…µä¸è‹±é›„å‰©ä½™å¯å‘å°„ 17mm å¼¹ä¸¸æ€»é‡			å…¨é˜Ÿ 17mm å¼¹ä¸¸å‰©ä½™å¯å…‘æ¢æ•°é‡
 
-¿ÕÖĞ»úÆ÷ÈË¡¢ÉÚ±ø»úÆ÷ÈË ¸Ã»úÆ÷ÈËÊ£Óà¿É·¢Éä 17mm µ¯Íè×ÜÁ¿ 				¸Ã»úÆ÷ÈËÊ£Óà¿É·¢Éä 17mm µ¯Íè×ÜÁ¿
+ç©ºä¸­æœºå™¨äººã€å“¨å…µæœºå™¨äºº è¯¥æœºå™¨äººå‰©ä½™å¯å‘å°„ 17mm å¼¹ä¸¸æ€»é‡ 				è¯¥æœºå™¨äººå‰©ä½™å¯å‘å°„ 17mm å¼¹ä¸¸æ€»é‡
 
 */
 uint16_t  JUDGE_usGetRadar_Robo_remain_17mm(void)
@@ -754,9 +754,9 @@ uint16_t  JUDGE_usGetRadar_Robo_remain_17mm(void)
 }
 
 /**
-  * @brief  shooterµçÔ´Êä³ö
+  * @brief  shooterç”µæºè¾“å‡º
   * @param  void
-  * @retval 1 ÒÑÊä³ö   0Ã»Êä³ö
+  * @retval 1 å·²è¾“å‡º   0æ²¡è¾“å‡º
   * @attention  
   */
 uint8_t  JUDGE_usGetJudge_shooter_Power(void)
@@ -766,25 +766,25 @@ uint8_t  JUDGE_usGetJudge_shooter_Power(void)
 
 
 
-/****************µ×ÅÌ×Ô¶¯ÉÁ±ÜÅĞ¶ÏÓÃ*******************/
+/****************åº•ç›˜è‡ªåŠ¨é—ªé¿åˆ¤æ–­ç”¨*******************/
 /**
-  * @brief  ×°¼×°åÉËº¦Êı¾İÊÇ·ñ¸üĞÂ
+  * @brief  è£…ç”²æ¿ä¼¤å®³æ•°æ®æ˜¯å¦æ›´æ–°
   * @param  void
-  * @retval TRUEÒÑ¸üĞÂ   FALSEÃ»¸üĞÂ
+  * @retval TRUEå·²æ›´æ–°   FALSEæ²¡æ›´æ–°
   * @attention  
   */
 bool  JUDGE_IfArmorHurt(void)
 {
 	static portTickType ulCurrent = 0;
 	static uint32_t ulDelay = 0;
-	static bool IfHurt = FALSE;//Ä¬ÈÏ×°¼×°å´¦ÓÚÀëÏß×´Ì¬
+	static bool IfHurt = FALSE;//é»˜è®¤è£…ç”²æ¿å¤„äºç¦»çº¿çŠ¶æ€
 
 	
 	ulCurrent = xTaskGetTickCount();
 
-	if (Hurt_Data_Update == TRUE)//×°¼×°åÊı¾İ¸üĞÂ
+	if (Hurt_Data_Update == TRUE)//è£…ç”²æ¿æ•°æ®æ›´æ–°
 	{
-		Hurt_Data_Update = FALSE;//±£Ö¤ÄÜÅĞ¶Ïµ½ÏÂ´Î×°¼×°åÉËº¦¸üĞÂ
+		Hurt_Data_Update = FALSE;//ä¿è¯èƒ½åˆ¤æ–­åˆ°ä¸‹æ¬¡è£…ç”²æ¿ä¼¤å®³æ›´æ–°
 		ulDelay = ulCurrent + 200;//
 		IfHurt = TRUE;
 	}
@@ -820,12 +820,12 @@ bool  Judge_If_Chassis(void)
 	}
 }
 /**
-  * @brief  ×°¼×°åÊÜ´ò»÷ID
+  * @brief  è£…ç”²æ¿å—æ‰“å‡»ID
   * @param  void
   * @retval   
   * @attention  
-		bit 0-3£º µ±ÑªÁ¿±ä»¯ÀàĞÍÎª×°¼×ÉËº¦£¬´ú±í×°¼× ID£¬ÆäÖĞÊıÖµÎª 0-4 ºÅ´ú±í»úÆ÷ÈË
-		µÄÎå¸ö×°¼×Æ¬£¬ÆäËûÑªÁ¿±ä»¯ÀàĞÍ£¬¸Ã±äÁ¿ÊıÖµÎª 0¡£
+		bit 0-3ï¼š å½“è¡€é‡å˜åŒ–ç±»å‹ä¸ºè£…ç”²ä¼¤å®³ï¼Œä»£è¡¨è£…ç”² IDï¼Œå…¶ä¸­æ•°å€¼ä¸º 0-4 å·ä»£è¡¨æœºå™¨äºº
+		çš„äº”ä¸ªè£…ç”²ç‰‡ï¼Œå…¶ä»–è¡€é‡å˜åŒ–ç±»å‹ï¼Œè¯¥å˜é‡æ•°å€¼ä¸º 0ã€‚
 
   */
 uint8_t  Judge_armor_id(void)
@@ -834,17 +834,17 @@ uint8_t  Judge_armor_id(void)
 }
 
 /**
-  * @brief  ×°¼×°åÊÜÉËÄ£Ê½
+  * @brief  è£…ç”²æ¿å—ä¼¤æ¨¡å¼
   * @param  void
   * @retval     
   * @attention  
-		bit 4-7£º ÑªÁ¿±ä»¯ÀàĞÍ
-			0x0 ×°¼×ÉËº¦¿ÛÑª£»
-			0x1 Ä£¿éµôÏß¿ÛÑª£»
-			0x2 ³¬ÉäËÙ¿ÛÑª£»
-			0x3 ³¬Ç¹¿ÚÈÈÁ¿¿ÛÑª£»
-			0x4 ³¬µ×ÅÌ¹¦ÂÊ¿ÛÑª£»
-			0x5 ×°¼××²»÷¿ÛÑª
+		bit 4-7ï¼š è¡€é‡å˜åŒ–ç±»å‹
+			0x0 è£…ç”²ä¼¤å®³æ‰£è¡€ï¼›
+			0x1 æ¨¡å—æ‰çº¿æ‰£è¡€ï¼›
+			0x2 è¶…å°„é€Ÿæ‰£è¡€ï¼›
+			0x3 è¶…æªå£çƒ­é‡æ‰£è¡€ï¼›
+			0x4 è¶…åº•ç›˜åŠŸç‡æ‰£è¡€ï¼›
+			0x5 è£…ç”²æ’å‡»æ‰£è¡€
   */
 uint8_t  Judge_hurt_mode(void)
 {
@@ -853,24 +853,24 @@ uint8_t  Judge_hurt_mode(void)
 
 
 /**
-* @brief  »úÆ÷ÈË¼äĞÅÏ¢½»»¥
+* @brief  æœºå™¨äººé—´ä¿¡æ¯äº¤äº’
 * @param  void
 **/
 uint8_t CliendTxBuffer[200];
 #define Teammate_max_len 200 //200
 unsigned char TeammateTxBuffer[Teammate_max_len];
-char first_line[30]  = {"         COVER:"};//µ¯²Õ¸Ç
-char second_line[30] = {"         STUCK:"};//Ğ¡ÍÓÂİ
-char third_line[30]  = {"         ENEMY:"};//×ÔÃé
-char fourth_line[30] = {"          FIRC:"};//ÈÈÁ¿ÏŞÖÆ
-char fifth_line[30]  = {": CUFF"};//·¢µ¯Á¿int
+char first_line[30]  = {"         COVER:"};//å¼¹èˆ±ç›–
+char second_line[30] = {"         STUCK:"};//å°é™€èº
+char third_line[30]  = {"         ENEMY:"};//è‡ªç„
+char fourth_line[30] = {"          FIRC:"};//çƒ­é‡é™åˆ¶
+char fifth_line[30]  = {": CUFF"};//å‘å¼¹é‡int
 char sixth_line[30]  = {": VUFF"};
-char seventh_line[30]= {"super capacitor:"};//³¬¼¶µçÈİÊ£ÓàÁ¿,float
+char seventh_line[30]= {"super capacitor:"};//è¶…çº§ç”µå®¹å‰©ä½™é‡,float
 char empty_line[30] = {"                             "};
-/*******************************¿ªÊ¼»æ×Ö·û´®******************************/
+/*******************************å¼€å§‹ç»˜å­—ç¬¦ä¸²******************************/
 ext_charstring_data_t tx_client_char;
-uint8_t state_first_graphic;//0~7Ñ­»·
-void Char_Graphic(ext_client_string_t* graphic,//×îÖÕÒª·¢³öÈ¥µÄÊı×éÖĞµÄÊı¾İ¶ÎÄÚÈİ
+uint8_t state_first_graphic;//0~7å¾ªç¯
+void Char_Graphic(ext_client_string_t* graphic,//æœ€ç»ˆè¦å‘å‡ºå»çš„æ•°ç»„ä¸­çš„æ•°æ®æ®µå†…å®¹
 									const char* name,
 									uint32_t operate_tpye,
 									uint32_t layer,
@@ -880,15 +880,15 @@ void Char_Graphic(ext_client_string_t* graphic,//×îÖÕÒª·¢³öÈ¥µÄÊı×éÖĞµÄÊı¾İ¶ÎÄÚÈ
 									uint32_t width,
 									uint32_t start_x,
 									uint32_t start_y,
-									const char *character)//Íâ²¿·ÅÈëµÄÊı×é
+									const char *character)//å¤–éƒ¨æ”¾å…¥çš„æ•°ç»„
 {
 	graphic_data_struct_t *data_struct = &graphic->grapic_data_struct;
 	for(char i=0;i<3;i++)
-		data_struct->graphic_name[i] = name[i];	//×Ö·ûË÷Òı
-	data_struct->operate_tpye = operate_tpye; //Í¼²ã²Ù×÷
-	data_struct->graphic_tpye = CHAR;         //CharĞÍ
-	data_struct->layer = layer;//¶¼ÔÚµÚÁã²ã
-	data_struct->color = color;//¶¼ÊÇ°×É«
+		data_struct->graphic_name[i] = name[i];	//å­—ç¬¦ç´¢å¼•
+	data_struct->operate_tpye = operate_tpye; //å›¾å±‚æ“ä½œ
+	data_struct->graphic_tpye = CHAR;         //Charå‹
+	data_struct->layer = layer;//éƒ½åœ¨ç¬¬é›¶å±‚
+	data_struct->color = color;//éƒ½æ˜¯ç™½è‰²
 	data_struct->start_angle = size;
 	data_struct->end_angle = length;	
 	data_struct->width = width;
@@ -906,7 +906,7 @@ bool Send_Color = 0;
 uint16_t send_time = 0;
 static void  Draw_char()
 {
-	if(state_first_graphic == 0)//²»ÖªµÀÊ²Ã´Ê±ºò½øÈë¿Í»§¶ËËùÒÔÒª²»¶Ï¸üĞÂ
+	if(state_first_graphic == 0)//ä¸çŸ¥é“ä»€ä¹ˆæ—¶å€™è¿›å…¥å®¢æˆ·ç«¯æ‰€ä»¥è¦ä¸æ–­æ›´æ–°
 	{
 		Char_Graphic(&tx_client_char.clientData,"CL1",ADD,0,GREEN,20,strlen(first_line),2,(50),(1080*9/12),first_line);//x1920/18
 		state_first_graphic = 1;
@@ -942,7 +942,7 @@ static void  Draw_char()
 		state_first_graphic = 7;
 	}
 }
-/*******************************½áÊø»æÖÆ×Ö·û´®******************************/
+/*******************************ç»“æŸç»˜åˆ¶å­—ç¬¦ä¸²******************************/
 
 //void  Client_graphic_Init()
 //{
@@ -950,38 +950,38 @@ static void  Draw_char()
 //	{
 //		state_first_graphic = 0;
 //	}
-//		//Ö¡Í·
+//		//å¸§å¤´
 //		tx_client_char.txFrameHeader.SOF = JUDGE_FRAME_HEADER;
 //		tx_client_char.txFrameHeader.DataLength = sizeof(ext_student_interactive_header_data_t) + sizeof(ext_client_string_t);
-//		tx_client_char.txFrameHeader.Seq = 0;//°üĞòºÅ
+//		tx_client_char.txFrameHeader.Seq = 0;//åŒ…åºå·
 //		memcpy(CliendTxBuffer,&tx_client_char.txFrameHeader,sizeof(xFrameHeader));
-//		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//Í·Ğ£Ñé
+//		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//å¤´æ ¡éªŒ
 //	
-//		//ÃüÁîÂë
+//		//å‘½ä»¤ç 
 //		tx_client_char.CmdID = ID_robot_interactive_header_data;
 //		
-//		//Êı¾İ¶ÎÍ·½á¹¹
+//		//æ•°æ®æ®µå¤´ç»“æ„
 //		tx_client_char.dataFrameHeader.data_cmd_id = INTERACT_ID_draw_char_graphic;
 //		tx_client_char.dataFrameHeader.send_ID     = REF.GameRobotStat.robot_id;
 //		tx_client_char.dataFrameHeader.receiver_ID = REF.self_client;
 //		
-//		//Êı¾İ¶Î
+//		//æ•°æ®æ®µ
 //		Draw_char();
-//		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&tx_client_char.CmdID, LEN_CMD_ID+tx_client_char.txFrameHeader.DataLength);//¼ÓÉÏÃüÁîÂë³¤¶È2
+//		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&tx_client_char.CmdID, LEN_CMD_ID+tx_client_char.txFrameHeader.DataLength);//åŠ ä¸Šå‘½ä»¤ç é•¿åº¦2
 //		
-//		//Ö¡Î²
+//		//å¸§å°¾
 //		append_CRC16_check_sum(CliendTxBuffer,sizeof(tx_client_char));
 //		
 //    HAL_UART_Transmit(&huart1,CliendTxBuffer,sizeof(tx_client_char),200);
 //    
 //}
 
-//************************************»æÖÆÏóĞÎ*******************************/
+//************************************ç»˜åˆ¶è±¡å½¢*******************************/
 ext_graphic_seven_data_t tx_client_graphic_figure;
-void Figure_Graphic(graphic_data_struct_t* graphic,//×îÖÕÒª·¢³öÈ¥µÄÊı×éµÄÊı¾İ¶ÎÄÚÈİ
+void Figure_Graphic(graphic_data_struct_t* graphic,//æœ€ç»ˆè¦å‘å‡ºå»çš„æ•°ç»„çš„æ•°æ®æ®µå†…å®¹
 									const char* name,
 									uint32_t operate_tpye,
-									uint32_t graphic_tpye,//»æÖÆÊ²Ã´Í¼Ïñ
+									uint32_t graphic_tpye,//ç»˜åˆ¶ä»€ä¹ˆå›¾åƒ
 									uint32_t layer,
 									uint32_t color,
 									uint32_t start_angle,
@@ -994,11 +994,11 @@ void Figure_Graphic(graphic_data_struct_t* graphic,//×îÖÕÒª·¢³öÈ¥µÄÊı×éµÄÊı¾İ¶ÎÄ
 									uint32_t end_y)							
 {
 	for(char i=0;i<3;i++)
-		graphic->graphic_name[i] = name[i];	//×Ö·ûË÷Òı
-	graphic->operate_tpye = operate_tpye; //¶Ô½øĞĞÍ¼²ã²Ù×÷
-	graphic->graphic_tpye = graphic_tpye;         //CharĞÍ
-	graphic->layer        = layer;//¶¼ÔÚµÚÒ»²ã
-	graphic->color        = color;//±äÉ«
+		graphic->graphic_name[i] = name[i];	//å­—ç¬¦ç´¢å¼•
+	graphic->operate_tpye = operate_tpye; //å¯¹è¿›è¡Œå›¾å±‚æ“ä½œ
+	graphic->graphic_tpye = graphic_tpye;         //Charå‹
+	graphic->layer        = layer;//éƒ½åœ¨ç¬¬ä¸€å±‚
+	graphic->color        = color;//å˜è‰²
 	graphic->start_angle  = start_angle;
 	graphic->end_angle    = end_angle;	
 	graphic->width        = width;
@@ -1012,26 +1012,26 @@ int update_figure_flag;
 extern global_flag_t global_flag;
 
 
-static void stuck_second_figure(global_flag_t*global_stuck)//Ğ¡ÍÓÂİ´ò¿ªÎªtrue
+static void stuck_second_figure(global_flag_t*global_stuck)//å°é™€èºæ‰“å¼€ä¸ºtrue
 {
-	if(global_flag.global_stuck == 1)//´ò¿ªĞ¡ÍÓÂİÎªÂÌÉ«
+	if(global_flag.global_stuck == 1)//æ‰“å¼€å°é™€èºä¸ºç»¿è‰²
 	{
 		Figure_Graphic(&tx_client_graphic_figure.clientData[0],"GL2",update_figure_flag,CIRCLE,1,GREEN,0,0,5,  200+160,1080*8/12, 20,0,0);
 	}
-	else if(global_flag.global_stuck != 1)//Ã»¿ªĞ¡ÍÓÂİÎª×ÏºìÉ«
+	else if(global_flag.global_stuck != 1)//æ²¡å¼€å°é™€èºä¸ºç´«çº¢è‰²
 		
 	{
 		Figure_Graphic(&tx_client_graphic_figure.clientData[0],"GL2",update_figure_flag,CIRCLE,1,FUCHSIA,0,0,5,  200+160,1080*8/12, 20,0,0);
 	}
 }
 
-static void auto_aim_third_figure(global_flag_t*global_aim)//×ÔÃé´ò¿ªÎªtrue
+static void auto_aim_third_figure(global_flag_t*global_aim)//è‡ªç„æ‰“å¼€ä¸ºtrue
 {
-	if(global_flag.global_auto == 1)//´ò¿ª×ÔÃéÎªÂÌÉ«
+	if(global_flag.global_auto == 1)//æ‰“å¼€è‡ªç„ä¸ºç»¿è‰²
 	{
 		Figure_Graphic(&tx_client_graphic_figure.clientData[1],"GL3",update_figure_flag,CIRCLE,1,GREEN,0,0,5,  200+160,1080*7/12, 20,0,0);
 	}
-	else if(global_flag.global_auto != 1)//Ã»¿ª×ÔÃéÎª×ÏºìÉ«
+	else if(global_flag.global_auto != 1)//æ²¡å¼€è‡ªç„ä¸ºç´«çº¢è‰²
 	{
 		Figure_Graphic(&tx_client_graphic_figure.clientData[1],"GL3",update_figure_flag,CIRCLE,1,FUCHSIA,0,0,5,  200+160,1080*7/12, 20,0,0);
 	}
@@ -1090,9 +1090,9 @@ static void vuff_seventh_figure(global_flag_t*global_vuff)
 void EMPTY (global_flag_t*global_stuck ,global_flag_t*global_aim, global_flag_t*global_cover,global_flag_t*global_firc,global_flag_t*global_cuff,global_flag_t*global_vuff )
 {
   
-	  if   (global_flag.global_stuck == 1)//´ò¿ªĞ¡ÍÓÂİÎªÂÌÉ«
+	  if   (global_flag.global_stuck == 1)//æ‰“å¼€å°é™€èºä¸ºç»¿è‰²
 		Figure_Graphic(&tx_client_graphic_figure.clientData[0],"GL2",DELETE,CIRCLE,1,GREEN,0,0,5,  200+160,1080*8/12, 20,0,0);
-		if   (global_flag.global_auto == 1)//´ò¿ª×ÔÃéÎªÂÌÉ«
+		if   (global_flag.global_auto == 1)//æ‰“å¼€è‡ªç„ä¸ºç»¿è‰²
 		Figure_Graphic(&tx_client_graphic_figure.clientData[1],"GL3",DELETE,CIRCLE,1,FUCHSIA,0,0,5,  200+160,1080*8/12, 20,0,0);
 		if   (global_flag.global_cover == 1)
 		Figure_Graphic(&tx_client_graphic_figure.clientData[2],"GL4",DELETE,CIRCLE,1,GREEN,0,0,5,  200+160,1080*9/12, 20,0,0);
@@ -1106,7 +1106,7 @@ void EMPTY (global_flag_t*global_stuck ,global_flag_t*global_aim, global_flag_t*
 //	  Figure_Graphic(&tx_client_graphic_figure.clientData[0],"GL2",DELETE,CIRCLE,1,GREEN,0,0,5,  200+160,1080*8/12, 20,0,0);
 }
 
-//!!!!!!!!!!!!!!!!!!!È«¾Ö±äÁ¿£¡£¡£¡£¡£¡
+//!!!!!!!!!!!!!!!!!!!å…¨å±€å˜é‡ï¼ï¼ï¼ï¼ï¼
 
 uint32_t global_sight_bead_x = 960,global_sight_bead_y = 720,global_supercapacitor_point=0;//[0,100]
 float global_supercapacitor_remain = 77.3,//[0,100]
@@ -1129,81 +1129,81 @@ static void Draw_Figure_bool()
   
 }
 
-//void  Client_graphic_Info_update()//Æß¸öÍ¼ÏñÒ»Æğ¸üĞÂ
+//void  Client_graphic_Info_update()//ä¸ƒä¸ªå›¾åƒä¸€èµ·æ›´æ–°
 //{
-//		//Ö¡Í·
+//		//å¸§å¤´
 //		tx_client_graphic_figure.txFrameHeader.SOF = JUDGE_FRAME_HEADER;
 //		tx_client_graphic_figure.txFrameHeader.DataLength = sizeof(ext_student_interactive_header_data_t) + sizeof(graphic_data_struct_t)*7;
-//		tx_client_graphic_figure.txFrameHeader.Seq = 0;//°üĞòºÅ
+//		tx_client_graphic_figure.txFrameHeader.Seq = 0;//åŒ…åºå·
 //		memcpy(CliendTxBuffer,&tx_client_graphic_figure.txFrameHeader,sizeof(xFrameHeader));
-//		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//Í·Ğ£Ñé
+//		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//å¤´æ ¡éªŒ
 
-//		//ÃüÁîÂë
+//		//å‘½ä»¤ç 
 //		tx_client_graphic_figure.CmdID = ID_robot_interactive_header_data;
 
-//		//Êı¾İ¶ÎÍ·½á¹¹
+//		//æ•°æ®æ®µå¤´ç»“æ„
 //		tx_client_graphic_figure.dataFrameHeader.data_cmd_id = INTERACT_ID_draw_seven_graphic;
 //		tx_client_graphic_figure.dataFrameHeader.send_ID     = REF.GameRobotStat.robot_id;
 //		tx_client_graphic_figure.dataFrameHeader.receiver_ID = REF.self_client;
 //	
-//		//Êı¾İ¶Î
+//		//æ•°æ®æ®µ
 //		Draw_Figure_bool();
-//		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&tx_client_graphic_figure.CmdID, LEN_CMD_ID+tx_client_graphic_figure.txFrameHeader.DataLength);//¼ÓÉÏÃüÁîÂë³¤¶È2
+//		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&tx_client_graphic_figure.CmdID, LEN_CMD_ID+tx_client_graphic_figure.txFrameHeader.DataLength);//åŠ ä¸Šå‘½ä»¤ç é•¿åº¦2
 
-//		//Ö¡Î²
+//		//å¸§å°¾
 //		append_CRC16_check_sum(CliendTxBuffer,sizeof(tx_client_graphic_figure));
 //		
 //    HAL_UART_Transmit(&huart1,CliendTxBuffer,sizeof(tx_client_graphic_figure),200);
 
 //}
 
-ext_graphic_two_data_t tx_aim_figure;//µÚÈı²ã·Å×¼ĞÄ
-int update_aim_flag;//1-add,3É¾³ı
-static void sight_bead_figrue(uint32_t x,uint32_t y)//¿ÉÒÆ¶¯×¼ĞÄ£¬ÇëÇ¿ÖÆ×ª»»³Éuint32_t 1920*1080ÓĞ²¿·ÖµØÇøÎŞ·¨»­³ö
+ext_graphic_two_data_t tx_aim_figure;//ç¬¬ä¸‰å±‚æ”¾å‡†å¿ƒ
+int update_aim_flag;//1-add,3åˆ é™¤
+static void sight_bead_figrue(uint32_t x,uint32_t y)//å¯ç§»åŠ¨å‡†å¿ƒï¼Œè¯·å¼ºåˆ¶è½¬æ¢æˆuint32_t 1920*1080æœ‰éƒ¨åˆ†åœ°åŒºæ— æ³•ç”»å‡º
 {
 	Figure_Graphic(&tx_aim_figure.clientData[0],"GR1",update_aim_flag,LINE,2,FUCHSIA,0,0,3,  x-20,y+20  ,0,  x+20,y-20);//graphic_Remove
 	Figure_Graphic(&tx_aim_figure.clientData[1],"GR2",update_aim_flag,LINE,2,FUCHSIA,0,0,3,  x-20,y-20  ,0,  x+20,y+20);
 }
-void  Client_aim_update()//Á½¸ö¸öÍ¼ÏñÒ»Æğ¸üĞÂ
+void  Client_aim_update()//ä¸¤ä¸ªä¸ªå›¾åƒä¸€èµ·æ›´æ–°
 {
-		//Ö¡Í·
+		//å¸§å¤´
 		tx_aim_figure.txFrameHeader.SOF = JUDGE_FRAME_HEADER;
 		tx_aim_figure.txFrameHeader.DataLength = sizeof(ext_student_interactive_header_data_t) + sizeof(graphic_data_struct_t)*2;
-		tx_aim_figure.txFrameHeader.Seq = 0;//°üĞòºÅ
+		tx_aim_figure.txFrameHeader.Seq = 0;//åŒ…åºå·
 		memcpy(CliendTxBuffer,&tx_aim_figure.txFrameHeader,sizeof(xFrameHeader));
-		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//Í·Ğ£Ñé
+		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//å¤´æ ¡éªŒ
 
-		//ÃüÁîÂë
+		//å‘½ä»¤ç 
 		tx_aim_figure.CmdID = ID_robot_interactive_header_data;
 
-		//Êı¾İ¶ÎÍ·½á¹¹
+		//æ•°æ®æ®µå¤´ç»“æ„
 		tx_aim_figure.dataFrameHeader.data_cmd_id = INTERACT_ID_draw_two_graphic;
 		tx_aim_figure.dataFrameHeader.send_ID     = REF.GameRobotStat.robot_id;
 		tx_aim_figure.dataFrameHeader.receiver_ID = REF.self_client;
 	
-		//Êı¾İ¶Î
+		//æ•°æ®æ®µ
 		sight_bead_figrue(global_sight_bead_x,global_sight_bead_y);
-		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&tx_aim_figure.CmdID, LEN_CMD_ID+tx_aim_figure.txFrameHeader.DataLength);//¼ÓÉÏÃüÁîÂë³¤¶È2
+		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&tx_aim_figure.CmdID, LEN_CMD_ID+tx_aim_figure.txFrameHeader.DataLength);//åŠ ä¸Šå‘½ä»¤ç é•¿åº¦2
 
-		//Ö¡Î²
+		//å¸§å°¾
 		append_CRC16_check_sum(CliendTxBuffer,sizeof(tx_aim_figure));
 		
 	HAL_UART_Transmit(&huart1,CliendTxBuffer,sizeof(tx_aim_figure),200);
 
 }
-//Ê£ÓàµçÈİÖ»ÓĞÒ»¸öÍ¼²ã
+//å‰©ä½™ç”µå®¹åªæœ‰ä¸€ä¸ªå›¾å±‚
 ext_graphic_one_data_t tx_supercapacitor_figure;
 int update_supercapacitor_flag;
 int superflag=0;
-static void supercapacitor_figure(float remain_energy,uint32_t turning_point)//Ê£Óà³¬¼¶µçÈİ£¨µ¥Î»°Ù·Ö±È£©£¬µÍÓÚÄ³°Ù·Ö±È±äºìÉ«
+static void supercapacitor_figure(float remain_energy,uint32_t turning_point)//å‰©ä½™è¶…çº§ç”µå®¹ï¼ˆå•ä½ç™¾åˆ†æ¯”ï¼‰ï¼Œä½äºæŸç™¾åˆ†æ¯”å˜çº¢è‰²
 {
 		superflag++;
 	static uint32_t remaining = 0;
 //	static uint32_t remaining_last =0;
 //	remaining_last = remaining;
-	remaining = (uint32_t)remain_energy;//Ç¿ÖÆ×ª»»
+	remaining = (uint32_t)remain_energy;//å¼ºåˆ¶è½¬æ¢
 		
-	if(remaining >= turning_point)//Ö±Ïß³¤¶ÈÎª3
+	if(remaining >= turning_point)//ç›´çº¿é•¿åº¦ä¸º3
 		Figure_Graphic(&tx_supercapacitor_figure.clientData,"SR1",update_supercapacitor_flag,LINE,2,GREEN,0,0,10,  (1920-400),585  ,0,  (1920-400)+remaining,585);//585
 	else if(remaining < turning_point)
 		Figure_Graphic(&tx_supercapacitor_figure.clientData,"SR1",update_supercapacitor_flag,LINE,2,FUCHSIA,0,0,10,(1920-400),585  ,0,  (1920-400)+remaining,585);
@@ -1222,61 +1222,61 @@ static void supercapacitor_figure(float remain_energy,uint32_t turning_point)//Ê
 //		superflag=0;
 
 }
-void  Client_supercapacitor_update()//Ò»¸öÍ¼Ïñ¸üĞÂ
+void  Client_supercapacitor_update()//ä¸€ä¸ªå›¾åƒæ›´æ–°
 {
-		//Ö¡Í·
+		//å¸§å¤´
 //		tx_supercapacitor_figure.txFrameHeader.SOF = JUDGE_FRAME_HEADER;
 //		tx_supercapacitor_figure.txFrameHeader.DataLength = sizeof(ext_student_interactive_header_data_t) + sizeof(graphic_data_struct_t);
-//		tx_supercapacitor_figure.txFrameHeader.Seq = 0;//°üĞòºÅ
+//		tx_supercapacitor_figure.txFrameHeader.Seq = 0;//åŒ…åºå·
 //		memcpy(CliendTxBuffer,&tx_supercapacitor_figure.txFrameHeader,sizeof(xFrameHeader));
-//		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//Í·Ğ£Ñé
+//		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//å¤´æ ¡éªŒ
 
-//		//ÃüÁîÂë
+//		//å‘½ä»¤ç 
 //		tx_supercapacitor_figure.CmdID = ID_robot_interactive_header_data;
 
-//		//Êı¾İ¶ÎÍ·½á¹¹
+//		//æ•°æ®æ®µå¤´ç»“æ„
 //		tx_supercapacitor_figure.dataFrameHeader.data_cmd_id = INTERACT_ID_draw_one_graphic;
 //		tx_supercapacitor_figure.dataFrameHeader.send_ID     = REF.GameRobotStat.robot_id;
 //		tx_supercapacitor_figure.dataFrameHeader.receiver_ID = REF.self_client;
 	
 			tx_supercapacitor_figure.txFrameHeader.SOF = JUDGE_FRAME_HEADER;
 		tx_supercapacitor_figure.txFrameHeader.DataLength = sizeof(ext_student_interactive_header_data_t) + sizeof(graphic_data_struct_t);
-		tx_supercapacitor_figure.txFrameHeader.Seq = 0;//°üĞòºÅ
+		tx_supercapacitor_figure.txFrameHeader.Seq = 0;//åŒ…åºå·
 		memcpy(CliendTxBuffer,&tx_supercapacitor_figure.txFrameHeader,sizeof(xFrameHeader));
-		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//Í·Ğ£Ñé
+		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//å¤´æ ¡éªŒ
 
-		//ÃüÁîÂë
+		//å‘½ä»¤ç 
 		tx_supercapacitor_figure.CmdID = ID_robot_interactive_header_data;
 
-		//Êı¾İ¶ÎÍ·½á¹¹
+		//æ•°æ®æ®µå¤´ç»“æ„
 		tx_supercapacitor_figure.dataFrameHeader.data_cmd_id = INTERACT_ID_draw_one_graphic;
 		tx_supercapacitor_figure.dataFrameHeader.send_ID     = REF.GameRobotStat.robot_id;
 		tx_supercapacitor_figure.dataFrameHeader.receiver_ID = REF.self_client;
 	
-		//Êı¾İ¶Î
+		//æ•°æ®æ®µ
 		supercapacitor_figure(global_supercapacitor_remain,global_supercapacitor_point);
-		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&tx_supercapacitor_figure.CmdID, LEN_CMD_ID+tx_supercapacitor_figure.txFrameHeader.DataLength);//¼ÓÉÏÃüÁîÂë³¤¶È2
+		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&tx_supercapacitor_figure.CmdID, LEN_CMD_ID+tx_supercapacitor_figure.txFrameHeader.DataLength);//åŠ ä¸Šå‘½ä»¤ç é•¿åº¦2
 
-		//Ö¡Î²
+		//å¸§å°¾
 		append_CRC16_check_sum(CliendTxBuffer,sizeof(tx_supercapacitor_figure));
 	
-		//Êı¾İ¶Î
+		//æ•°æ®æ®µ
 //		supercapacitor_figure(global_supercapacitor_remain,global_supercapacitor_point);
-//		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&tx_supercapacitor_figure.CmdID, LEN_CMD_ID+tx_supercapacitor_figure.txFrameHeader.DataLength);//¼ÓÉÏÃüÁîÂë³¤¶È2
+//		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&tx_supercapacitor_figure.CmdID, LEN_CMD_ID+tx_supercapacitor_figure.txFrameHeader.DataLength);//åŠ ä¸Šå‘½ä»¤ç é•¿åº¦2
 
-//		//Ö¡Î²
+//		//å¸§å°¾
 //		append_CRC16_check_sum(CliendTxBuffer,sizeof(tx_supercapacitor_figure));
 		
 	HAL_UART_Transmit(&huart1,CliendTxBuffer,sizeof(tx_supercapacitor_figure),200);
 }
-//******************»æÖÆ¸¡µãÊı*************************/
-//µÚÎå²ãÍ¼²ã
+//******************ç»˜åˆ¶æµ®ç‚¹æ•°*************************/
+//ç¬¬äº”å±‚å›¾å±‚
 ext_float_two_data_t tx_gimbal_angle;
 int update_float_flag;
-void Float_Graphic(Float_data_struct_t* graphic,//×îÖÕÒª·¢³öÈ¥µÄÊı×éµÄÊı¾İ¶ÎÄÚÈİ
+void Float_Graphic(Float_data_struct_t* graphic,//æœ€ç»ˆè¦å‘å‡ºå»çš„æ•°ç»„çš„æ•°æ®æ®µå†…å®¹
 									const char* name,
 									uint32_t operate_tpye,
-									uint32_t graphic_tpye,//»æÖÆÊ²Ã´Í¼Ïñ
+									uint32_t graphic_tpye,//ç»˜åˆ¶ä»€ä¹ˆå›¾åƒ
 									uint32_t layer,
 									uint32_t color,
 									uint32_t size,
@@ -1287,13 +1287,13 @@ void Float_Graphic(Float_data_struct_t* graphic,//×îÖÕÒª·¢³öÈ¥µÄÊı×éµÄÊı¾İ¶ÎÄÚÈİ
 									float number)							
 {
 	for(char i=0;i<3;i++)
-		graphic->graphic_name[i] = name[i];	//×Ö·ûË÷Òı
-	graphic->operate_tpye = operate_tpye; //Í¼²ã²Ù×÷
+		graphic->graphic_name[i] = name[i];	//å­—ç¬¦ç´¢å¼•
+	graphic->operate_tpye = operate_tpye; //å›¾å±‚æ“ä½œ
 	graphic->graphic_tpye = graphic_tpye;  
 	graphic->layer        = layer;//
-	graphic->color        = color;//±äÉ«
+	graphic->color        = color;//å˜è‰²
 	graphic->start_angle  = size;
-	graphic->end_angle    = decimal;//Ğ¡ÊıÓĞĞ§Î»	
+	graphic->end_angle    = decimal;//å°æ•°æœ‰æ•ˆä½	
 	graphic->width        = width;
 	graphic->start_x      = start_x;
 	graphic->start_y      = start_y;	
@@ -1303,45 +1303,45 @@ void Float_Graphic(Float_data_struct_t* graphic,//×îÖÕÒª·¢³öÈ¥µÄÊı×éµÄÊı¾İ¶ÎÄÚÈİ
 	graphic->end_y           = (IntData & 0xffe00000) >> 21;
 
 }
-static void gimbal_angle_float(float gimble_pitch,float gimble_yaw)//µ±Ç°ÔÆÌ¨½Ç¶È
+static void gimbal_angle_float(float gimble_pitch,float gimble_yaw)//å½“å‰äº‘å°è§’åº¦
 {
-	//ÇàÉ«pitchµÚÒ»ĞĞ£¬»ÆÉ«yawµÚ¶şĞĞ
+	//é’è‰²pitchç¬¬ä¸€è¡Œï¼Œé»„è‰²yawç¬¬äºŒè¡Œ
 		Float_Graphic(&tx_gimbal_angle.clientData[0],"FR1",update_float_flag,FLOAT,4,CYAN_BLUE,30,2,3,(1920*4/6),810  ,(float)gimble_pitch);
 		Float_Graphic(&tx_gimbal_angle.clientData[1],"FR2",update_float_flag,FLOAT,4,YELLOW,   30,2,3,(1920*4/6),760  ,(float)gimble_yaw);		
 }
-void  Client_gimbal_angle_update()//Á½¸öÍ¼Ïñ¸üĞÂ
+void  Client_gimbal_angle_update()//ä¸¤ä¸ªå›¾åƒæ›´æ–°
 {
-		//Ö¡Í·
+		//å¸§å¤´
 		tx_gimbal_angle.txFrameHeader.SOF = JUDGE_FRAME_HEADER;
 		tx_gimbal_angle.txFrameHeader.DataLength = sizeof(ext_student_interactive_header_data_t) + sizeof(graphic_data_struct_t)*2;
-		tx_gimbal_angle.txFrameHeader.Seq = 0;//°üĞòºÅ
+		tx_gimbal_angle.txFrameHeader.Seq = 0;//åŒ…åºå·
 		memcpy(CliendTxBuffer,&tx_gimbal_angle.txFrameHeader,sizeof(xFrameHeader));
-		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//Í·Ğ£Ñé
+		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//å¤´æ ¡éªŒ
 
-		//ÃüÁîÂë
+		//å‘½ä»¤ç 
 		tx_gimbal_angle.CmdID = ID_robot_interactive_header_data;
 
-		//Êı¾İ¶ÎÍ·½á¹¹
+		//æ•°æ®æ®µå¤´ç»“æ„
 		tx_gimbal_angle.dataFrameHeader.data_cmd_id = INTERACT_ID_draw_two_graphic;
 		tx_gimbal_angle.dataFrameHeader.send_ID     = REF.GameRobotStat.robot_id;
 		tx_gimbal_angle.dataFrameHeader.receiver_ID = REF.self_client;
 	
-		//Êı¾İ¶Î
+		//æ•°æ®æ®µ
 	gimbal_angle_float(global_flag.global_pitch,global_flag.global_yaw);
-		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&tx_gimbal_angle.CmdID, LEN_CMD_ID+tx_gimbal_angle.txFrameHeader.DataLength);//¼ÓÉÏÃüÁîÂë³¤¶È2
+		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&tx_gimbal_angle.CmdID, LEN_CMD_ID+tx_gimbal_angle.txFrameHeader.DataLength);//åŠ ä¸Šå‘½ä»¤ç é•¿åº¦2
 
-		//Ö¡Î²
+		//å¸§å°¾
 		append_CRC16_check_sum(CliendTxBuffer,sizeof(tx_gimbal_angle));
 		
 	HAL_UART_Transmit(&huart1,CliendTxBuffer,sizeof(tx_gimbal_angle),200);
 }
-//**********************»æÖÆintÀàĞÍ***************************/
+//**********************ç»˜åˆ¶intç±»å‹***************************/
 ext_int_two_data_t tx_bullet_int;
 int update_int_flag;
-void Int_Graphic(Int_data_struct_t* graphic,//×îÖÕÒª·¢³öÈ¥µÄÊı×éµÄÊı¾İ¶ÎÄÚÈİ
+void Int_Graphic(Int_data_struct_t* graphic,//æœ€ç»ˆè¦å‘å‡ºå»çš„æ•°ç»„çš„æ•°æ®æ®µå†…å®¹
 									const char* name,
 									uint32_t operate_tpye,
-									uint32_t graphic_tpye,//»æÖÆÊ²Ã´Í¼Ïñ
+									uint32_t graphic_tpye,//ç»˜åˆ¶ä»€ä¹ˆå›¾åƒ
 									uint32_t layer,
 									uint32_t color,
 									uint32_t size,
@@ -1352,11 +1352,11 @@ void Int_Graphic(Int_data_struct_t* graphic,//×îÖÕÒª·¢³öÈ¥µÄÊı×éµÄÊı¾İ¶ÎÄÚÈİ
 									int number)							
 {
 	for(char i=0;i<3;i++)
-		graphic->graphic_name[i] = name[i];	//×Ö·ûË÷Òı
-	graphic->operate_tpye = operate_tpye; //Í¼²ã²Ù×÷
+		graphic->graphic_name[i] = name[i];	//å­—ç¬¦ç´¢å¼•
+	graphic->operate_tpye = operate_tpye; //å›¾å±‚æ“ä½œ
 	graphic->graphic_tpye = graphic_tpye;        
-	graphic->layer        = layer;//¶¼ÔÚµÚÒ»²ã
-	graphic->color        = color;//±äÉ«
+	graphic->layer        = layer;//éƒ½åœ¨ç¬¬ä¸€å±‚
+	graphic->color        = color;//å˜è‰²
 	graphic->start_angle  = size;
 	graphic->end_angle    = zero;	
 	graphic->width        = width;
@@ -1364,89 +1364,89 @@ void Int_Graphic(Int_data_struct_t* graphic,//×îÖÕÒª·¢³öÈ¥µÄÊı×éµÄÊı¾İ¶ÎÄÚÈİ
 	graphic->start_y      = start_y;	
 	graphic->number       = number;
 }
-static void bullet_int(int fix_time)//×Óµ¯ÉäËÙºÍ·¢µ¯Á¿
+static void bullet_int(int fix_time)//å­å¼¹å°„é€Ÿå’Œå‘å¼¹é‡
 {
-	//×ÜÊıÁ¿µÚÒ»ĞĞ£¬ÉäËÙµÚ¶şĞĞ
+	//æ€»æ•°é‡ç¬¬ä¸€è¡Œï¼Œå°„é€Ÿç¬¬äºŒè¡Œ
 		Int_Graphic(&tx_bullet_int.clientData[0],"IR1",update_int_flag,INT,5,CYAN_BLUE,30,0,3,(1920*5/6),(710)  ,fix_time);
 	//	Int_Graphic(&tx_bullet_int.clientData[1],"IR2",update_int_flag,INT,5,WHITE,30,0,3,(1920-280),(730)  ,(int)bullet_speed);		
 }
-void  Client_bullet_int_update()//Á½¸öÍ¼Ïñ¸üĞÂ
+void  Client_bullet_int_update()//ä¸¤ä¸ªå›¾åƒæ›´æ–°
 {
-		//Ö¡Í·
+		//å¸§å¤´
 		tx_bullet_int.txFrameHeader.SOF = JUDGE_FRAME_HEADER;
 		tx_bullet_int.txFrameHeader.DataLength = sizeof(ext_student_interactive_header_data_t) + sizeof(graphic_data_struct_t)*2;
-		tx_bullet_int.txFrameHeader.Seq = 0;//°üĞòºÅ
+		tx_bullet_int.txFrameHeader.Seq = 0;//åŒ…åºå·
 		memcpy(CliendTxBuffer,&tx_bullet_int.txFrameHeader,sizeof(xFrameHeader));
-		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//Í·Ğ£Ñé
+		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//å¤´æ ¡éªŒ
 
-		//ÃüÁîÂë
+		//å‘½ä»¤ç 
 		tx_bullet_int.CmdID = ID_robot_interactive_header_data;
 
-		//Êı¾İ¶ÎÍ·½á¹¹
+		//æ•°æ®æ®µå¤´ç»“æ„
 		tx_bullet_int.dataFrameHeader.data_cmd_id = INTERACT_ID_draw_two_graphic;
 		tx_bullet_int.dataFrameHeader.send_ID     = REF.GameRobotStat.robot_id;
 		tx_bullet_int.dataFrameHeader.receiver_ID = REF.self_client;
 	
-		//Êı¾İ¶Î
+		//æ•°æ®æ®µ
 		bullet_int(global_flag.global_fix);
-		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&tx_bullet_int.CmdID, LEN_CMD_ID+tx_bullet_int.txFrameHeader.DataLength);//¼ÓÉÏÃüÁîÂë³¤¶È2
+		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&tx_bullet_int.CmdID, LEN_CMD_ID+tx_bullet_int.txFrameHeader.DataLength);//åŠ ä¸Šå‘½ä»¤ç é•¿åº¦2
 
-		//Ö¡Î²
+		//å¸§å°¾
 		append_CRC16_check_sum(CliendTxBuffer,sizeof(tx_bullet_int));
 		
 	HAL_UART_Transmit(&huart1,CliendTxBuffer,sizeof(tx_bullet_int),200);
 }
 
-//*****************************Ó¢ĞÛĞèÇó*************************************/
-//*****************************Ó¢ĞÛĞèÇó*************************************/
+//*****************************è‹±é›„éœ€æ±‚*************************************/
+//*****************************è‹±é›„éœ€æ±‚*************************************/
 ext_graphic_five_data_t aim_line_graphic;
 uint32_t global_vertical_1,global_vertical_2,global_horizontal_1,global_horizontal_2,global_horizontal_3;
-//»æÍ¼
-static void Draw_Figure_aimline(uint32_t vertical_1,uint32_t vertical_2,//ÊúÏß·¶Î§ÔÚ0~1920
-	                              uint32_t horizontal_1,uint32_t horizontal_2,uint32_t horizontal_3)//Ë®Æ½Ïß·¶Î§ÔÚ0~1080
+//ç»˜å›¾
+static void Draw_Figure_aimline(uint32_t vertical_1,uint32_t vertical_2,//ç«–çº¿èŒƒå›´åœ¨0~1920
+	                              uint32_t horizontal_1,uint32_t horizontal_2,uint32_t horizontal_3)//æ°´å¹³çº¿èŒƒå›´åœ¨0~1080
 {
-	//ÊúÏß
+	//ç«–çº¿
 		Figure_Graphic(&aim_line_graphic.clientData[0],"LL1",ADD,LINE,6,WHITE,0,0,3,  vertical_1,1080, 0,vertical_1,0);
 		Figure_Graphic(&aim_line_graphic.clientData[1],"LL2",ADD,LINE,6,WHITE,0,0,3,  vertical_2,1080, 0,vertical_2,0);
-	//Ë®Æ½Ïß
+	//æ°´å¹³çº¿
 		Figure_Graphic(&aim_line_graphic.clientData[2],"LL3",ADD,LINE,6,WHITE,0,0,3,  0,horizontal_1, 0,1920,horizontal_1);
 		Figure_Graphic(&aim_line_graphic.clientData[3],"LL4",ADD,LINE,6,WHITE,0,0,3,  0,horizontal_2, 0,1920,horizontal_2);
 		Figure_Graphic(&aim_line_graphic.clientData[4],"LL5",ADD,LINE,6,WHITE,0,0,3,  0,horizontal_3, 0,1920,horizontal_3);
 		
 
 }
-void  Client_aim_line()//Îå¸öÍ¼Ïñ²»¸üĞÂ
+void  Client_aim_line()//äº”ä¸ªå›¾åƒä¸æ›´æ–°
 {
-		//Ö¡Í·
+		//å¸§å¤´
 		aim_line_graphic.txFrameHeader.SOF = JUDGE_FRAME_HEADER;
 		aim_line_graphic.txFrameHeader.DataLength = sizeof(ext_student_interactive_header_data_t) + sizeof(graphic_data_struct_t)*5;
-		aim_line_graphic.txFrameHeader.Seq = 0;//°üĞòºÅ
+		aim_line_graphic.txFrameHeader.Seq = 0;//åŒ…åºå·
 		memcpy(CliendTxBuffer,&aim_line_graphic.txFrameHeader,sizeof(xFrameHeader));
-		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//Í·Ğ£Ñé
+		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//å¤´æ ¡éªŒ
 
-		//ÃüÁîÂë
+		//å‘½ä»¤ç 
 		aim_line_graphic.CmdID = ID_robot_interactive_header_data;
 
-		//Êı¾İ¶ÎÍ·½á¹¹
+		//æ•°æ®æ®µå¤´ç»“æ„
 		aim_line_graphic.dataFrameHeader.data_cmd_id = INTERACT_ID_draw_five_graphic;
 		aim_line_graphic.dataFrameHeader.send_ID     = REF.GameRobotStat.robot_id;
 		aim_line_graphic.dataFrameHeader.receiver_ID = REF.self_client;
 	
-		//Êı¾İ¶Î
+		//æ•°æ®æ®µ
     Draw_Figure_aimline(global_vertical_1,global_vertical_2,global_horizontal_1,global_horizontal_2,global_horizontal_3);
-		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&aim_line_graphic.CmdID, LEN_CMD_ID+aim_line_graphic.txFrameHeader.DataLength);//¼ÓÉÏÃüÁîÂë³¤¶È2
+		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&aim_line_graphic.CmdID, LEN_CMD_ID+aim_line_graphic.txFrameHeader.DataLength);//åŠ ä¸Šå‘½ä»¤ç é•¿åº¦2
 
-		//Ö¡Î²
+		//å¸§å°¾
 		append_CRC16_check_sum(CliendTxBuffer,sizeof(aim_line_graphic));
 		
 	HAL_UART_Transmit(&huart1,CliendTxBuffer,sizeof(aim_line_graphic),200);
 }
 
-////ÈıºÅ×¼ĞÄÍ¼²ã
-//void Figure_Graphic(graphic_data_struct_t* graphic,//×îÖÕÒª·¢³öÈ¥µÄÊı×éµÄÊı¾İ¶ÎÄÚÈİ
+////ä¸‰å·å‡†å¿ƒå›¾å±‚
+//void Figure_Graphic(graphic_data_struct_t* graphic,//æœ€ç»ˆè¦å‘å‡ºå»çš„æ•°ç»„çš„æ•°æ®æ®µå†…å®¹
 //									const char* name,
 //									uint32_t operate_tpye,
-//									uint32_t graphic_tpye,//»æÖÆÊ²Ã´Í¼Ïñ
+//									uint32_t graphic_tpye,//ç»˜åˆ¶ä»€ä¹ˆå›¾åƒ
 //									uint32_t layer,
 //									uint32_t color,
 //									uint32_t start_angle,
@@ -1457,16 +1457,16 @@ void  Client_aim_line()//Îå¸öÍ¼Ïñ²»¸üĞÂ
 //									uint32_t radius,
 //									uint32_t end_x,
 //									uint32_t end_y)		
-ext_graphic_seven_data_t high_aim_figure;//²Ù×÷ÊÖ×¼ĞÄÖ®ÉÏ,²»¸üĞÂ
-ext_graphic_seven_data_t low_aim_shortfigure_1;//×¼ĞÄÏÂµÄµÚÒ»¸ö¶ÌÏß
+ext_graphic_seven_data_t high_aim_figure;//æ“ä½œæ‰‹å‡†å¿ƒä¹‹ä¸Š,ä¸æ›´æ–°
+ext_graphic_seven_data_t low_aim_shortfigure_1;//å‡†å¿ƒä¸‹çš„ç¬¬ä¸€ä¸ªçŸ­çº¿
 ext_graphic_seven_data_t low_aim_shortfigure_2;
-ext_graphic_seven_data_t  low_aim_shortfigure_3;//Îå¸ö¶ÌÏßÁ½¸ö×İÏß
+ext_graphic_seven_data_t  low_aim_shortfigure_3;//äº”ä¸ªçŸ­çº¿ä¸¤ä¸ªçºµçº¿
 ext_graphic_seven_data_t  vision_range_data;
-ext_graphic_five_data_t  low_aim_longfigure;//×¼ĞÄÏÂµÄ³¤ºáÏß
-//!!!!!!!!!!!!!!!!!!È«¾Ö±äÁ¿
+ext_graphic_five_data_t  low_aim_longfigure;//å‡†å¿ƒä¸‹çš„é•¿æ¨ªçº¿
+//!!!!!!!!!!!!!!!!!!å…¨å±€å˜é‡
 uint32_t division_value = 10;
-//division_value·Ö¶ÈÖµ,line_length¶ÌÏß³¤¶ÈµÄÒ»°ë
-static void aim_1(uint32_t division_value,uint32_t line_length)//×¼ĞÄÉÏ°ë²¿·ÖµÄ¿í¶È"AH"--aim_high
+//division_valueåˆ†åº¦å€¼,line_lengthçŸ­çº¿é•¿åº¦çš„ä¸€åŠ
+static void aim_1(uint32_t division_value,uint32_t line_length)//å‡†å¿ƒä¸ŠåŠéƒ¨åˆ†çš„å®½åº¦"AH"--aim_high
 {
 	Figure_Graphic(&high_aim_figure.clientData[1],"AH2",ADD,LINE,1,GREEN,0,0,2,  498,8, 0,795,381);
 
@@ -1474,62 +1474,62 @@ static void aim_1(uint32_t division_value,uint32_t line_length)//×¼ĞÄÉÏ°ë²¿·ÖµÄ¿
 }
 void _high_aim_()
 {
-		//Ö¡Í·
+		//å¸§å¤´
 		high_aim_figure.txFrameHeader.SOF = JUDGE_FRAME_HEADER;
 		high_aim_figure.txFrameHeader.DataLength = sizeof(ext_student_interactive_header_data_t) + sizeof(graphic_data_struct_t)*7;
-		high_aim_figure.txFrameHeader.Seq = 0;//°üĞòºÅ
+		high_aim_figure.txFrameHeader.Seq = 0;//åŒ…åºå·
 		memcpy(CliendTxBuffer,&high_aim_figure.txFrameHeader,sizeof(xFrameHeader));
-		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//Í·Ğ£Ñé
+		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//å¤´æ ¡éªŒ
 
-		//ÃüÁîÂë
+		//å‘½ä»¤ç 
 		high_aim_figure.CmdID = ID_robot_interactive_header_data;
 
-		//Êı¾İ¶ÎÍ·½á¹¹
+		//æ•°æ®æ®µå¤´ç»“æ„
 		high_aim_figure.dataFrameHeader.data_cmd_id = INTERACT_ID_draw_seven_graphic;
 		high_aim_figure.dataFrameHeader.send_ID     = REF.GameRobotStat.robot_id;
 		high_aim_figure.dataFrameHeader.receiver_ID = REF.self_client;
 	
-		//Êı¾İ¶Î
+		//æ•°æ®æ®µ
 		aim_1(division_value,10);
-		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&high_aim_figure.CmdID, LEN_CMD_ID+high_aim_figure.txFrameHeader.DataLength);//¼ÓÉÏÃüÁîÂë³¤¶È2
+		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&high_aim_figure.CmdID, LEN_CMD_ID+high_aim_figure.txFrameHeader.DataLength);//åŠ ä¸Šå‘½ä»¤ç é•¿åº¦2
 
-		//Ö¡Î²
+		//å¸§å°¾
 		append_CRC16_check_sum(CliendTxBuffer,sizeof(high_aim_figure));
 		
 		HAL_UART_Transmit(&huart1,CliendTxBuffer,sizeof(high_aim_figure),200);
 }
 
-static void aim_lowshort_2(uint32_t division_value,uint32_t line_length)//×¼ĞÄÉÏ°ë²¿·ÖµÄ¿í¶È"AL"--aim_low
+static void aim_lowshort_2(uint32_t division_value,uint32_t line_length)//å‡†å¿ƒä¸ŠåŠéƒ¨åˆ†çš„å®½åº¦"AL"--aim_low
 {
 	Figure_Graphic(&low_aim_shortfigure_1.clientData[0],"AL1",ADD,LINE,3,YELLOW,0,0,1,  950,540-170,0,  950,540-10);//graphic_Remove
 }
 void _lowshort_aim_2()
 {
-		//Ö¡Í·
+		//å¸§å¤´
 		low_aim_shortfigure_1.txFrameHeader.SOF = JUDGE_FRAME_HEADER;
 		low_aim_shortfigure_1.txFrameHeader.DataLength = sizeof(ext_student_interactive_header_data_t) + sizeof(graphic_data_struct_t)*7;
-		low_aim_shortfigure_1.txFrameHeader.Seq = 0;//°üĞòºÅ
+		low_aim_shortfigure_1.txFrameHeader.Seq = 0;//åŒ…åºå·
 		memcpy(CliendTxBuffer,&low_aim_shortfigure_1.txFrameHeader,sizeof(xFrameHeader));
-		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//Í·Ğ£Ñé
+		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//å¤´æ ¡éªŒ
 
-		//ÃüÁîÂë
+		//å‘½ä»¤ç 
 		low_aim_shortfigure_1.CmdID = ID_robot_interactive_header_data;
 
-		//Êı¾İ¶ÎÍ·½á¹¹
+		//æ•°æ®æ®µå¤´ç»“æ„
 		low_aim_shortfigure_1.dataFrameHeader.data_cmd_id = INTERACT_ID_draw_seven_graphic;
 		low_aim_shortfigure_1.dataFrameHeader.send_ID     = REF.GameRobotStat.robot_id;
 		low_aim_shortfigure_1.dataFrameHeader.receiver_ID = REF.self_client;
 	
-		//Êı¾İ¶Î
+		//æ•°æ®æ®µ
 		aim_lowshort_2(division_value,10);
-		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&low_aim_shortfigure_1.CmdID, LEN_CMD_ID+low_aim_shortfigure_1.txFrameHeader.DataLength);//¼ÓÉÏÃüÁîÂë³¤¶È2
+		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&low_aim_shortfigure_1.CmdID, LEN_CMD_ID+low_aim_shortfigure_1.txFrameHeader.DataLength);//åŠ ä¸Šå‘½ä»¤ç é•¿åº¦2
 
-		//Ö¡Î²
+		//å¸§å°¾
 		append_CRC16_check_sum(CliendTxBuffer,sizeof(low_aim_shortfigure_1));
 		
 		HAL_UART_Transmit(&huart1,CliendTxBuffer,sizeof(low_aim_shortfigure_1),200);
 }
-static void aim_lowshort_3(uint32_t division_value,uint32_t line_length)//×¼ĞÄÉÏ°ë²¿·ÖµÄ¿í¶È"AM"--aim_low_middle
+static void aim_lowshort_3(uint32_t division_value,uint32_t line_length)//å‡†å¿ƒä¸ŠåŠéƒ¨åˆ†çš„å®½åº¦"AM"--aim_low_middle
 {
 	Figure_Graphic(&low_aim_shortfigure_2.clientData[0],"AM1",ADD,LINE,3,YELLOW,0,0,1,  950-line_length,540+60-division_value*9 ,0,  950+line_length,540+60-division_value*9 );//graphic_Remove	Figure_Graphic(&low_aim_shortfigure_2.clientData[1],"AM2",ADD,LINE,3,YELLOW,0,0,1,  960-line_length,540+30-division_value*10,0,  960+line_length,540+30-division_value*10);
 	Figure_Graphic(&low_aim_shortfigure_2.clientData[1],"AM2",ADD,LINE,3,YELLOW,0,0,1,  950-line_length,540+60-division_value*10,0,  950+line_length,540+60-division_value*10);
@@ -1541,32 +1541,32 @@ static void aim_lowshort_3(uint32_t division_value,uint32_t line_length)//×¼ĞÄÉÏ
 }
 void _lowshort_aim_3()
 {
-		//Ö¡Í·
+		//å¸§å¤´
 		low_aim_shortfigure_2.txFrameHeader.SOF = JUDGE_FRAME_HEADER;
 		low_aim_shortfigure_2.txFrameHeader.DataLength = sizeof(ext_student_interactive_header_data_t) + sizeof(graphic_data_struct_t)*7;
-		low_aim_shortfigure_2.txFrameHeader.Seq = 0;//°üĞòºÅ
+		low_aim_shortfigure_2.txFrameHeader.Seq = 0;//åŒ…åºå·
 		memcpy(CliendTxBuffer,&low_aim_shortfigure_2.txFrameHeader,sizeof(xFrameHeader));
-		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//Í·Ğ£Ñé
+		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//å¤´æ ¡éªŒ
 
-		//ÃüÁîÂë
+		//å‘½ä»¤ç 
 		low_aim_shortfigure_2.CmdID = ID_robot_interactive_header_data;
 
-		//Êı¾İ¶ÎÍ·½á¹¹
+		//æ•°æ®æ®µå¤´ç»“æ„
 		low_aim_shortfigure_2.dataFrameHeader.data_cmd_id = INTERACT_ID_draw_seven_graphic;
 		low_aim_shortfigure_2.dataFrameHeader.send_ID     = REF.GameRobotStat.robot_id;
 		low_aim_shortfigure_2.dataFrameHeader.receiver_ID = REF.self_client;
 	
-		//Êı¾İ¶Î
+		//æ•°æ®æ®µ
 		aim_lowshort_3(division_value,20);
-		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&low_aim_shortfigure_2.CmdID, LEN_CMD_ID+low_aim_shortfigure_2.txFrameHeader.DataLength);//¼ÓÉÏÃüÁîÂë³¤¶È2
+		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&low_aim_shortfigure_2.CmdID, LEN_CMD_ID+low_aim_shortfigure_2.txFrameHeader.DataLength);//åŠ ä¸Šå‘½ä»¤ç é•¿åº¦2
 
-		//Ö¡Î²
+		//å¸§å°¾
 		append_CRC16_check_sum(CliendTxBuffer,sizeof(low_aim_shortfigure_2));
 		
 		HAL_UART_Transmit(&huart1,CliendTxBuffer,sizeof(low_aim_shortfigure_2),200);
 }
-//ÊÓ¾õÃé×¼·¶Î§
-static void vision_range_1(uint32_t division_value,uint32_t line_length)//×¼ĞÄÉÏ°ë²¿·ÖµÄ¿í¶È"AM"--aim_low_bottom,"AS"--aim_stem
+//è§†è§‰ç„å‡†èŒƒå›´
+static void vision_range_1(uint32_t division_value,uint32_t line_length)//å‡†å¿ƒä¸ŠåŠéƒ¨åˆ†çš„å®½åº¦"AM"--aim_low_bottom,"AS"--aim_stem
 { 
 	int start_x,start_y,length,height;
   start_x=620;
@@ -1581,26 +1581,26 @@ static void vision_range_1(uint32_t division_value,uint32_t line_length)//×¼ĞÄÉÏ
 }
 void vision_range()
 {
-		//Ö¡Í·
+		//å¸§å¤´
 		vision_range_data.txFrameHeader.SOF = JUDGE_FRAME_HEADER;
 		vision_range_data.txFrameHeader.DataLength = sizeof(ext_student_interactive_header_data_t) + sizeof(graphic_data_struct_t)*7;
-		vision_range_data.txFrameHeader.Seq = 0;//°üĞòºÅ
+		vision_range_data.txFrameHeader.Seq = 0;//åŒ…åºå·
 		memcpy(CliendTxBuffer,&vision_range_data.txFrameHeader,sizeof(xFrameHeader));
-		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//Í·Ğ£Ñé
+		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//å¤´æ ¡éªŒ
 
-		//ÃüÁîÂë
+		//å‘½ä»¤ç 
 		vision_range_data.CmdID = ID_robot_interactive_header_data;
 
-		//Êı¾İ¶ÎÍ·½á¹¹
+		//æ•°æ®æ®µå¤´ç»“æ„
 		vision_range_data.dataFrameHeader.data_cmd_id = INTERACT_ID_draw_seven_graphic;
 		vision_range_data.dataFrameHeader.send_ID     = REF.GameRobotStat.robot_id;
 		vision_range_data.dataFrameHeader.receiver_ID = REF.self_client;
 	
-		//Êı¾İ¶Î
+		//æ•°æ®æ®µ
 		vision_range_1(division_value,10);
-		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&vision_range_data.CmdID, LEN_CMD_ID+vision_range_data.txFrameHeader.DataLength);//¼ÓÉÏÃüÁîÂë³¤¶È2
+		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&vision_range_data.CmdID, LEN_CMD_ID+vision_range_data.txFrameHeader.DataLength);//åŠ ä¸Šå‘½ä»¤ç é•¿åº¦2
 
-		//Ö¡Î²
+		//å¸§å°¾
 		append_CRC16_check_sum(CliendTxBuffer,sizeof(vision_range_data));
 		
 		HAL_UART_Transmit(&huart1,CliendTxBuffer,sizeof(vision_range_data),200);
@@ -1612,7 +1612,7 @@ void vision_range()
 
 
 
-static void aim_lowlong(uint32_t division_value,uint32_t line_length)//×¼ĞÄÉÏ°ë²¿·ÖµÄ¿í¶È"AM"--aim_low_Long,"AS"--aim_stem
+static void aim_lowlong(uint32_t division_value,uint32_t line_length)//å‡†å¿ƒä¸ŠåŠéƒ¨åˆ†çš„å®½åº¦"AM"--aim_low_Long,"AS"--aim_stem
 { 
 	Figure_Graphic(&low_aim_longfigure.clientData[0],"AL1",ADD,LINE,4,YELLOW,0,0,1,960-line_length-30,540-30-division_value*19,0,960+line_length+30,540-30-division_value*19);//graphic_Remove
 	Figure_Graphic(&low_aim_longfigure.clientData[1],"AL2",ADD,LINE,4,YELLOW,0,0,1,960-line_length-40,540-30-division_value*15,0,960+line_length+40,540-30-division_value*15);
@@ -1623,26 +1623,26 @@ static void aim_lowlong(uint32_t division_value,uint32_t line_length)//×¼ĞÄÉÏ°ë²
 }
 void _lowlong_aim_()
 {
-		//Ö¡Í·
+		//å¸§å¤´
 		low_aim_longfigure.txFrameHeader.SOF = JUDGE_FRAME_HEADER;
 		low_aim_longfigure.txFrameHeader.DataLength = sizeof(ext_student_interactive_header_data_t) + sizeof(graphic_data_struct_t)*5;
-		low_aim_longfigure.txFrameHeader.Seq = 0;//°üĞòºÅ
+		low_aim_longfigure.txFrameHeader.Seq = 0;//åŒ…åºå·
 		memcpy(CliendTxBuffer,&low_aim_longfigure.txFrameHeader,sizeof(xFrameHeader));
-		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//Í·Ğ£Ñé
+		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//å¤´æ ¡éªŒ
 
-		//ÃüÁîÂë
+		//å‘½ä»¤ç 
 		low_aim_longfigure.CmdID = ID_robot_interactive_header_data;
 
-		//Êı¾İ¶ÎÍ·½á¹¹
-		low_aim_longfigure.dataFrameHeader.data_cmd_id = INTERACT_ID_draw_five_graphic;//0x0103 ¿Í»§¶Ë»æÖÆ5¸öÍ¼ĞÎ
+		//æ•°æ®æ®µå¤´ç»“æ„
+		low_aim_longfigure.dataFrameHeader.data_cmd_id = INTERACT_ID_draw_five_graphic;//0x0103 å®¢æˆ·ç«¯ç»˜åˆ¶5ä¸ªå›¾å½¢
 		low_aim_longfigure.dataFrameHeader.send_ID     = REF.GameRobotStat.robot_id;
 		low_aim_longfigure.dataFrameHeader.receiver_ID = REF.self_client;
 	
-		//Êı¾İ¶Î
+		//æ•°æ®æ®µ
 		aim_lowlong(division_value,10);
-		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&low_aim_longfigure.CmdID, LEN_CMD_ID+low_aim_longfigure.txFrameHeader.DataLength);//¼ÓÉÏÃüÁîÂë³¤¶È2
+		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&low_aim_longfigure.CmdID, LEN_CMD_ID+low_aim_longfigure.txFrameHeader.DataLength);//åŠ ä¸Šå‘½ä»¤ç é•¿åº¦2
 
-		//Ö¡Î²
+		//å¸§å°¾
 		append_CRC16_check_sum(CliendTxBuffer,sizeof(low_aim_longfigure));
 		
 		HAL_UART_Transmit(&huart1,CliendTxBuffer,sizeof(low_aim_longfigure),200);
@@ -1659,26 +1659,26 @@ void  Client_graphic_Init()
 	{
 		state_first_graphic = 0;
 	}
-		//Ö¡Í·
+		//å¸§å¤´
 		tx_client_char.txFrameHeader.SOF = JUDGE_FRAME_HEADER;
 		tx_client_char.txFrameHeader.DataLength = sizeof(ext_student_interactive_header_data_t) + sizeof(ext_client_string_t);
-		tx_client_char.txFrameHeader.Seq = 0;//°üĞòºÅ
+		tx_client_char.txFrameHeader.Seq = 0;//åŒ…åºå·
 		memcpy(CliendTxBuffer,&tx_client_char.txFrameHeader,sizeof(xFrameHeader));
-		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//Í·Ğ£Ñé
+		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//å¤´æ ¡éªŒ
 	
-		//ÃüÁîÂë
+		//å‘½ä»¤ç 
 		tx_client_char.CmdID = ID_robot_interactive_header_data;
 		
-		//Êı¾İ¶ÎÍ·½á¹¹
+		//æ•°æ®æ®µå¤´ç»“æ„
 		tx_client_char.dataFrameHeader.data_cmd_id = INTERACT_ID_draw_char_graphic;
 		tx_client_char.dataFrameHeader.send_ID     = REF.GameRobotStat.robot_id;
 		tx_client_char.dataFrameHeader.receiver_ID = REF.self_client;
 		
-		//Êı¾İ¶Î
+		//æ•°æ®æ®µ
 		Draw_char();
-		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&tx_client_char.CmdID, LEN_CMD_ID+tx_client_char.txFrameHeader.DataLength);//¼ÓÉÏÃüÁîÂë³¤¶È2
+		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&tx_client_char.CmdID, LEN_CMD_ID+tx_client_char.txFrameHeader.DataLength);//åŠ ä¸Šå‘½ä»¤ç é•¿åº¦2
 		
-		//Ö¡Î²
+		//å¸§å°¾
 		append_CRC16_check_sum(CliendTxBuffer,sizeof(tx_client_char));
 		
     HAL_UART_Transmit(&huart1,CliendTxBuffer,sizeof(tx_client_char),200);
@@ -1686,28 +1686,28 @@ void  Client_graphic_Init()
 }
 
 
-void  Client_graphic_Info_update()//Æß¸öÍ¼ÏñÒ»Æğ¸üĞÂ
+void  Client_graphic_Info_update()//ä¸ƒä¸ªå›¾åƒä¸€èµ·æ›´æ–°
 {
-		//Ö¡Í·
+		//å¸§å¤´
 		tx_client_graphic_figure.txFrameHeader.SOF = JUDGE_FRAME_HEADER;
 		tx_client_graphic_figure.txFrameHeader.DataLength = sizeof(ext_student_interactive_header_data_t) + sizeof(graphic_data_struct_t)*7;
-		tx_client_graphic_figure.txFrameHeader.Seq = 0;//°üĞòºÅ
+		tx_client_graphic_figure.txFrameHeader.Seq = 0;//åŒ…åºå·
 		memcpy(CliendTxBuffer,&tx_client_graphic_figure.txFrameHeader,sizeof(xFrameHeader));
-		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//Í·Ğ£Ñé
+		append_CRC8_check_sum(CliendTxBuffer, sizeof(xFrameHeader));//å¤´æ ¡éªŒ
 
-		//ÃüÁîÂë
+		//å‘½ä»¤ç 
 		tx_client_graphic_figure.CmdID = ID_robot_interactive_header_data;
 
-		//Êı¾İ¶ÎÍ·½á¹¹
+		//æ•°æ®æ®µå¤´ç»“æ„
 		tx_client_graphic_figure.dataFrameHeader.data_cmd_id = INTERACT_ID_draw_seven_graphic;
 		tx_client_graphic_figure.dataFrameHeader.send_ID     = REF.GameRobotStat.robot_id;
 		tx_client_graphic_figure.dataFrameHeader.receiver_ID = REF.self_client;
 	
-		//Êı¾İ¶Î
+		//æ•°æ®æ®µ
 		Draw_Figure_bool();
-		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&tx_client_graphic_figure.CmdID, LEN_CMD_ID+tx_client_graphic_figure.txFrameHeader.DataLength);//¼ÓÉÏÃüÁîÂë³¤¶È2
+		memcpy(CliendTxBuffer+LEN_FRAME_HEAD, (uint8_t*)&tx_client_graphic_figure.CmdID, LEN_CMD_ID+tx_client_graphic_figure.txFrameHeader.DataLength);//åŠ ä¸Šå‘½ä»¤ç é•¿åº¦2
 
-		//Ö¡Î²
+		//å¸§å°¾
 		append_CRC16_check_sum(CliendTxBuffer,sizeof(tx_client_graphic_figure));
 		
     HAL_UART_Transmit(&huart1,CliendTxBuffer,sizeof(tx_client_graphic_figure),200);

@@ -4,23 +4,23 @@
 
 
 /*
-1.Ğ£×¼µÄÊ±ºòÏëÒª±£´æÊı¾İ¶¼±ØĞë°´Ò»ÏÂÆøÑ¹¼ÆĞ£×¼
-2.ÉèÖÃpidµÄÊ±ºò£¬ÏÈ°´Ğ´Èë·É¿Ø£¬ÔÙ°´ÆøÑ¹¼ÆĞ£×¼
+1.æ ¡å‡†çš„æ—¶å€™æƒ³è¦ä¿å­˜æ•°æ®éƒ½å¿…é¡»æŒ‰ä¸€ä¸‹æ°”å‹è®¡æ ¡å‡†
+2.è®¾ç½®pidçš„æ—¶å€™ï¼Œå…ˆæŒ‰å†™å…¥é£æ§ï¼Œå†æŒ‰æ°”å‹è®¡æ ¡å‡†
 */
 #define abs(x) ((x)>0? (x):(-(x)))
 
 
 /******************************PID default parameter*****************/
 ////////////////////////////		kp		ki		kd		
-#define CHASSIS_Rot_PID_OFF 	{9.0f,	0.0f,	0.0f}       //Ä¿Ç°±»ÆúÓÃ£¨ÏÖÔÚÎŞ·¨Í¨¹ıÉÏÎ»»úÉèÖÃ£©
-#define CHASSIS_Vec_PID_OFF 	{40000.0f,	0.0f,	0.0f}   //µ×ÅÌµ¥¸öµç»úËÙ¶Èpid
+#define CHASSIS_Rot_PID_OFF 	{9.0f,	0.0f,	0.0f}       //ç›®å‰è¢«å¼ƒç”¨ï¼ˆç°åœ¨æ— æ³•é€šè¿‡ä¸Šä½æœºè®¾ç½®ï¼‰
+#define CHASSIS_Vec_PID_OFF 	{40000.0f,	0.0f,	0.0f}   //åº•ç›˜å•ä¸ªç”µæœºé€Ÿåº¦pid
 #define GIMBALP_Pos_PID_OFF 	{16.0f,	0.0f,	0.0f}         
 #define GIMBALP_Vec_PID_OFF 	{8200.0f,	0.0f,	0.0f}
 
 #define GIMBALY_Pos_PID_OFF 	{-14.0f,	0.0f,	0.0f}
 #define GIMBALY_Vec_PID_OFF 	{-8200.0f,	0.0f,	0.0f}
 #define SLIBLIN_Pos_PID_OFF 	{0.0f,	0.0f,	0.0f}
-#define SLIBLIN_Vec_PID_OFF 	{1000.0f,	0.0f,	0.0f}  //²¦µ¯ ËÙ¶È»·
+#define SLIBLIN_Vec_PID_OFF 	{1000.0f,	0.0f,	0.0f}  //æ‹¨å¼¹ é€Ÿåº¦ç¯
 
 
 #define M3508_MOTOR_SPEED_PID_MAX_OUT 16000.0f
@@ -29,7 +29,7 @@
 #define RADIAN_PER_RAD (57.29578f)
 
 
-#define RC_KEY_LONG_TIME 500       //¼üÅÌÇĞ»»Ä£Ê½°´¼üÊ±¼ä
+#define RC_KEY_LONG_TIME 500       //é”®ç›˜åˆ‡æ¢æ¨¡å¼æŒ‰é”®æ—¶é—´
 
 
 

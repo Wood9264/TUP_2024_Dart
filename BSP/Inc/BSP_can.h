@@ -29,7 +29,7 @@ extern "C"
 		CAN2_PITCH_Motor_ID = 0x207,
 	};
 
-	//可在此处加入所需电机编号
+	//鍙湪姝ゅ鍔犲叆鎵�闇�鐢垫満缂栧彿
 	enum motor_ID
 	{
 		FL,

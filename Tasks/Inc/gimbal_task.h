@@ -14,34 +14,34 @@
 #include "user_lib.h"
 
 
-//ÈÎÎñ³õÊ¼»¯ ¿ÕÏĞÒ»¶ÎÊ±¼ä
+//ä»»åŠ¡åˆå§‹åŒ– ç©ºé—²ä¸€æ®µæ—¶é—´
 #define GIMBAL_TASK_INIT_TIME 201
 
 #define Motor_Ecd_to_Rad 0.000766990394f //      2*  PI  /8192
 
 
-//µôÍ·180 °´¼ü
+//æ‰å¤´180 æŒ‰é”®
 #define TURN_KEYBOARD KEY_PRESSED_OFFSET_Z&&KEY_PRESSED_OFFSET_CTRL
-//µôÍ·ÔÆÌ¨ËÙ¶È
+//æ‰å¤´äº‘å°é€Ÿåº¦
 #define TURN_SPEED    0.01f
 
-//µç»úÂëÅÌÖµ×î´óÒÔ¼°ÖĞÖµ
+//ç”µæœºç ç›˜å€¼æœ€å¤§ä»¥åŠä¸­å€¼
 #define HALF_ECD_RANGE  4096
 #define ECD_RANGE       8191
 
-//ÔÆÌ¨³õÊ¼»¯»ØÖĞÖµ£¬ÔÊĞíµÄÎó²î,²¢ÇÒÔÚÎó²î·¶Î§ÄÚÍ£Ö¹Ò»¶ÎÊ±¼äÒÔ¼°×î´óÊ±¼ä6sºó½â³ı³õÊ¼»¯×´Ì¬£¬
+//äº‘å°åˆå§‹åŒ–å›ä¸­å€¼ï¼Œå…è®¸çš„è¯¯å·®,å¹¶ä¸”åœ¨è¯¯å·®èŒƒå›´å†…åœæ­¢ä¸€æ®µæ—¶é—´ä»¥åŠæœ€å¤§æ—¶é—´6såè§£é™¤åˆå§‹åŒ–çŠ¶æ€ï¼Œ
 #define GIMBAL_INIT_ANGLE_ERROR     0.01f
 #define GIMBAL_INIT_STOP_TIME       100
 #define GIMBAL_INIT_TIME            1000
 #define GIMBAL_CALI_REDUNDANT_ANGLE 0.1f
-//ÔÆÌ¨³õÊ¼»¯»ØÖĞÖµµÄËÙ¶ÈÒÔ¼°¿ØÖÆµ½µÄ½Ç¶È
+//äº‘å°åˆå§‹åŒ–å›ä¸­å€¼çš„é€Ÿåº¦ä»¥åŠæ§åˆ¶åˆ°çš„è§’åº¦
 #define GIMBAL_INIT_PITCH_SPEED     0.03f
 #define GIMBAL_INIT_YAW_SPEED       0.025f
 
 #define INIT_YAW_SET    0.0f
 #define INIT_PITCH_SET  0.0f
 #define INIT_Relative_PITCH_SET -0.1f
-//µç»ú±àÂëÖµ×ª»¯³É½Ç¶ÈÖµ
+//ç”µæœºç¼–ç å€¼è½¬åŒ–æˆè§’åº¦å€¼
 #ifndef MOTOR_ECD_TO_RAD
 #define MOTOR_ECD_TO_RAD 0.000766990394f //      2*  PI  /8192
 #define MOTOR_ECD_TO_RAD_DOUBLE  0.000383495197 //2*  PI  /8192*2
@@ -60,7 +60,7 @@ class gimbal_motor_t
 	  LADRC_FDW_t LADRC_FDW;	
 	  LADRC_FDW_t AUTO_LADRC_FDW;
 	  uint16_t offset_ecd;
-		int64_t ecd_angle; //¼ÆËã½Ç¶È²îÖµ
+		int64_t ecd_angle; //è®¡ç®—è§’åº¦å·®å€¼
     fp32 max_relative_angle; //rad
     fp32 min_relative_angle; //rad
 
@@ -87,22 +87,22 @@ class gimbal_motor_t
 class Gimbal_Kalman_t
 {
 	public:
-	//¸ù¾İÊÓ¾õ·¢ËÍµÄÎó²îÖµ¼ÓÉÏµ±Ç°ÖµµÄÄ¿±êÖµ ¿¨¶ûÂü
+	//æ ¹æ®è§†è§‰å‘é€çš„è¯¯å·®å€¼åŠ ä¸Šå½“å‰å€¼çš„ç›®æ ‡å€¼ å¡å°”æ›¼
   extKalman_t Gimbal_Pitch_Accle_Kalman;
 	extKalman_t Gimbal_Pitch_Gyro_Kalman;
 	extKalman_t Gimbal_Yaw_Accle_Kalman;
 	extKalman_t Gimbal_Yaw_Gyro_Kalman;
 	
-  //ÔÆÌ¨½Ç¶ÈÎó²î¿¨¶ûÂü
+  //äº‘å°è§’åº¦è¯¯å·®å¡å°”æ›¼
 	extKalman_t Vision_Distance_Kalman;
-	extKalman_t Yaw_Error_Vis_Kalman;//ÊÓ¾õÎó²îKalman
+	extKalman_t Yaw_Error_Vis_Kalman;//è§†è§‰è¯¯å·®Kalman
 	extKalman_t Pitch_Error_Vis_Kalman;//
-	extKalman_t Yaw_Set_Gim_Kalman;//¸ø¶¨set kalman
+	extKalman_t Yaw_Set_Gim_Kalman;//ç»™å®šset kalman
 	extKalman_t Pitch_Set_Gim_Kalman;//
 
 	float Auto_Error_Yaw[2];//    now/last
 	float Auto_Error_Pitch[2];
-	float Auto_Distance;//¾àÀëµ¥Ä¿
+	float Auto_Distance;//è·ç¦»å•ç›®
 
 	uint32_t Vision_Time[2];// NOW/LAST
 	

@@ -9,14 +9,14 @@ extern "C"{
 class extKalman_t
 {
 	public:
-		float X_last; //ÉÏÒ»Ê±¿ÌµÄ×îÓÅ½á¹û  X(k-|k-1)
-    float X_mid;  //µ±Ç°Ê±¿ÌµÄÔ¤²â½á¹û  X(k|k-1)
-    float X_now;  //µ±Ç°Ê±¿ÌµÄ×îÓÅ½á¹û  X(k|k)
-    float P_mid;  //µ±Ç°Ê±¿ÌÔ¤²â½á¹ûµÄĞ­·½²î  P(k|k-1)
-    float P_now;  //µ±Ç°Ê±¿Ì×îÓÅ½á¹ûµÄĞ­·½²î  P(k|k)
-    float P_last; //ÉÏÒ»Ê±¿Ì×îÓÅ½á¹ûµÄĞ­·½²î  P(k-1|k-1)
-    float kg;     //kalmanÔöÒæ
-    float A;      //ÏµÍ³²ÎÊı
+		float X_last; //ä¸Šä¸€æ—¶åˆ»çš„æœ€ä¼˜ç»“æœ  X(k-|k-1)
+    float X_mid;  //å½“å‰æ—¶åˆ»çš„é¢„æµ‹ç»“æœ  X(k|k-1)
+    float X_now;  //å½“å‰æ—¶åˆ»çš„æœ€ä¼˜ç»“æœ  X(k|k)
+    float P_mid;  //å½“å‰æ—¶åˆ»é¢„æµ‹ç»“æœçš„åæ–¹å·®  P(k|k-1)
+    float P_now;  //å½“å‰æ—¶åˆ»æœ€ä¼˜ç»“æœçš„åæ–¹å·®  P(k|k)
+    float P_last; //ä¸Šä¸€æ—¶åˆ»æœ€ä¼˜ç»“æœçš„åæ–¹å·®  P(k-1|k-1)
+    float kg;     //kalmanå¢ç›Š
+    float A;      //ç³»ç»Ÿå‚æ•°
 	  float B;
     float Q;
     float R;

@@ -22,42 +22,42 @@ bool vision_update_flag;
 
 void Vision_Read_Data(uint8_t *ReadFromUsart)
 {
-	//ÅĞ¶ÏÖ¡Í·Êı¾İÊÇ·ñÎª0xA5
+	//åˆ¤æ–­å¸§å¤´æ•°æ®æ˜¯å¦ä¸º0xA5
 	if(ReadFromUsart[0] == 0xA5)
 	{
-		//Ö¡Í·CRC8Ğ£Ñé
+		//å¸§å¤´CRC8æ ¡éªŒ
 		if(Verify_CRC8_Check_Sum( ReadFromUsart, VISION_LEN_HEADER ) == true)
 		{
-			//Ö¡Î²CRC16Ğ£Ñé
+			//å¸§å°¾CRC16æ ¡éªŒ
 			if(Verify_CRC16_Check_Sum( ReadFromUsart, VISION_LEN_PACKED ) == true)
 			{
-				//½ÓÊÕÊı¾İ¿½±´
+				//æ¥æ”¶æ•°æ®æ‹·è´
 				memcpy(&vision_info.RxPacketFir, ReadFromUsart, VISION_LEN_PACKED);	
-				 //Ö¡¼ÆËã
+				 //å¸§è®¡ç®—
 			  vision_info.Fir_State.rx_time_now  = xTaskGetTickCountFromISR();
 				vision_info.Fir_State.rx_time_fps  = vision_info.Fir_State.rx_time_now - vision_info.Fir_State.rx_time_prev;
 				vision_info.Fir_State.rx_time_prev = vision_info.Fir_State.rx_time_now;
 				vision_info.Vision_empty_time=20;
-				vision_info.Fir_State.rx_data_update = true;//±ê¼ÇÊÓ¾õÊı¾İ¸üĞÂÁË
+				vision_info.Fir_State.rx_data_update = true;//æ ‡è®°è§†è§‰æ•°æ®æ›´æ–°äº†
 			}
 		}
 	}
 	else if(ReadFromUsart[0] == 0xB5)
 	{
-	  //Ö¡Í·CRC8Ğ£Ñé
+	  //å¸§å¤´CRC8æ ¡éªŒ
 		if(Verify_CRC8_Check_Sum( ReadFromUsart, VISION_LEN_HEADER ) == 1)
 		{
-			//Ö¡Î²CRC16Ğ£Ñé
+			//å¸§å°¾CRC16æ ¡éªŒ
 			if(Verify_CRC16_Check_Sum( ReadFromUsart, VISION_LEN_PACKED ) == 1)
 			{
-				//½ÓÊÕÊı¾İ¿½±´
+				//æ¥æ”¶æ•°æ®æ‹·è´
 				memcpy( &vision_info.RxPacketSed, ReadFromUsart, VISION_LEN_PACKED);	
-				 //Ö¡¼ÆËã
+				 //å¸§è®¡ç®—
 			  vision_info.Sed_State.rx_time_now  = xTaskGetTickCountFromISR();
 				vision_info.Sed_State.rx_time_fps  = vision_info.Sed_State.rx_time_now - vision_info.Sed_State.rx_time_prev;
 				vision_info.Sed_State.rx_time_prev = vision_info.Sed_State.rx_time_now;
 				vision_info.Vision_empty_time=20;
-				vision_info.Sed_State.rx_data_update = true;//±ê¼ÇÊÓ¾õÊı¾İ¸üĞÂÁË
+				vision_info.Sed_State.rx_data_update = true;//æ ‡è®°è§†è§‰æ•°æ®æ›´æ–°äº†
 				
 			}
 		}
@@ -67,20 +67,20 @@ void Vision_Read_Data(uint8_t *ReadFromUsart)
   else if(ReadFromUsart[0] == 0xC5)
 	{
 	
-	  //Ö¡Í·CRC8Ğ£Ñé
+	  //å¸§å¤´CRC8æ ¡éªŒ
 		if(Verify_CRC8_Check_Sum( ReadFromUsart, VISION_LEN_HEADER ) == 1)
 		{
-			//Ö¡Î²CRC16Ğ£Ñé
+			//å¸§å°¾CRC16æ ¡éªŒ
 			if(Verify_CRC16_Check_Sum( ReadFromUsart, VISION_LEN_PACKED ) == 1)
 			{
-				//½ÓÊÕÊı¾İ¿½±´
+				//æ¥æ”¶æ•°æ®æ‹·è´
 				memcpy( &vision_info.RxPacketThi, ReadFromUsart, VISION_LEN_PACKED);	
-        //Ö¡¼ÆËã
+        //å¸§è®¡ç®—
 			  vision_info.Thi_State.rx_time_now  = xTaskGetTickCountFromISR();
 				vision_info.Thi_State.rx_time_fps  = vision_info.Thi_State.rx_time_now - vision_info.Thi_State.rx_time_prev;
 				vision_info.Thi_State.rx_time_prev = vision_info.Thi_State.rx_time_now;
 				vision_info.Vision_empty_time=20;
-				vision_info.Thi_State.rx_data_update = true;//±ê¼ÇÊÓ¾õÊı¾İ¸üĞÂÁË
+				vision_info.Thi_State.rx_data_update = true;//æ ‡è®°è§†è§‰æ•°æ®æ›´æ–°äº†
 			}
 		}
 	}
@@ -90,19 +90,19 @@ void Vision_Read_Data(uint8_t *ReadFromUsart)
 
 void vision_info_t::Vision_Send_Fir_Data( uint8_t CmdID )
 {
-	uint8_t vision_sendfir_pack[64] = {0};//´óÓÚ22¾ÍĞĞ
+	uint8_t vision_sendfir_pack[64] = {0};//å¤§äº22å°±è¡Œ
 
 	
 	TxHandFir.SOF = VISION_SOF;
-	TxHandFir.CmdID = CmdID;//¶ÔÊÓ¾õÀ´Ëµ×îÖØÒªµÄÊı¾İ
+	TxHandFir.CmdID = CmdID;//å¯¹è§†è§‰æ¥è¯´æœ€é‡è¦çš„æ•°æ®
 	
-	//Ğ´ÈëÖ¡Í·
+	//å†™å…¥å¸§å¤´
 	memcpy( vision_sendfir_pack, &TxHandFir, VISION_LEN_HEADER );
 	
-	//Ö¡Í·CRC8Ğ£ÑéĞ­Òé
+	//å¸§å¤´CRC8æ ¡éªŒåè®®
 	Append_CRC8_Check_Sum( vision_sendfir_pack, VISION_LEN_HEADER );
 	
-	//ÖĞ¼äÊı¾İ²»ÓÃ¹Ü,ÊÓ¾õÓÃ²»µ½,ÓÃµ½ÁËÒ²ÊÇºóÃæ×ÔÃé×Ô¶¯¿ª»ğ,ÓÃµ½½Ç¶È²¹³¥Êı¾İ
+	//ä¸­é—´æ•°æ®ä¸ç”¨ç®¡,è§†è§‰ç”¨ä¸åˆ°,ç”¨åˆ°äº†ä¹Ÿæ˜¯åé¢è‡ªç„è‡ªåŠ¨å¼€ç«,ç”¨åˆ°è§’åº¦è¡¥å¿æ•°æ®
 	TxPacketFir.INS_quat_send[0] = INS_quat[0];
 	TxPacketFir.INS_quat_send[1] = INS_quat[1];
 	TxPacketFir.INS_quat_send[2] = INS_quat[2];
@@ -113,8 +113,8 @@ void vision_info_t::Vision_Send_Fir_Data( uint8_t CmdID )
 	TxPacketFir.INS_accel_send[0] = INS_accel[0];
 	TxPacketFir.INS_accel_send[1] = INS_accel[1];
 	TxPacketFir.INS_accel_send[2] = INS_accel[2];
-	TxPacketFir.revolver_speed =JUDGE_usGetSpeedHeat();//ÉäËÙ
-	// TxPacketFir.firc_error=per_fir_delay;//´òµ¯ÑÓ³Ù
+	TxPacketFir.revolver_speed =JUDGE_usGetSpeedHeat();//å°„é€Ÿ
+	// TxPacketFir.firc_error=per_fir_delay;//æ‰“å¼¹å»¶è¿Ÿ
   //TxPacketFir.Color=BLUE;
   //TxPacketFir.Color=RED;
 
@@ -122,10 +122,10 @@ void vision_info_t::Vision_Send_Fir_Data( uint8_t CmdID )
 
 	memcpy( vision_sendfir_pack + 3, &TxPacketFir, VISION_LEN_DATA);
 	
-	//Ö¡Î²CRC16Ğ£ÑéĞ­Òé
+	//å¸§å°¾CRC16æ ¡éªŒåè®®
 	Append_CRC16_Check_Sum( vision_sendfir_pack, VISION_LEN_PACKED );
 	
-	//½«´ò°üºÃµÄÊı¾İ·¢ËÍ
+	//å°†æ‰“åŒ…å¥½çš„æ•°æ®å‘é€
 	
 	CDC_Transmit_FS(vision_sendfir_pack, VISION_LEN_PACKED);
 	
@@ -147,15 +147,15 @@ void vision_info_t::Vision_Send_Fir_Data( uint8_t CmdID )
 
 void vision_info_t::Vision_Send_Sed_Data(uint8_t CmdID)
 {
-   uint8_t vision_send_sentry_1_pack[64] = {0};//´óÓÚ22¾ÍĞĞ
+   uint8_t vision_send_sentry_1_pack[64] = {0};//å¤§äº22å°±è¡Œ
 	 
    TxHandSed.SOF = VISION_SENTRY1_SOF;
-	 TxHandSed.CmdID = CmdID;//¶ÔÊÓ¾õÀ´Ëµ×îÖØÒªµÄÊı¾İ
-	 //Ğ´ÈëÖ¡Í·
+	 TxHandSed.CmdID = CmdID;//å¯¹è§†è§‰æ¥è¯´æœ€é‡è¦çš„æ•°æ®
+	 //å†™å…¥å¸§å¤´
 	 memcpy( vision_send_sentry_1_pack, &TxHandSed, VISION_LEN_HEADER );
-   //Ö¡Í·CRC8Ğ£ÑéĞ­Òé
+   //å¸§å¤´CRC8æ ¡éªŒåè®®
 	 Append_CRC8_Check_Sum( vision_send_sentry_1_pack, VISION_LEN_HEADER );
-	 //ÖĞ¼äÊı¾İÎª·¢ËÍ¸øÉÚ±ø µÄÈ«³¡Î»ÖÃ×ø±êĞÅÏ¢  14*4 56Î»
+	 //ä¸­é—´æ•°æ®ä¸ºå‘é€ç»™å“¨å…µ çš„å…¨åœºä½ç½®åæ ‡ä¿¡æ¯  14*4 56ä½
 	 for(int i=0;i<=13;i++)
 	 {
 	    TxPacketSed.robots_position[i]=1;
@@ -163,10 +163,10 @@ void vision_info_t::Vision_Send_Sed_Data(uint8_t CmdID)
 	 
 	 memcpy( vision_send_sentry_1_pack + 3, &TxPacketSed, VISION_LEN_DATA);
 	 
-	 //Ö¡Î²CRC16Ğ£ÑéĞ­Òé
+	 //å¸§å°¾CRC16æ ¡éªŒåè®®
 	 Append_CRC16_Check_Sum( vision_send_sentry_1_pack, VISION_LEN_PACKED );
 	
-	 //½«´ò°üºÃµÄÊı¾İ·¢ËÍ
+	 //å°†æ‰“åŒ…å¥½çš„æ•°æ®å‘é€
 	 CDC_Transmit_FS(vision_send_sentry_1_pack, VISION_LEN_PACKED);
 	 memset(vision_send_sentry_1_pack, 0, VISION_LEN_PACKED);
  }
@@ -174,42 +174,42 @@ void vision_info_t::Vision_Send_Sed_Data(uint8_t CmdID)
  
 void vision_info_t:: Vision_Send_Thi_Data(uint8_t CmdID) 
  {
-	 uint8_t vision_send_sentry_pack[64] = {0};//´óÓÚ22¾ÍĞĞ
+	 uint8_t vision_send_sentry_pack[64] = {0};//å¤§äº22å°±è¡Œ
 	 TxHandThi.SOF = VISION_SENTRY2_SOF;
-	 TxHandThi.CmdID = CmdID;//¶ÔÊÓ¾õÀ´Ëµ×îÖØÒªµÄÊı¾İ
-	 //Ğ´ÈëÖ¡Í·
+	 TxHandThi.CmdID = CmdID;//å¯¹è§†è§‰æ¥è¯´æœ€é‡è¦çš„æ•°æ®
+	 //å†™å…¥å¸§å¤´
 	 memcpy( vision_send_sentry_pack, &TxHandThi, VISION_LEN_HEADER );
-   //Ö¡Í·CRC8Ğ£ÑéĞ­Òé
+   //å¸§å¤´CRC8æ ¡éªŒåè®®
 	 Append_CRC8_Check_Sum( vision_send_sentry_pack, VISION_LEN_HEADER );
-	 //ÖĞ¼äÊı¾İÎª·¢ËÍ¸øÉÚ±øµÄÈ«³¡Î»ÖÃ×ø±êĞÅÏ¢  6*4 24Î»
+	 //ä¸­é—´æ•°æ®ä¸ºå‘é€ç»™å“¨å…µçš„å…¨åœºä½ç½®åæ ‡ä¿¡æ¯  6*4 24ä½
 	 for(int a=0;a<=5;a++)
 	 {
 	    TxPacketThi.robots_position[a]=2;
 	 }
-	 //·¢ËÍ¸øÉÚ±øµÄÈ«³¡»úÆ÷ÈËÑªÁ¿ĞÅÏ¢   10*2 20Î»
+	 //å‘é€ç»™å“¨å…µçš„å…¨åœºæœºå™¨äººè¡€é‡ä¿¡æ¯   10*2 20ä½
 	 
 	 for(int j=0;j<=9;j++)
 	 {
 		 TxPacketThi.robots_hp[j]= 3;
 	 }
 
-   //È«³¡Ê£ÓàÊ±¼ä 1*2 2Î»
+   //å…¨åœºå‰©ä½™æ—¶é—´ 1*2 2ä½
 	 TxPacketThi.stage_remain_time= 4;
 	 
 	 memcpy( vision_send_sentry_pack + 3, &TxPacketThi, VISION_LEN_DATA);
 	 
-	 //Ö¡Î²CRC16Ğ£ÑéĞ­Òé
+	 //å¸§å°¾CRC16æ ¡éªŒåè®®
 	 Append_CRC16_Check_Sum( vision_send_sentry_pack, VISION_LEN_PACKED );
 	
-	 //½«´ò°üºÃµÄÊı¾İ·¢ËÍ
+	 //å°†æ‰“åŒ…å¥½çš„æ•°æ®å‘é€
 	 CDC_Transmit_FS(vision_send_sentry_pack, VISION_LEN_PACKED);
 	 memset(vision_send_sentry_pack, 0, VISION_LEN_PACKED);
 }
 
 
 /**
-  * @brief  »ñÈ¡yawÎó²î½Ç¶È
-  * @param  Îó²îÖ¸Õë
+  * @brief  è·å–yawè¯¯å·®è§’åº¦
+  * @param  è¯¯å·®æŒ‡é’ˆ
   * @retval void
   */
 float vision_info_t::Vision_Error_Angle_Yaw(float *error)
@@ -219,8 +219,8 @@ float vision_info_t::Vision_Error_Angle_Yaw(float *error)
 }
 
 /**
-  * @brief  »ñÈ¡pitchÎó²î½Ç¶È
-  * @param  Îó²îÖ¸Õë
+  * @brief  è·å–pitchè¯¯å·®è§’åº¦
+  * @param  è¯¯å·®æŒ‡é’ˆ
   */
 float vision_info_t::Vision_Error_Angle_Pitch(float *error)
 {	
@@ -229,7 +229,7 @@ float vision_info_t::Vision_Error_Angle_Pitch(float *error)
 }
 
 /**
-  * @brief  »ñÈ¡¾àÀë
+  * @brief  è·å–è·ç¦»
   * @param  void
   * @retval void
   * @attention  
