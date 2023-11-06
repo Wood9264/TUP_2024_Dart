@@ -100,14 +100,14 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 			get_motor_measure(YAW, rx_data2);
 			break;
 		}
-		case CAN2_TRIGGER_MOTOR_ID:
+		case CAN2_3508_BL_ID:
 		{
-			get_motor_measure(TRIGGER, rx_data2);
+			get_motor_measure(BL, rx_data2);
 			break;
 		}
-		case CAN2_PITCH_Motor_ID:
+		case CAN2_3508_BR_ID:
 		{
-			get_motor_measure(PITCH, rx_data2);
+			get_motor_measure(BR, rx_data2);
 			break;
 		}
 		}
