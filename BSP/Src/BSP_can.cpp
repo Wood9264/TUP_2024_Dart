@@ -43,6 +43,8 @@ void can_filter_init(void)
 	HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO0_MSG_PENDING);
 }
 
+uint32_t rate1, rate2, rate3, rate4, rate5, rate6, rate7, rate8;
+
 /**
  * @brief          hal库CAN回调函数,接收电机数据
  * @param[in]      hcan:CAN句柄指针
@@ -64,21 +66,25 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 		case CAN1_3508_BL_ID:
 		{
 			get_motor_measure(BL, rx_data1);
+			rate3++;
 			break;
 		}
 		case CAN1_3508_BR_ID:
 		{
 			get_motor_measure(BR, rx_data1);
+			rate4++;
 			break;
 		}
 		case CAN1_3508_FR_ID:
 		{
 			get_motor_measure(FR, rx_data1);
+			rate2++;
 			break;
 		}
 		case CAN1_3508_FL_ID:
 		{
 			get_motor_measure(FL, rx_data1);
+			rate1++;
 			break;
 		}
 		}
@@ -103,11 +109,13 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 		case CAN2_3508_BL_ID:
 		{
 			get_motor_measure(BL, rx_data2);
+			// rate3++;
 			break;
 		}
 		case CAN2_3508_BR_ID:
 		{
 			get_motor_measure(BR, rx_data2);
+			// rate4++;
 			break;
 		}
 		}
