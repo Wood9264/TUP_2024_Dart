@@ -38,17 +38,17 @@ class Vision_process_t
     float distend_get;
 	  
 	  float Yaw_error;
-	  float Pitch_error;//Êµ¼ÊÊÓ¾õ¸ø¶¨½Ç¶È
+	  float Pitch_error;//å®é™…è§†è§‰ç»™å®šè§’åº¦
 	  float YawTarget_now;
-	  float PitchTarget_now;//Êµ¼ÊÊÓ¾õ¸ø¶¨½Ç¶È
+	  float PitchTarget_now;//å®é™…è§†è§‰ç»™å®šè§’åº¦
 	  float update_cloud_yaw ;
-	  float update_cloud_pitch;	/*¼ÇÂ¼ÊÓ¾õ¸üĞÂÊı¾İÊ±µÄÔÆÌ¨Êı¾İ£¬¸øÏÂ´Î½ÓÊÕÓÃ*/
+	  float update_cloud_pitch;	/*è®°å½•è§†è§‰æ›´æ–°æ•°æ®æ—¶çš„äº‘å°æ•°æ®ï¼Œç»™ä¸‹æ¬¡æ¥æ”¶ç”¨*/
     float lastupdate_cloud_yaw;
-	  float lastupdate_cloud_pitch; /*Ç°Á½Ö¡µÄÊı¾İ*/
+	  float lastupdate_cloud_pitch; /*å‰ä¸¤å¸§çš„æ•°æ®*/
 	
-	  //UIÆÏÌÑÉäÊÖ
-		fp32 fx,fy;  //Ïà»ú½¹¾à²ÎÊı
-	  fp32 cx,cy;  //Ïà»ú¹âĞÄ¡ª¡ªÍ¼ÏñÖĞĞÄ×ø±ê£¨960£¬540£©
+	  //UIè‘¡è„å°„æ‰‹
+		fp32 fx,fy;  //ç›¸æœºç„¦è·å‚æ•°
+	  fp32 cx,cy;  //ç›¸æœºå…‰å¿ƒâ€”â€”å›¾åƒä¸­å¿ƒåæ ‡ï¼ˆ960ï¼Œ540ï¼‰
 	  fp32 x_value,y_value,z_value;
 	  fp32 predict_x_value,predict_y_value,predict_z_value;
 		fp32 f;

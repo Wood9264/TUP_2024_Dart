@@ -1,9 +1,9 @@
 /**
   ****************************(C) COPYRIGHT 2016 DJI****************************
   * @file       remote_control.c/h
-  * @brief      Ò£¿ØÆ÷´¦Àí£¬Ò£¿ØÆ÷ÊÇÍ¨¹ýÀàËÆSBUSµÄÐ­Òé´«Êä£¬ÀûÓÃDMA´«Êä·½Ê½½ÚÔ¼CPU
-  *             ×ÊÔ´£¬ÀûÓÃ´®¿Ú¿ÕÏÐÖÐ¶ÏÀ´À­Æð´¦Àíº¯Êý£¬Í¬Ê±Ìá¹©Ò»Ð©µôÏßÖØÆôDMA£¬´®¿Ú
-  *             µÄ·½Ê½±£Ö¤ÈÈ²å°ÎµÄÎÈ¶¨ÐÔ¡£
+  * @brief      é¥æŽ§å™¨å¤„ç†ï¼Œé¥æŽ§å™¨æ˜¯é€šè¿‡ç±»ä¼¼SBUSçš„åè®®ä¼ è¾“ï¼Œåˆ©ç”¨DMAä¼ è¾“æ–¹å¼èŠ‚çº¦CPU
+  *             èµ„æºï¼Œåˆ©ç”¨ä¸²å£ç©ºé—²ä¸­æ–­æ¥æ‹‰èµ·å¤„ç†å‡½æ•°ï¼ŒåŒæ—¶æä¾›ä¸€äº›æŽ‰çº¿é‡å¯DMAï¼Œä¸²å£
+  *             çš„æ–¹å¼ä¿è¯çƒ­æ’æ‹”çš„ç¨³å®šæ€§ã€‚
   * @note       
   * @history
   *  Version    Date            Author          Modification
@@ -85,11 +85,42 @@ typedef __packed struct
         } key;
 
 } RC_ctrl_t;
+
+typedef enum
+{
+        KEY_W,                     // 0
+        KEY_S,                     // 1
+        KEY_A,                     // 2
+        KEY_D,                     // 3
+        KEY_SHIFT,                 // 4
+        KEY_CTRL,                  // 5
+        KEY_Q,                     // 6
+        KEY_E,                     // 7
+        KEY_R,                     // 8
+        KEY_F,                     // 9
+        KEY_G,                     // 10
+        KEY_Z,                     // 11
+        KEY_X,                     // 12
+        KEY_C,                     // 13
+        KEY_V,                     // 14
+        KEY_B,                     // 15
+        MOUSE_L,                   // 16
+        MOUSE_R,                   // 17
+        RIGHT_ROCKER_RIGHT_TOP,    // 18
+        RIGHT_ROCKER_LEFT_TOP,     // 19
+        RIGHT_ROCKER_LEFT_BOTTOM,  // 20
+        RIGHT_ROCKER_RIGHT_BOTTOM, // 21
+        LEFT_ROCKER_RIGHT_TOP,     // 22
+        LEFT_ROCKER_LEFT_TOP,      // 23
+        LEFT_ROCKER_LEFT_BOTTOM,   // 24
+        LEFT_ROCKER_RIGHT_BOTTOM,  // 25
+} CHANNEL_int;
+
 typedef __packed struct
 {
-	uint16_t rc_keyB_time;  //°´¼üBµÄÊ±¼ä
-  uint16_t rc_keyC_time;  //°´¼üCµÄÊ±¼ä
-	uint16_t rc_keyCtrl_time;  //°´¼üCtrlµÄÊ±¼ä
+	uint16_t rc_keyB_time;  //æŒ‰é”®Bçš„æ—¶é—´
+  uint16_t rc_keyC_time;  //æŒ‰é”®Cçš„æ—¶é—´
+	uint16_t rc_keyCtrl_time;  //æŒ‰é”®Ctrlçš„æ—¶é—´
 	uint16_t mouse_left_time;
 	uint16_t mouse_right_time;
 }RC_ctrl_time_t;
@@ -100,7 +131,7 @@ typedef __packed struct
 #define    RC_CH3_LUD_OFFSET  	(rc_ctrl.rc.ch3 - RC_CH_VALUE_OFFSET)
 
 
-/* ¼ì²âÒ£¿ØÆ÷¿ª¹Ø×´Ì¬ */
+/* æ£€æµ‹é¥æŽ§å™¨å¼€å…³çŠ¶æ€ */
 #define    IF_RC_SW0_UP      (rc_ctrl.rc.s[0] == RC_SW_UP)
 #define    IF_RC_SW0_MID     (rc_ctrl.rc.s[0] == RC_SW_MID)
 #define    IF_RC_SW0_DOWN    (rc_ctrl.rc.s[0] == RC_SW_DOWN)
@@ -110,7 +141,7 @@ typedef __packed struct
 #define    IF_RC_SW1_DOWN    (rc_ctrl.rc.s[1] == RC_SW_DOWN)
 
 
-/*²¦¸ËÎ»ÖÃ*/
+/*æ‹¨æ†ä½ç½®*/
 #define    IF_RIGHT_ROCKER_RIGHT_TOP      (rc_ctrl.rc.ch[0] > 600 && rc_ctrl.rc.ch[1] > 600)
 #define    IF_RIGHT_ROCKER_LEFT_TOP       (rc_ctrl.rc.ch[0] < -600 && rc_ctrl.rc.ch[1] > 600)
 #define    IF_RIGHT_ROCKER_LEFT_BOTTOM    (rc_ctrl.rc.ch[0] < -600 && rc_ctrl.rc.ch[1] < -600)
@@ -122,20 +153,20 @@ typedef __packed struct
 #define    IF_LEFT_ROCKER_RIGHT_BOTTOM    (rc_ctrl.rc.ch[2] > 600 && rc_ctrl.rc.ch[3] < -600)    
 
 
-/* »ñÈ¡Êó±êÈýÖáµÄÒÆ¶¯ËÙ¶È */
+/* èŽ·å–é¼ æ ‡ä¸‰è½´çš„ç§»åŠ¨é€Ÿåº¦ */
 #define    MOUSE_X_MOVE_SPEED    (rc_ctrl.mouse.x)
 #define    MOUSE_Y_MOVE_SPEED    (rc_ctrl.mouse.y)
 #define    MOUSE_Z_MOVE_SPEED    (rc_ctrl.mouse.z)
 
 
-/* ¼ì²âÊó±ê°´¼ü×´Ì¬ 
-   °´ÏÂÎª1£¬Ã»°´ÏÂÎª0*/
+/* æ£€æµ‹é¼ æ ‡æŒ‰é”®çŠ¶æ€ 
+   æŒ‰ä¸‹ä¸º1ï¼Œæ²¡æŒ‰ä¸‹ä¸º0*/
 #define    IF_MOUSE_PRESSED_LEFT    (rc_ctrl.mouse.press_l == 1)
 #define    IF_MOUSE_PRESSED_RIGH    (rc_ctrl.mouse.press_r == 1)
 
 
-/* ¼ì²â¼üÅÌ°´¼ü×´Ì¬ 
-   Èô¶ÔÓ¦°´¼ü±»°´ÏÂ£¬ÔòÂß¼­±í´ïÊ½µÄÖµÎª1£¬·ñÔòÎª0 */
+/* æ£€æµ‹é”®ç›˜æŒ‰é”®çŠ¶æ€ 
+   è‹¥å¯¹åº”æŒ‰é”®è¢«æŒ‰ä¸‹ï¼Œåˆ™é€»è¾‘è¡¨è¾¾å¼çš„å€¼ä¸º1ï¼Œå¦åˆ™ä¸º0 */
 #define    IF_KEY_PRESSED         (  rc_ctrl.key.v  )
 #define    IF_KEY_PRESSED_W       ( (rc_ctrl.key.v & KEY_PRESSED_OFFSET_W)    != 0 )
 #define    IF_KEY_PRESSED_S       ( (rc_ctrl.key.v & KEY_PRESSED_OFFSET_S)    != 0 )
@@ -163,6 +194,9 @@ extern uint8_t RC_data_is_error(void);
 extern void slove_RC_lost(void);
 extern void slove_data_error(void);
 extern void sbus_to_usart1(uint8_t *sbus);
+extern bool_t RC_held_continuous_return(CHANNEL_int channel, uint16_t time);
+extern bool_t RC_held_single_return(CHANNEL_int channel, uint16_t time);
+extern bool_t RC_double_held_single_return(CHANNEL_int channel_1, CHANNEL_int channel_2, uint16_t time);
 extern RC_ctrl_t rc_ctrl;
 
 

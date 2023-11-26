@@ -37,3 +37,4 @@ MDK-ARM/JLinkLog.txt
 MDK-ARM/JLinkSettings.ini
 *.map
 *.uvguix.*
+*.jdebug.user

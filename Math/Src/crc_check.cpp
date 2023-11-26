@@ -2,7 +2,7 @@
 #include "crc_check.h"
 
 
-/***********************************    ��    DJI�ṩ��CRCУ�캯��   ��  ***********************************/
+/***********************************    ↓    DJI提供的CRC校检函数   ↓  ***********************************/
 //crc8 generator polynomial:G(x)=x8+x5+x4+1
 const unsigned char CRC8_INIT = 0xff;
 const unsigned char CRC8_TAB[256] =
@@ -161,6 +161,6 @@ void Append_CRC16_Check_Sum(uint8_t * pchMessage,uint32_t dwLength)
     pchMessage[dwLength-2] = (uint8_t)(wCRC & 0x00ff);
     pchMessage[dwLength-1] = (uint8_t)((wCRC >> 8)& 0x00ff);
 }
-/***********************************    ��    DJI�ṩ��CRCУ�캯��   ��  ***********************************/   
+/***********************************    ↑    DJI提供的CRC校检函数   ↑  ***********************************/   
   
 

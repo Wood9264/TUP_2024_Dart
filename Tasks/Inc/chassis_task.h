@@ -11,9 +11,9 @@
 // #include "Bsp_can.h"
 // #include "judge_task.h"
 
-// #define CHASSIS_TASK_INIT_TIME 357 //����ʼ����һ��ʱ��
+// #define CHASSIS_TASK_INIT_TIME 357 //任务开始空闲一段时间
 
-// #define CHASSIS_CONTROL_TIME_MS 2  //����������Ƽ�� 2ms
+// #define CHASSIS_CONTROL_TIME_MS 2  //底盘任务控制间隔 2ms
 
 // #define M3508_MOTOR_SPEED_PID_MAX_OUT    16000.0f
 // #define M3508_MOTOR_SPEED_PID_MAX_IOUT   2000.0f
@@ -37,15 +37,15 @@
 	
 
 
-// #define CHASSIS_WZ_RC_SEN      0.007f      //��������̨��ʱ�� ң������yawң�ˣ�max 660��ת���ɳ�����ת�ٶȵı���
-// #define CHASSIS_WZ_CHANNEL     2           //������ģʽ�£�����ͨ��ң����������ת
-// #define CHASSIS_WZ_SET_SCALE -0.072f//����������ת�ٶȣ�����ǰ�������ֲ�ͬ�趨�ٶȵı�����Ȩ 0Ϊ�ڼ������ģ�����Ҫ����
+// #define CHASSIS_WZ_RC_SEN      0.007f      //不跟随云台的时候 遥控器的yaw遥杆（max 660）转化成车体旋转速度的比例
+// #define CHASSIS_WZ_CHANNEL     2           //在特殊模式下，可以通过遥控器控制旋转
+// #define CHASSIS_WZ_SET_SCALE -0.072f//底盘设置旋转速度，设置前后左右轮不同设定速度的比例分权 0为在几何中心，不需要补偿
 // #define MOTOR_DISTANCE_TO_CENTER 0.22f
-// #define MAX_WHEEL_SPEED 6.0f	//���̵������ٶ�
+// #define MAX_WHEEL_SPEED 6.0f	//底盘电机最大速度
 
 
 
-// #define M3508_MOTOR_RPM_TO_VECTOR 0.000415809748903494517209f //m3508ת���ɵ����ٶ�(m/s)�ı������������� ����Ϊ���ܻ������Ҫ��������
+// #define M3508_MOTOR_RPM_TO_VECTOR 0.000415809748903494517209f //m3508转化成底盘速度(m/s)的比例，做两个宏 是因为可能换电机需要更换比例
 // #define CHASSIS_MOTOR_RPM_TO_VECTOR_SEN M3508_MOTOR_RPM_TO_VECTOR
 
 // #ifdef __cplusplus
@@ -78,34 +78,34 @@ typedef struct
 // {
 // 	private:
 // 	system_mode_e chassis_mode;
-// 	gimbal_motor_t chassis_yaw_motor;   //����ʹ�õ�yaw��̨�������ԽǶ���������̵�ŷ����
-//   gimbal_motor_t chassis_pitch_motor; //����ʹ�õ�pitch��̨�������ԽǶ���������̵�ŷ����	
+// 	gimbal_motor_t chassis_yaw_motor;   //底盘使用到yaw云台电机的相对角度来计算底盘的欧拉角
+//   gimbal_motor_t chassis_pitch_motor; //底盘使用到pitch云台电机的相对角度来计算底盘的欧拉角	
 	
 	
 // 	PID_t chassis_motor_speed_pid[4];
-//   PID_t chassis_angle_pid;              //���̸���Ƕ�pid
+//   PID_t chassis_angle_pid;              //底盘跟随角度pid
 // 	PID_t chassis_angle_spin_pid;
 // 	PID_t chassis_current_pid[4]; 
 	
 // 	first_order_filter_type_t chassis_cmd_slow_set_vx;
 //   first_order_filter_type_t chassis_cmd_slow_set_vy;
 
-// 	fp32 vx;                         //�����ٶ� ǰ������ ǰΪ������λ m/s
-//   fp32 vy;                         //�����ٶ� ���ҷ��� ��Ϊ��  ��λ m/s
-//   fp32 wz;                         //������ת���ٶȣ���ʱ��Ϊ�� ��λ rad/s
+// 	fp32 vx;                         //底盘速度 前进方向 前为正，单位 m/s
+//   fp32 vy;                         //底盘速度 左右方向 左为正  单位 m/s
+//   fp32 wz;                         //底盘旋转角速度，逆时针为正 单位 rad/s
 	
-//   fp32 vx_set;                     //�����趨�ٶ� ǰ������ ǰΪ������λ m/s
-//   fp32 vy_set;                     //�����趨�ٶ� ���ҷ��� ��Ϊ������λ m/s
-// 	fp32 wz_set;                     //������ת���ٶȣ���ʱ��Ϊ�� ��λ rad/s
+//   fp32 vx_set;                     //底盘设定速度 前进方向 前为正，单位 m/s
+//   fp32 vy_set;                     //底盘设定速度 左右方向 左为正，单位 m/s
+// 	fp32 wz_set;                     //底盘旋转角速度，逆时针为正 单位 rad/s
 	
 	
-// 	fp32 vx_follow_set;                     //�����趨�ٶ� ǰ������ ǰΪ������λ m/s
-//   fp32 vy_follow_set;                     //�����趨�ٶ� ���ҷ��� ��Ϊ������λ m/s
+// 	fp32 vx_follow_set;                     //底盘设定速度 前进方向 前为正，单位 m/s
+//   fp32 vy_follow_set;                     //底盘设定速度 左右方向 左为正，单位 m/s
 	
-// 	fp32 vx_max_speed;               //ǰ����������ٶ� ��λm/s 
-//   fp32 vx_min_speed;               //ǰ��������С�ٶ� ��λm/s
-//   fp32 vy_max_speed;               //���ҷ�������ٶ� ��λm/s
-//   fp32 vy_min_speed;               //���ҷ�����С�ٶ� ��λm/s
+// 	fp32 vx_max_speed;               //前进方向最大速度 单位m/s 
+//   fp32 vx_min_speed;               //前进方向最小速度 单位m/s
+//   fp32 vy_max_speed;               //左右方向最大速度 单位m/s
+//   fp32 vy_min_speed;               //左右方向最小速度 单位m/s
 	 
 //   fp32 chassis_relative_angle_set;
 

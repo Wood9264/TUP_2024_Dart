@@ -12,7 +12,7 @@ extern "C"{
 }
 extern DMA_HandleTypeDef hdma_usart1_rx;
 
-/*²ÃÅÐÏµÍ³·¢¹ýÀ´µÄÊý¾ÝÔÝ´æÔÚÕâÀï*/
+/*è£åˆ¤ç³»ç»Ÿå‘è¿‡æ¥çš„æ•°æ®æš‚å­˜åœ¨è¿™é‡Œ*/
 uint8_t Judge_Buffer[JUDGE_BUFFER_LEN] = {0};
 uint8_t usart1_rx_flag;
 ina226_t ina226_data;
@@ -24,8 +24,8 @@ void Judge_Task(void const * argumt)
 //	  uint32_t currentTime;
 		while(1)
 		{
-//		currentTime = xTaskGetTickCount();//µ±Ç°ÏµÍ³Ê±¼ä			
-		Judge_Read_Data(Judge_Buffer);		//¶ÁÈ¡²ÃÅÐÏµÍ³Êý¾Ý	
+//		currentTime = xTaskGetTickCount();//å½“å‰ç³»ç»Ÿæ—¶é—´			
+		Judge_Read_Data(Judge_Buffer);		//è¯»å–è£åˆ¤ç³»ç»Ÿæ•°æ®	
 
 		osDelay(2);
 		//pm01_access_poll();	
@@ -35,7 +35,7 @@ void Judge_Task(void const * argumt)
 
 extern "C"
 {
-/*´®¿Ú1ÖÐ¶Ïº¯Êý*/
+/*ä¸²å£1ä¸­æ–­å‡½æ•°*/
 void USART1_IRQHandler(void)
 {
     if(USART1->SR & UART_FLAG_IDLE)

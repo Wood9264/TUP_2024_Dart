@@ -17,15 +17,15 @@ typedef struct
 } _filter_1_st;
 
 
-typedef struct  //ÊÓ¾õÄ¿±êËÙ¶È²âÁ¿
+typedef struct  //è§†è§‰ç›®æ ‡é€Ÿåº¦æµ‹é‡
 {
-  int delay_cnt;//¼ÆËãÏàÁÚÁ½Ö¡Ä¿±ê²»±ä³ÖĞøÊ±¼ä,ÓÃÀ´ÅĞ¶ÏËÙ¶ÈÊÇ·ñÎª0
+  int delay_cnt;//è®¡ç®—ç›¸é‚»ä¸¤å¸§ç›®æ ‡ä¸å˜æŒç»­æ—¶é—´,ç”¨æ¥åˆ¤æ–­é€Ÿåº¦æ˜¯å¦ä¸º0
   int freq;
-  int last_time;//ÉÏ´ÎÊÜµ½Ä¿±ê½Ç¶ÈµÄÊ±¼ä
-  float last_position;//ÉÏ¸öÄ¿±ê½Ç¶È
-  float speed;//ËÙ¶È
-  float last_speed;//ÉÏ´ÎËÙ¶È
-  float processed_speed;//ËÙ¶È¼ÆËã½á¹û
+  int last_time;//ä¸Šæ¬¡å—åˆ°ç›®æ ‡è§’åº¦çš„æ—¶é—´
+  float last_position;//ä¸Šä¸ªç›®æ ‡è§’åº¦
+  float speed;//é€Ÿåº¦
+  float last_speed;//ä¸Šæ¬¡é€Ÿåº¦
+  float processed_speed;//é€Ÿåº¦è®¡ç®—ç»“æœ
 }speed_calc_data_t;
 
 

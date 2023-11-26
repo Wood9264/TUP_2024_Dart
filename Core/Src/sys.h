@@ -7,8 +7,8 @@
 #define MEM_ADDR(addr)  *((volatile unsigned long  *)(addr)) 
 #define BIT_ADDR(addr, bitnum)   MEM_ADDR(BITBAND(addr, bitnum)) 
 #define GPIOF_IDR_Addr    (GPIOF_BASE+16) //0x40021410 
-#define PHout(n)   BIT_ADDR(GPIOF_ODR_Addr,n)  //Êä³ö 
-#define PHin(n)    BIT_ADDR(GPIOF_IDR_Addr,n)  //ÊäÈë
+#define PHout(n)   BIT_ADDR(GPIOF_ODR_Addr,n)  //è¾“å‡º 
+#define PHin(n)    BIT_ADDR(GPIOF_IDR_Addr,n)  //è¾“å…¥
 
 
 

@@ -11,20 +11,20 @@ extern "C"{
 class LADRC_t
 {
 	public:
-		fp32 time_cons; //Ê±¼ä³£Êý
+		fp32 time_cons; //æ—¶é—´å¸¸æ•°
 	
-	  fp32 own_wo;//¹Û²âÆ÷´ø¿í
-		fp32 own_b0;//Êä³öÔöÒæ
+	  fp32 own_wo;//è§‚æµ‹å™¨å¸¦å®½
+		fp32 own_b0;//è¾“å‡ºå¢žç›Š
 		fp32 z1;
 		fp32 z2;
 	
-	  fp32 own_wc;//¿ØÖÆÆ÷´ø¿í
+	  fp32 own_wc;//æŽ§åˆ¶å™¨å¸¦å®½
 	
-    fp32 own_max_out;  //×î´óÊä³ö
-	  //ÊäÈë
-    fp32 own_set;//Éè¶¨Öµ
-    fp32 own_fdb;//·´À¡Öµ
-		fp32 own_gyro;//½ÇËÙ¶È
+    fp32 own_max_out;  //æœ€å¤§è¾“å‡º
+	  //è¾“å…¥
+    fp32 own_set;//è®¾å®šå€¼
+    fp32 own_fdb;//åé¦ˆå€¼
+		fp32 own_gyro;//è§’é€Ÿåº¦
 		fp32 own_err;
 	
 		fp32 u;

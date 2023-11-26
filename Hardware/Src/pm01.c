@@ -2,8 +2,8 @@
 #include "judge.h"
 volatile pm01_od_t pm01_od;
 
-volatile uint16_t  pm01_access_id;    /* ÕıÔÚ·ÃÎÊµÄ±êÊ¶·û     */
-volatile uint16_t  pm01_response_flg; /* ¿ØÖÆÆ÷ÏìÓ¦³É¹¦±êÖ¾Î» */
+volatile uint16_t  pm01_access_id;    /* æ­£åœ¨è®¿é—®çš„æ ‡è¯†ç¬¦     */
+volatile uint16_t  pm01_response_flg; /* æ§åˆ¶å™¨å“åº”æˆåŠŸæ ‡å¿—ä½ */
 
 uint16_t g_cmd_set   = 2;
 uint16_t g_power_set = 12000;
@@ -11,11 +11,11 @@ uint16_t g_vout_set  = 2400;
 uint16_t g_iout_set  = 500;
 
 /**
-  * @brief          ¿ØÖÆÃüÁî·¢ËÍ
-  * @param[in]      new_cmd   0x00: Í£»ú
-															0x01: ÔËĞĞ£¬²»´ò¿ªÊä³ö¸ºÔØ¿ª¹Ø£¨Ö»¸ø³¬¼¶µçÈİ³äµç£©
-															0x02: ÔËĞĞ£¬´ò¿ªÊä³ö¸ºÔØ¿ª¹Ø£¨Õı³£ÔËĞĞÊ¹ÓÃ¸ÃÖ¸Áî£©
-	                  save_flg: 0x00: ²»±£´æÖÁEEPROM  0x01: ±£´æÖÁEEPROM
+  * @brief          æ§åˆ¶å‘½ä»¤å‘é€
+  * @param[in]      new_cmd   0x00: åœæœº
+															0x01: è¿è¡Œï¼Œä¸æ‰“å¼€è¾“å‡ºè´Ÿè½½å¼€å…³ï¼ˆåªç»™è¶…çº§ç”µå®¹å……ç”µï¼‰
+															0x02: è¿è¡Œï¼Œæ‰“å¼€è¾“å‡ºè´Ÿè½½å¼€å…³ï¼ˆæ­£å¸¸è¿è¡Œä½¿ç”¨è¯¥æŒ‡ä»¤ï¼‰
+	                  save_flg: 0x00: ä¸ä¿å­˜è‡³EEPROM  0x01: ä¿å­˜è‡³EEPROM
   * @retval         none
   */
 void pm01_cmd_send( uint16_t new_cmd, uint8_t save_flg )
@@ -38,9 +38,9 @@ void pm01_cmd_send( uint16_t new_cmd, uint8_t save_flg )
 }
 
 /**
-  * @brief          ÉèÖÃ¹¦ÂÊ
-  * @param[in]      new_power£ºĞÂµÄ¹¦ÂÊÖµ
-                    save_flg: 0x00: ²»±£´æÖÁEEPROM  0x01: ±£´æÖÁEEPROM
+  * @brief          è®¾ç½®åŠŸç‡
+  * @param[in]      new_powerï¼šæ–°çš„åŠŸç‡å€¼
+                    save_flg: 0x00: ä¸ä¿å­˜è‡³EEPROM  0x01: ä¿å­˜è‡³EEPROM
   * @retval         none
   */
 void pm01_power_set( uint16_t new_power, uint8_t save_flg )
@@ -63,9 +63,9 @@ void pm01_power_set( uint16_t new_power, uint8_t save_flg )
 	
 }
 /**
-  * @brief          ÉèÖÃÊä³öµçÑ¹
-  * @param[in]      new_volt£ºĞÂµÄµçÑ¹Öµ
-                    save_flg: 0x00: ²»±£´æÖÁEEPROM  0x01: ±£´æÖÁEEPROM
+  * @brief          è®¾ç½®è¾“å‡ºç”µå‹
+  * @param[in]      new_voltï¼šæ–°çš„ç”µå‹å€¼
+                    save_flg: 0x00: ä¸ä¿å­˜è‡³EEPROM  0x01: ä¿å­˜è‡³EEPROM
   * @retval         none
   */
 void pm01_voltage_set( uint16_t new_voltage, uint8_t save_flg )
@@ -89,9 +89,9 @@ void pm01_voltage_set( uint16_t new_voltage, uint8_t save_flg )
 	
 }
 /**
-  * @brief          ÉèÖÃÊä³öµçÁ÷
-  * @param[in]      new_current£ºĞÂµÄµçÁ÷Öµ
-                    save_flg: 0x00: ²»±£´æÖÁEEPROM  0x01: ±£´æÖÁEEPROM
+  * @brief          è®¾ç½®è¾“å‡ºç”µæµ
+  * @param[in]      new_currentï¼šæ–°çš„ç”µæµå€¼
+                    save_flg: 0x00: ä¸ä¿å­˜è‡³EEPROM  0x01: ä¿å­˜è‡³EEPROM
   * @retval         none
   */
 void pm01_current_set( uint16_t new_current, uint8_t save_flg )
@@ -114,16 +114,16 @@ void pm01_current_set( uint16_t new_current, uint8_t save_flg )
 	
 }
 /**
-  * @brief          ÂÖÑ¯·ÃÎÊPM01²ÎÊı£¬ÇëÒÔ100HZÆµÂÊµ÷ÓÃ
+  * @brief          è½®è¯¢è®¿é—®PM01å‚æ•°ï¼Œè¯·ä»¥100HZé¢‘ç‡è°ƒç”¨
   * @param[in]      none
   * @retval         none
   */
 void pm01_access_poll(void)
 {
 	
-	static uint8_t   m_state   = 0x00;   /* ×´Ì¬    */
-	static uint16_t  m_can_id  = 0x600;  /* ±êÊ¶·û  */
-	static uint32_t  m_timeout = 0;      /* ³¬Ê±    */
+	static uint8_t   m_state   = 0x00;   /* çŠ¶æ€    */
+	static uint16_t  m_can_id  = 0x600;  /* æ ‡è¯†ç¬¦  */
+	static uint32_t  m_timeout = 0;      /* è¶…æ—¶    */
 	
 	static uint16_t  i = 0;
 //	uint16_t chassis_limit_power;
@@ -138,11 +138,11 @@ void pm01_access_poll(void)
 	
 	switch( m_state )
 	{
-		case 0x00:  /* ·¢ËÍÊı¾İ */
+		case 0x00:  /* å‘é€æ•°æ® */
 		
-		  m_timeout = 0;   /* Çå³ı³¬Ê±¶¨Ê±Æ÷ */		
+		  m_timeout = 0;   /* æ¸…é™¤è¶…æ—¶å®šæ—¶å™¨ */		
 
-		  m_state = 0x01;  /* ÇĞ»»µ½µÈ´ı×´Ì¬ */
+		  m_state = 0x01;  /* åˆ‡æ¢åˆ°ç­‰å¾…çŠ¶æ€ */
 
 		  switch(i)
 			{
@@ -154,51 +154,51 @@ void pm01_access_poll(void)
 					case 5:
 					case 6:
 					case 7:
-							pm01_access_id = m_can_id; /* ¼ÇÂ¼±¾´Î·ÃÎÊµÄ±êÊ¶·û */
+							pm01_access_id = m_can_id; /* è®°å½•æœ¬æ¬¡è®¿é—®çš„æ ‡è¯†ç¬¦ */
 
-							power_tx_message.StdId = m_can_id;       /* ·¢ËÍÏàÓ¦µÄ±êÊ¶·û */
-							power_tx_message.IDE   = CAN_ID_STD;     /* ±ê×¼Ö¡           */
-							power_tx_message.RTR   = CAN_RTR_REMOTE; /* Ô¶³ÌÖ¡           */
+							power_tx_message.StdId = m_can_id;       /* å‘é€ç›¸åº”çš„æ ‡è¯†ç¬¦ */
+							power_tx_message.IDE   = CAN_ID_STD;     /* æ ‡å‡†å¸§           */
+							power_tx_message.RTR   = CAN_RTR_REMOTE; /* è¿œç¨‹å¸§           */
 							power_tx_message.DLC   = 0x00;
 
 							HAL_CAN_AddTxMessage(&hcan2, &power_tx_message, power_can_send_data, &send_mail_box);
 					  break;
 					case 8:
 					
-							pm01_access_id = m_can_id; /* ¼ÇÂ¼±¾´Î·ÃÎÊµÄ±êÊ¶·û */					
+							pm01_access_id = m_can_id; /* è®°å½•æœ¬æ¬¡è®¿é—®çš„æ ‡è¯†ç¬¦ */					
 					
 						  pm01_cmd_send( g_cmd_set, 0x00 );
 					  break;
 					case 9:
 					
-							pm01_access_id = m_can_id; /* ¼ÇÂ¼±¾´Î·ÃÎÊµÄ±êÊ¶·û */					
+							pm01_access_id = m_can_id; /* è®°å½•æœ¬æ¬¡è®¿é—®çš„æ ‡è¯†ç¬¦ */					
 					
 						  pm01_power_set( g_power_set, 0x00 );
 					  break;
 					case 10:
 					
-							pm01_access_id = m_can_id; /* ¼ÇÂ¼±¾´Î·ÃÎÊµÄ±êÊ¶·û */					
+							pm01_access_id = m_can_id; /* è®°å½•æœ¬æ¬¡è®¿é—®çš„æ ‡è¯†ç¬¦ */					
 					
 						  pm01_voltage_set( g_vout_set, 0x00 );
 					  break;
 					case 11:
 					
-							pm01_access_id = m_can_id; /* ¼ÇÂ¼±¾´Î·ÃÎÊµÄ±êÊ¶·û */					
+							pm01_access_id = m_can_id; /* è®°å½•æœ¬æ¬¡è®¿é—®çš„æ ‡è¯†ç¬¦ */					
 					
 						  pm01_current_set( g_iout_set, 0x00 );
 					  break;						
 			}
 		
 			break;
-		case 0x01: /* µÈ´ıÏìÓ¦ */
+		case 0x01: /* ç­‰å¾…å“åº” */
 		
 	
       if( pm01_response_flg == 0x01 )
 			{
 				
-				pm01_response_flg = 0x00; /* ¸´Î»Ó¦´ğ±êÖ¾Î» */
+				pm01_response_flg = 0x00; /* å¤ä½åº”ç­”æ ‡å¿—ä½ */
 				
-				 /* ·ÃÎÊ³É¹¦£¬¼ÌĞø·ÃÎÊÏÂÒ»¸ö±êÊ¶·û */
+				 /* è®¿é—®æˆåŠŸï¼Œç»§ç»­è®¿é—®ä¸‹ä¸€ä¸ªæ ‡è¯†ç¬¦ */
 				
 				i = (i+1) % 12;
 				
@@ -213,13 +213,13 @@ void pm01_access_poll(void)
 					case 5: m_can_id = 0x611; break;
 					case 6: m_can_id = 0x612; break;
 					case 7: m_can_id = 0x613; break;
-				  case 8: m_can_id = 0x600; break; /* Ğ´ */
-					case 9: m_can_id = 0x601; break; /* Ğ´ */
-					case 10: m_can_id = 0x602; break; /* Ğ´ */
-					case 11: m_can_id = 0x603; break; /* Ğ´ */
+				  case 8: m_can_id = 0x600; break; /* å†™ */
+					case 9: m_can_id = 0x601; break; /* å†™ */
+					case 10: m_can_id = 0x602; break; /* å†™ */
+					case 11: m_can_id = 0x603; break; /* å†™ */
 				}
 				
-				m_state = 0x00;  /* Æô¶¯ÏÂÒ»ÂÖ·ÃÎÊ */							
+				m_state = 0x00;  /* å¯åŠ¨ä¸‹ä¸€è½®è®¿é—® */							
 				
 			}
 			else
@@ -227,7 +227,7 @@ void pm01_access_poll(void)
 				m_timeout++;
 			}
 
-		  /* ³¬Ê±1s£¬ÖØĞÂ·ÃÎÊ  */
+		  /* è¶…æ—¶1sï¼Œé‡æ–°è®¿é—®  */
       if( m_timeout > 100 )
 			{
 				m_state = 0x00;	
@@ -240,7 +240,7 @@ void pm01_access_poll(void)
 	}
 }
 /**
-  * @brief          Ó¦´ğ´¦Àí£¬ÔÚCAN½ÓÊÕÖĞ¶ÏÖĞµ÷ÓÃ
+  * @brief          åº”ç­”å¤„ç†ï¼Œåœ¨CANæ¥æ”¶ä¸­æ–­ä¸­è°ƒç”¨
   * @param[in]      none
   * @retval         none
   */

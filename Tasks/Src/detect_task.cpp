@@ -3,7 +3,7 @@
   * @file       detect_task.c/h
   * @brief      detect error task, judged by receiving data time. provide detect
                 hook function, error exist function.
-  *             ¼ì²â´íÎóÈÎÎñ£¬ Í¨¹ı½ÓÊÕÊı¾İÊ±¼äÀ´ÅĞ¶Ï.Ìá¹© ¼ì²â¹³×Óº¯Êı,´íÎó´æÔÚº¯Êı.
+  *             æ£€æµ‹é”™è¯¯ä»»åŠ¡ï¼Œ é€šè¿‡æ¥æ”¶æ•°æ®æ—¶é—´æ¥åˆ¤æ–­.æä¾› æ£€æµ‹é’©å­å‡½æ•°,é”™è¯¯å­˜åœ¨å‡½æ•°.
   * @note       
   * @history
   *  Version    Date            Author          Modification
@@ -29,22 +29,22 @@
     3. if XXX_TOE has data_is_error_fun ,solve_lost_fun,solve_data_error_fun function, 
         please assign to function pointer.
     4. when XXX_TOE sensor data come, add the function detect_hook(XXX_TOE) function.
-    Èç¹ûÒªÌí¼ÓÒ»¸öĞÂÉè±¸
-    1.µÚÒ»²½ÔÚdetect_task.h£¬Ìí¼ÓÉè±¸Ãû×ÖÔÚerrorListµÄ×îºó£¬Ïñ
+    å¦‚æœè¦æ·»åŠ ä¸€ä¸ªæ–°è®¾å¤‡
+    1.ç¬¬ä¸€æ­¥åœ¨detect_task.hï¼Œæ·»åŠ è®¾å¤‡åå­—åœ¨errorListçš„æœ€åï¼Œåƒ
     enum errorList
     {
         ...
-        XXX_TOE,    //ĞÂÉè±¸
+        XXX_TOE,    //æ–°è®¾å¤‡
         ERROR_LIST_LENGHT,
     };
-    2.ÔÚdetect_initº¯Êı,Ìí¼ÓofflineTime, onlinetime, priority²ÎÊı
+    2.åœ¨detect_initå‡½æ•°,æ·»åŠ offlineTime, onlinetime, priorityå‚æ•°
         uint16_t set_item[ERROR_LIST_LENGHT][3] =
         {
             ...
             {n,n,n}, //XX_TOE
         };
-    3.Èç¹ûÓĞdata_is_error_fun ,solve_lost_fun,solve_data_error_funº¯Êı£¬¸³Öµµ½º¯ÊıÖ¸Õë
-    4.ÔÚXXX_TOEÉè±¸Êı¾İÀ´µÄÊ±ºò, Ìí¼Óº¯Êıdetect_hook(XXX_TOE).
+    3.å¦‚æœæœ‰data_is_error_fun ,solve_lost_fun,solve_data_error_funå‡½æ•°ï¼Œèµ‹å€¼åˆ°å‡½æ•°æŒ‡é’ˆ
+    4.åœ¨XXX_TOEè®¾å¤‡æ•°æ®æ¥çš„æ—¶å€™, æ·»åŠ å‡½æ•°detect_hook(XXX_TOE).
   ==============================================================================
   @endverbatim
   ****************************(C) COPYRIGHT 2019 DJI****************************
@@ -60,8 +60,8 @@
   * @retval         none
   */
 /**
-  * @brief          ³õÊ¼»¯error_list,¸³Öµ offline_time, online_time, priority
-  * @param[in]      time:ÏµÍ³Ê±¼ä
+  * @brief          åˆå§‹åŒ–error_list,èµ‹å€¼ offline_time, online_time, priority
+  * @param[in]      time:ç³»ç»Ÿæ—¶é—´
   * @retval         none
   */
 static void detect_init(uint32_t time);
@@ -83,7 +83,7 @@ uint32_t detect_task_stack;
   * @retval         none
   */
 /**
-  * @brief          ¼ì²âÈÎÎñ
+  * @brief          æ£€æµ‹ä»»åŠ¡
   * @param[in]      pvParameters: NULL
   * @retval         none
   */
@@ -91,9 +91,9 @@ void detect_task(void const *pvParameters)
 {
     static uint32_t system_time;
     system_time = xTaskGetTickCount();
-    //init,³õÊ¼»¯
+    //init,åˆå§‹åŒ–
     detect_init(system_time);
-    //wait a time.¿ÕÏĞÒ»¶ÎÊ±¼ä
+    //wait a time.ç©ºé—²ä¸€æ®µæ—¶é—´
     vTaskDelay(DETECT_TASK_INIT_TIME);
 
     while (1)
@@ -108,25 +108,25 @@ void detect_task(void const *pvParameters)
         for (int i = 0; i < ERROR_LIST_LENGHT; i++)
         {
             //disable, continue
-            //Î´Ê¹ÄÜ£¬Ìø¹ı
+            //æœªä½¿èƒ½ï¼Œè·³è¿‡
             if (error_list[i].enable == 0)
             {
                 continue;
             }
 
-            //judge offline.ÅĞ¶ÏµôÏß
+            //judge offline.åˆ¤æ–­æ‰çº¿
             if (system_time - error_list[i].new_time > error_list[i].set_offline_time)
             {
                 if (error_list[i].error_exist == 0)
                 {
                     //record error and time
-                    //¼ÇÂ¼´íÎóÒÔ¼°µôÏßÊ±¼ä
+                    //è®°å½•é”™è¯¯ä»¥åŠæ‰çº¿æ—¶é—´
                     error_list[i].is_lost = 1;
                     error_list[i].error_exist = 1;
                     error_list[i].lost_time = system_time;
                 }
                 //judge the priority,save the highest priority ,
-                //ÅĞ¶Ï´íÎóÓÅÏÈ¼¶£¬ ±£´æÓÅÏÈ¼¶×î¸ßµÄ´íÎóÂë
+                //åˆ¤æ–­é”™è¯¯ä¼˜å…ˆçº§ï¼Œ ä¿å­˜ä¼˜å…ˆçº§æœ€é«˜çš„é”™è¯¯ç 
                 if (error_list[i].priority > error_list[error_num_display].priority)
                 {
                     error_num_display = i;
@@ -136,7 +136,7 @@ void detect_task(void const *pvParameters)
                 error_list[ERROR_LIST_LENGHT].is_lost = 1;
                 error_list[ERROR_LIST_LENGHT].error_exist = 1;
                 //if solve_lost_fun != NULL, run it
-                //Èç¹ûÌá¹©½â¾öº¯Êı£¬ÔËĞĞ½â¾öº¯Êı
+                //å¦‚æœæä¾›è§£å†³å‡½æ•°ï¼Œè¿è¡Œè§£å†³å‡½æ•°
                 if (error_list[i].solve_lost_fun != NULL)
                 {
                     error_list[i].solve_lost_fun();
@@ -145,14 +145,14 @@ void detect_task(void const *pvParameters)
             else if (system_time - error_list[i].work_time < error_list[i].set_online_time)
             {
                 //just online, maybe unstable, only record
-                //¸Õ¸ÕÉÏÏß£¬¿ÉÄÜ´æÔÚÊı¾İ²»ÎÈ¶¨£¬Ö»¼ÇÂ¼²»¶ªÊ§£¬
+                //åˆšåˆšä¸Šçº¿ï¼Œå¯èƒ½å­˜åœ¨æ•°æ®ä¸ç¨³å®šï¼Œåªè®°å½•ä¸ä¸¢å¤±ï¼Œ
                 error_list[i].is_lost = 0;
                 error_list[i].error_exist = 1;
             }
             else
             {
                 error_list[i].is_lost = 0;
-                //ÅĞ¶ÏÊÇ·ñ´æÔÚÊı¾İ´íÎó
+                //åˆ¤æ–­æ˜¯å¦å­˜åœ¨æ•°æ®é”™è¯¯
                 //judge if exist data error
                 if (error_list[i].data_is_error != NULL)
                 {
@@ -163,7 +163,7 @@ void detect_task(void const *pvParameters)
                     error_list[i].error_exist = 0;
                 }
                 //calc frequency
-                //¼ÆËãÆµÂÊ
+                //è®¡ç®—é¢‘ç‡
                 if (error_list[i].new_time > error_list[i].last_time)
                 {
                     error_list[i].frequency = configTICK_RATE_HZ / (fp32)(error_list[i].new_time - error_list[i].last_time);
@@ -187,9 +187,9 @@ void detect_task(void const *pvParameters)
   * @retval         true (eror) or false (no error)
   */
 /**
-  * @brief          »ñÈ¡Éè±¸¶ÔÓ¦µÄ´íÎó×´Ì¬
-  * @param[in]      toe:Éè±¸Ä¿Â¼
-  * @retval         true(´íÎó) »òÕßfalse(Ã»´íÎó)
+  * @brief          è·å–è®¾å¤‡å¯¹åº”çš„é”™è¯¯çŠ¶æ€
+  * @param[in]      toe:è®¾å¤‡ç›®å½•
+  * @retval         true(é”™è¯¯) æˆ–è€…false(æ²¡é”™è¯¯)
   */
 bool_t toe_is_error(uint8_t toe)
 {
@@ -202,8 +202,8 @@ bool_t toe_is_error(uint8_t toe)
   * @retval         none
   */
 /**
-  * @brief          ¼ÇÂ¼Ê±¼ä
-  * @param[in]      toe:Éè±¸Ä¿Â¼
+  * @brief          è®°å½•æ—¶é—´
+  * @param[in]      toe:è®¾å¤‡ç›®å½•
   * @retval         none
   */
 void detect_hook(uint8_t toe)
@@ -246,9 +246,9 @@ void detect_hook(uint8_t toe)
   * @retval         the point of error_list
   */
 /**
-  * @brief          µÃµ½´íÎóÁĞ±í
+  * @brief          å¾—åˆ°é”™è¯¯åˆ—è¡¨
   * @param[in]      none
-  * @retval         error_listµÄÖ¸Õë
+  * @retval         error_listçš„æŒ‡é’ˆ
   */
 const error_t *get_error_list_point(void)
 {
@@ -258,7 +258,7 @@ const error_t *get_error_list_point(void)
 
 static void detect_init(uint32_t time)
 {
-    //ÉèÖÃÀëÏßÊ±¼ä£¬ÉÏÏßÎÈ¶¨¹¤×÷Ê±¼ä£¬ÓÅÏÈ¼¶ offlineTime onlinetime priority
+    //è®¾ç½®ç¦»çº¿æ—¶é—´ï¼Œä¸Šçº¿ç¨³å®šå·¥ä½œæ—¶é—´ï¼Œä¼˜å…ˆçº§ offlineTime onlinetime priority
     uint16_t set_item[ERROR_LIST_LENGHT][3] =
         {
             {30, 40, 15},   //SBUS

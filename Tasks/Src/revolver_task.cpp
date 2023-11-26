@@ -4,6 +4,7 @@
 #include "Revolver_task.h"
 #include "judge_task.h"
 #include "BSP_buzzer.h"
+#include "monitor_task.h"
 
 revolver_task_t  revolver; 
 
@@ -23,16 +24,19 @@ void revolver_task(void const *pvParameters)
 {
 	//延时
 	vTaskDelay(REVOLVER_TASK_INIT_TIME);
+	uint32_t currentTime;
 	while(1)
 	{
+		//获取当前系统时间
+		currentTime = xTaskGetTickCount();
 		//数据更新
 		revolver.revolver_feedback_update();
 		//分任务控制
 		revolver.control();
 		//发送电流
-		CAN1_200_cmd_motor(revolver.fric_motor[0].give_current, revolver.fric_motor[1].give_current, revolver.fric_motor[2].give_current, revolver.fric_motor[3].give_current);
-		CAN2_200_cmd_motor(revolver.slipper_motor.give_current, 0, 0, 0);
-		vTaskDelay(2);
+		CAN1_200_cmd_motor(revolver.fric_motor[0].give_current, revolver.fric_motor[1].give_current, 0, 0);
+		CAN2_200_cmd_motor(revolver.slipper_motor.give_current, 0, revolver.fric_motor[2].give_current, revolver.fric_motor[3].give_current);
+		vTaskDelayUntil(&currentTime, 1);
 
 		for(int i = 0; i < 4; i++)
 		{
@@ -61,6 +65,7 @@ revolver_task_t::revolver_task_t()
 		fric_motor[i].speed_pid.init(PID_POSITION, Fric_speed_pid,FRIC_SPEED_PID_MAX_OUT, FRIC_SPEED_PID_MAX_IOUT);
 	}
 	
+	fric_speed_offset = 0;
 	slipper_motor.calibrate_begin = 0;
 	slipper_motor.has_calibrated = 0;
 	slipper_motor.if_shoot_begin = 0;
@@ -97,6 +102,11 @@ void revolver_task_t::revolver_feedback_update()
 
 	slipper_motor.bottom_tick = HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_11);
 
+	if (slipper_motor.bottom_tick)
+	{
+		buzzer_warn(0, 0, 3, 10000);
+	}
+
 	static int16_t recali_time = 0;
 	//除了校准的时候，其它时候滑块不会碰到底部触点开关；如果碰到说明校准出错了，要重新校准
 	if(slipper_motor.has_calibrated ==1 && slipper_motor.bottom_tick == 1)
@@ -121,8 +131,11 @@ void revolver_task_t::control()
 	if(syspoint()->sys_mode == ZERO_FORCE)
 	{
 		ZERO_FORCE_control();
-		//摩擦轮转速补偿
-		fric_speed_offset_control();
+		if(IF_RC_SW1_MID)
+		{
+			//摩擦轮转速补偿
+			fric_speed_offset_control();
+		}
 		//遥控器读取摩擦轮转速
 		fric_speed_buzzer();
 	}
@@ -156,8 +169,35 @@ void revolver_task_t::fric_speed_offset_control()
 {
 	static bool_t offset_flag = 0;
 
-	//遥控器右摇杆↗进行调整
+	//遥控器右摇杆↗调整千位
 	if (IF_RIGHT_ROCKER_RIGHT_TOP)
+	{
+		//左摇杆右拨一次+1000， 左拨一次-1000
+		if (revolver_rc_ctrl->rc.ch[2] > 500)
+		{
+			if (offset_flag == 0)
+			{
+				fric_speed_offset += 1000;
+				offset_flag = 1;
+				buzzer_warn(0, 0, 1, 10000);
+			}
+		}
+		else if (revolver_rc_ctrl->rc.ch[2] < -500)
+		{
+			if (offset_flag == 0)
+			{
+				fric_speed_offset -= 1000;
+				offset_flag = 1;
+				buzzer_warn(0, 0, 1, 10000);
+			}
+		}
+		else
+		{
+			offset_flag = 0;
+		}
+	}
+	//遥控器右摇杆↖调整百位
+	else if (IF_RIGHT_ROCKER_LEFT_TOP)
 	{
 		//左摇杆右拨一次+100， 左拨一次-100
 		if (revolver_rc_ctrl->rc.ch[2] > 500)
@@ -166,6 +206,7 @@ void revolver_task_t::fric_speed_offset_control()
 			{
 				fric_speed_offset += 100;
 				offset_flag = 1;
+				buzzer_warn(0, 0, 2, 10000);
 			}
 		}
 		else if (revolver_rc_ctrl->rc.ch[2] < -500)
@@ -174,6 +215,34 @@ void revolver_task_t::fric_speed_offset_control()
 			{
 				fric_speed_offset -= 100;
 				offset_flag = 1;
+				buzzer_warn(0, 0, 2, 10000);
+			}
+		}
+		else
+		{
+			offset_flag = 0;
+		}
+	}
+	//遥控器右摇杆↙调整十位
+	else if (IF_RIGHT_ROCKER_LEFT_BOTTOM)
+	{
+		//左摇杆右拨一次+10， 左拨一次-10
+		if (revolver_rc_ctrl->rc.ch[2] > 500)
+		{
+			if (offset_flag == 0)
+			{
+				fric_speed_offset += 10;
+				offset_flag = 1;
+				buzzer_warn(0, 0, 3, 10000);
+			}
+		}
+		else if (revolver_rc_ctrl->rc.ch[2] < -500)
+		{
+			if (offset_flag == 0)
+			{
+				fric_speed_offset -= 10;
+				offset_flag = 1;
+				buzzer_warn(0, 0, 3, 10000);
 			}
 		}
 		else
@@ -266,51 +335,57 @@ void slipper_motor_t::position_limit_buffer(fp32 limit_point)
 
 /**
  * @brief	校准模式，设定最底部为滑块的零点
-*/
+ */
 void slipper_motor_t::CALIBRATE_control()
 {
-	static uint16_t rc_cmd_time = 0;
-	static bool_t found_zero_point = 0; //是否找到零点
-
-	//遥控器↘↙开始校准
-	if(IF_LEFT_ROCKER_RIGHT_BOTTOM && IF_RIGHT_ROCKER_LEFT_BOTTOM)
-	{
-		rc_cmd_time++;
-	}
-	else
-	{
-		rc_cmd_time = 0;
-	}
-	if(rc_cmd_time > 200)
+	//遥控器↙↘开始自动校准
+	if (RC_double_held_single_return(LEFT_ROCKER_LEFT_BOTTOM, RIGHT_ROCKER_RIGHT_BOTTOM, 400))
 	{
 		calibrate_begin = 1;
 	}
 
-	if(calibrate_begin == 0)
+	//遥控器↘↙手动校准，适用于触点开关失效的情况
+	if (RC_double_held_single_return(LEFT_ROCKER_RIGHT_BOTTOM, RIGHT_ROCKER_LEFT_BOTTOM, 400))
+	{
+		manual_calibrate();
+	}
+
+	if (calibrate_begin == 1)
+	{
+		auto_calibrate();
+	}
+	else 
 	{
 		speed_set = 0;
 		return;
 	}
+}
 
+/**
+ * @brief	自动校准
+ */
+void slipper_motor_t::auto_calibrate()
+{
+	static bool_t found_zero_point = 0; //是否找到零点
 
 	//触点开关被压下，找到零点
-	if(bottom_tick)
+	if (bottom_tick)
 	{
 		found_zero_point = 1;
 	}
 
 	//滑块下移
-	if(found_zero_point == 0)
+	if (found_zero_point == 0)
 	{
 		speed_set = CALIBRATE_DOWN_SPEED;
 	}
 	//压下触点开关后上移
-	else if(found_zero_point == 1 && bottom_tick == 1)
+	else if (found_zero_point == 1 && bottom_tick == 1)
 	{
 		speed_set = CALIBRATE_UP_SPEED;
 	}
 	//滑块离开触点开关，校准完毕
-	else if(found_zero_point == 1 && bottom_tick == 0)
+	else if (found_zero_point == 1 && bottom_tick == 0)
 	{
 		speed_set = 0;
 		has_calibrated = 1;
@@ -318,11 +393,28 @@ void slipper_motor_t::CALIBRATE_control()
 		calibrate_begin = 0;
 
 		//设置飞镖发射时滑块每次停留的位置
-		for(int i = 0; i <= MAX_DART_NUM; i++)
+		for (int i = 0; i <= MAX_DART_NUM; i++)
 		{
 			slipper_position_ecd[i] = accumulate_ecd + i * ONE_DART_ECD + CALIBRATE_OFFSET;
 		}
 	}
+}
+
+/**
+ * @brief	手动校准，适用于触点开关失效的情况
+ */
+void slipper_motor_t::manual_calibrate()
+{
+	speed_set = 0;
+	has_calibrated = 1;
+	calibrate_begin = 0;
+
+	//设置飞镖发射时滑块每次停留的位置
+	for (int i = 0; i <= MAX_DART_NUM; i++)
+	{
+		slipper_position_ecd[i] = accumulate_ecd + i * ONE_DART_ECD + CALIBRATE_OFFSET;
+	}
+	buzzer_warn(0, 0, 3, 10000);
 }
 
 /**
@@ -350,19 +442,10 @@ void revolver_task_t::SHOOT_control()
 */
 void revolver_task_t::READY_control()
 {
-	static uint16_t rc_cmd_time = 0;
 	static fp32 angle_out = 0;
 
 	//遥控器↗↖，开启摩擦轮
-	if(IF_LEFT_ROCKER_RIGHT_TOP && IF_RIGHT_ROCKER_LEFT_TOP)
-	{
-		rc_cmd_time++;
-	}
-	else
-	{
-		rc_cmd_time = 0;
-	}
-	if(rc_cmd_time > 200)
+	if(RC_double_held_single_return(LEFT_ROCKER_RIGHT_TOP, RIGHT_ROCKER_LEFT_TOP, 400))
 	{
 		is_fric_wheel_on = 1;
 	}
@@ -402,10 +485,10 @@ void revolver_task_t::SHOOTING_control()
 	}
 	else if (is_fric_wheel_on == 1)
 	{
-		fric_motor[0].speed_set =  (BASE_SPEED + fric_speed_offset);
-		fric_motor[1].speed_set = -(BASE_SPEED + fric_speed_offset);
-		fric_motor[2].speed_set =  (BASE_SPEED + fric_speed_offset + 1000);
-		fric_motor[3].speed_set = -(BASE_SPEED + fric_speed_offset + 1000);
+		fric_motor[0].speed_set =  (BASE_SPEED + fric_speed_offset + 1000);
+		fric_motor[1].speed_set = -(BASE_SPEED + fric_speed_offset + 1000);
+		fric_motor[2].speed_set =  (BASE_SPEED + fric_speed_offset);
+		fric_motor[3].speed_set = -(BASE_SPEED + fric_speed_offset);
 	}
 
 	slipper_motor.SHOOTING_slipper_control();
@@ -417,8 +500,6 @@ void revolver_task_t::SHOOTING_control()
 */
 void slipper_motor_t::SHOOTING_slipper_control()
 {
-	static bool_t set_num_add_flag = 0;
-	static bool_t num_add_flag = 0;
 	static fp32 angle_out = 0;
 
 	//如果未校准，滑块锁定
@@ -430,21 +511,13 @@ void slipper_motor_t::SHOOTING_slipper_control()
 	}
 
 	//遥控器左摇杆↖每打一次，发射数量+1
-	if (IF_LEFT_ROCKER_LEFT_TOP)
+	if (RC_held_single_return(LEFT_ROCKER_LEFT_TOP, 1))
 	{
 		if_shoot_begin = 1;
-		if (set_num_add_flag == 0)
-		{
-			bullet_num_set++;
-			set_num_add_flag = 1;
-		}
-	}
-	else
-	{
-		set_num_add_flag = 0;
+		bullet_num_set++;
 	}
 
-	//开始发射前，滑块位置锁死
+	//开始发射前，滑块位置锁死在当前位置
 	if (if_shoot_begin == 0)
 	{
 		angle_out = position_pid.calc(accumulate_ecd, ecd_set);
@@ -506,28 +579,33 @@ void revolver_task_t::fric_speed_buzzer()
 {
 	static uint8_t show_num = 0;
 
+	//遥控器右摇杆↘进行读取
 	if (IF_RIGHT_ROCKER_RIGHT_BOTTOM)
 	{
-		//千位
+		//左摇杆↗读取千位
 		if (IF_LEFT_ROCKER_RIGHT_TOP)
 		{
 			show_num = (BASE_SPEED + fric_speed_offset) / 1000;
-			buzzer_warn_error(show_num);
+			buzzer_warn(show_num, 100, 1, 10000);
 
 		}
-		//百位
+		//左摇杆↖读取百位
 		else if (IF_LEFT_ROCKER_LEFT_TOP)
 		{
 			show_num = ((int)(BASE_SPEED + fric_speed_offset) / 100) % 10;
-			buzzer_warn_error(show_num);
+			buzzer_warn(show_num, 100, 1, 10000);
 		}
-		else
+		//左摇杆↙读取十位
+		else if (IF_LEFT_ROCKER_LEFT_BOTTOM)
 		{
-			buzzer_off();
+			show_num = ((int)(BASE_SPEED + fric_speed_offset) / 10) % 10;
+			buzzer_warn(show_num, 100, 1, 10000);
 		}
-	}
-	else
-	{
-		buzzer_off();
+		//左摇杆↘读取个位
+		else if (IF_LEFT_ROCKER_RIGHT_BOTTOM)
+		{
+			show_num = ((int)(BASE_SPEED + fric_speed_offset)) % 10;
+			buzzer_warn(show_num, 100, 1, 10000);
+		}
 	}
 }

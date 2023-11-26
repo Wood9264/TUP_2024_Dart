@@ -1,13 +1,13 @@
 /**
   ****************************(C) COPYRIGHT 2019 DJI****************************
   * @file       remote_control.c/h
-  * @brief      Ò£¿ØÆ÷´¦Àí£¬Ò£¿ØÆ÷ÊÇÍ¨¹ıÀàËÆSBUSµÄĞ­Òé´«Êä£¬ÀûÓÃDMA´«Êä·½Ê½½ÚÔ¼CPU
-  *             ×ÊÔ´£¬ÀûÓÃ´®¿Ú¿ÕÏĞÖĞ¶ÏÀ´À­Æğ´¦Àíº¯Êı£¬Í¬Ê±Ìá¹©Ò»Ğ©µôÏßÖØÆôDMA£¬´®¿Ú
-  *             µÄ·½Ê½±£Ö¤ÈÈ²å°ÎµÄÎÈ¶¨ĞÔ¡£
-  * @note       ¸ÃÈÎÎñÊÇÍ¨¹ı´®¿ÚÖĞ¶ÏÆô¶¯£¬²»ÊÇfreeRTOSÈÎÎñ
+  * @brief      é¥æ§å™¨å¤„ç†ï¼Œé¥æ§å™¨æ˜¯é€šè¿‡ç±»ä¼¼SBUSçš„åè®®ä¼ è¾“ï¼Œåˆ©ç”¨DMAä¼ è¾“æ–¹å¼èŠ‚çº¦CPU
+  *             èµ„æºï¼Œåˆ©ç”¨ä¸²å£ç©ºé—²ä¸­æ–­æ¥æ‹‰èµ·å¤„ç†å‡½æ•°ï¼ŒåŒæ—¶æä¾›ä¸€äº›æ‰çº¿é‡å¯DMAï¼Œä¸²å£
+  *             çš„æ–¹å¼ä¿è¯çƒ­æ’æ‹”çš„ç¨³å®šæ€§ã€‚
+  * @note       è¯¥ä»»åŠ¡æ˜¯é€šè¿‡ä¸²å£ä¸­æ–­å¯åŠ¨ï¼Œä¸æ˜¯freeRTOSä»»åŠ¡
   * @history
   *  Version    Date            Author          Modification
-  *  V1.0.0     Dec-01-2019     RM              1. Íê³É
+  *  V1.0.0     Dec-01-2019     RM              1. å®Œæˆ
   *
   @verbatim
   ==============================================================================
@@ -31,19 +31,19 @@ extern DMA_HandleTypeDef hdma_usart3_rx;
   * @retval         none
   */
 /**
-  * @brief          Ò£¿ØÆ÷Ğ­Òé½âÎö
-  * @param[in]      sbus_buf: Ô­ÉúÊı¾İÖ¸Õë
-  * @param[out]     rc_ctrl: Ò£¿ØÆ÷Êı¾İÖ¸
+  * @brief          é¥æ§å™¨åè®®è§£æ
+  * @param[in]      sbus_buf: åŸç”Ÿæ•°æ®æŒ‡é’ˆ
+  * @param[out]     rc_ctrl: é¥æ§å™¨æ•°æ®æŒ‡
   * @retval         none
   */
 static void sbus_to_rc(volatile const uint8_t *sbus_buf, RC_ctrl_t *rc_ctrl);
 
-//remote control data 
-//Ò£¿ØÆ÷¿ØÖÆ±äÁ¿
+// remote control data
+//é¥æ§å™¨æ§åˆ¶å˜é‡
 RC_ctrl_t rc_ctrl;
 
-//receive data, 18 bytes one frame, but set 36 bytes 
-//½ÓÊÕÔ­Ê¼Êı¾İ£¬Îª18¸ö×Ö½Ú£¬¸øÁË36¸ö×Ö½Ú³¤¶È£¬·ÀÖ¹DMA´«ÊäÔ½½ç
+// receive data, 18 bytes one frame, but set 36 bytes
+//æ¥æ”¶åŸå§‹æ•°æ®ï¼Œä¸º18ä¸ªå­—èŠ‚ï¼Œç»™äº†36ä¸ªå­—èŠ‚é•¿åº¦ï¼Œé˜²æ­¢DMAä¼ è¾“è¶Šç•Œ
 static uint8_t sbus_rx_buf[2][SBUS_RX_BUF_NUM];
 
 /**
@@ -52,14 +52,13 @@ static uint8_t sbus_rx_buf[2][SBUS_RX_BUF_NUM];
   * @retval         none
   */
 /**
-  * @brief          Ò£¿ØÆ÷³õÊ¼»¯
+  * @brief          é¥æ§å™¨åˆå§‹åŒ–
   * @param[in]      none
   * @retval         none
   */
 void remote_control_init(void)
 {
-    RC_Init(sbus_rx_buf[0], sbus_rx_buf[1], SBUS_RX_BUF_NUM);
-
+	RC_Init(sbus_rx_buf[0], sbus_rx_buf[1], SBUS_RX_BUF_NUM);
 }
 /**
   * @brief          get remote control data point
@@ -67,92 +66,90 @@ void remote_control_init(void)
   * @retval         remote control data point
   */
 /**
-  * @brief          »ñÈ¡Ò£¿ØÆ÷Êı¾İÖ¸Õë
+  * @brief          è·å–é¥æ§å™¨æ•°æ®æŒ‡é’ˆ
   * @param[in]      none
-  * @retval         Ò£¿ØÆ÷Êı¾İÖ¸Õë
+  * @retval         é¥æ§å™¨æ•°æ®æŒ‡é’ˆ
   */
 const RC_ctrl_t *get_remote_control_point(void)
 {
-    return &rc_ctrl;
+	return &rc_ctrl;
 }
 
-
-//´®¿ÚÖĞ¶Ï
+//ä¸²å£ä¸­æ–­
 void USART3_IRQHandler(void)
 {
-    if(huart3.Instance->SR & UART_FLAG_RXNE)//½ÓÊÕµ½Êı¾İ
-    {
-        __HAL_UART_CLEAR_PEFLAG(&huart3);
-    }
-    else if(USART3->SR & UART_FLAG_IDLE)
-    {
-        static uint16_t this_time_rx_len = 0;
+	if (huart3.Instance->SR & UART_FLAG_RXNE) //æ¥æ”¶åˆ°æ•°æ®
+	{
+		__HAL_UART_CLEAR_PEFLAG(&huart3);
+	}
+	else if (USART3->SR & UART_FLAG_IDLE)
+	{
+		static uint16_t this_time_rx_len = 0;
 
-        __HAL_UART_CLEAR_PEFLAG(&huart3);
+		__HAL_UART_CLEAR_PEFLAG(&huart3);
 
-        if ((hdma_usart3_rx.Instance->CR & DMA_SxCR_CT) == RESET)
-        {
-            /* Current memory buffer used is Memory 0 */
-    
-            //disable DMA
-            //Ê§Ğ§DMA
-            __HAL_DMA_DISABLE(&hdma_usart3_rx);
+		if ((hdma_usart3_rx.Instance->CR & DMA_SxCR_CT) == RESET)
+		{
+			/* Current memory buffer used is Memory 0 */
 
-            //get receive data length, length = set_data_length - remain_length
-            //»ñÈ¡½ÓÊÕÊı¾İ³¤¶È,³¤¶È = Éè¶¨³¤¶È - Ê£Óà³¤¶È
-            this_time_rx_len = SBUS_RX_BUF_NUM - hdma_usart3_rx.Instance->NDTR;
+			// disable DMA
+			//å¤±æ•ˆDMA
+			__HAL_DMA_DISABLE(&hdma_usart3_rx);
 
-            //reset set_data_lenght
-            //ÖØĞÂÉè¶¨Êı¾İ³¤¶È
-            hdma_usart3_rx.Instance->NDTR = SBUS_RX_BUF_NUM;
+			// get receive data length, length = set_data_length - remain_length
+			//è·å–æ¥æ”¶æ•°æ®é•¿åº¦,é•¿åº¦ = è®¾å®šé•¿åº¦ - å‰©ä½™é•¿åº¦
+			this_time_rx_len = SBUS_RX_BUF_NUM - hdma_usart3_rx.Instance->NDTR;
 
-            //set memory buffer 1
-            //Éè¶¨»º³åÇø1
-            hdma_usart3_rx.Instance->CR |= DMA_SxCR_CT;
-            
-            //enable DMA
-            //Ê¹ÄÜDMA
-            __HAL_DMA_ENABLE(&hdma_usart3_rx);
+			// reset set_data_lenght
+			//é‡æ–°è®¾å®šæ•°æ®é•¿åº¦
+			hdma_usart3_rx.Instance->NDTR = SBUS_RX_BUF_NUM;
 
-            if(this_time_rx_len == RC_FRAME_LENGTH)
-            {
-                sbus_to_rc(sbus_rx_buf[0], &rc_ctrl);
-						    detect_hook(DBUS_TOE);
-            }
-        }
-        else
-        {
-            /* Current memory buffer used is Memory 1 */
-            //disable DMA
-            //Ê§Ğ§DMA
-            __HAL_DMA_DISABLE(&hdma_usart3_rx);
+			// set memory buffer 1
+			//è®¾å®šç¼“å†²åŒº1
+			hdma_usart3_rx.Instance->CR |= DMA_SxCR_CT;
 
-            //get receive data length, length = set_data_length - remain_length
-            //»ñÈ¡½ÓÊÕÊı¾İ³¤¶È,³¤¶È = Éè¶¨³¤¶È - Ê£Óà³¤¶È
-            this_time_rx_len = SBUS_RX_BUF_NUM - hdma_usart3_rx.Instance->NDTR;
+			// enable DMA
+			//ä½¿èƒ½DMA
+			__HAL_DMA_ENABLE(&hdma_usart3_rx);
 
-            //reset set_data_lenght
-            //ÖØĞÂÉè¶¨Êı¾İ³¤¶È
-            hdma_usart3_rx.Instance->NDTR = SBUS_RX_BUF_NUM;
+			if (this_time_rx_len == RC_FRAME_LENGTH)
+			{
+				sbus_to_rc(sbus_rx_buf[0], &rc_ctrl);
+				detect_hook(DBUS_TOE);
+			}
+		}
+		else
+		{
+			/* Current memory buffer used is Memory 1 */
+			// disable DMA
+			//å¤±æ•ˆDMA
+			__HAL_DMA_DISABLE(&hdma_usart3_rx);
 
-            //set memory buffer 0
-            //Éè¶¨»º³åÇø0
-            DMA1_Stream1->CR &= ~(DMA_SxCR_CT);
-            
-            //enable DMA
-            //Ê¹ÄÜDMA
-            __HAL_DMA_ENABLE(&hdma_usart3_rx);
+			// get receive data length, length = set_data_length - remain_length
+			//è·å–æ¥æ”¶æ•°æ®é•¿åº¦,é•¿åº¦ = è®¾å®šé•¿åº¦ - å‰©ä½™é•¿åº¦
+			this_time_rx_len = SBUS_RX_BUF_NUM - hdma_usart3_rx.Instance->NDTR;
 
-            if(this_time_rx_len == RC_FRAME_LENGTH)
-            {
-                //´¦ÀíÒ£¿ØÆ÷Êı¾İ
-                sbus_to_rc(sbus_rx_buf[1], &rc_ctrl);
-							  detect_hook(DBUS_TOE);
-            }
-        }
-    }
+			// reset set_data_lenght
+			//é‡æ–°è®¾å®šæ•°æ®é•¿åº¦
+			hdma_usart3_rx.Instance->NDTR = SBUS_RX_BUF_NUM;
+
+			// set memory buffer 0
+			//è®¾å®šç¼“å†²åŒº0
+			DMA1_Stream1->CR &= ~(DMA_SxCR_CT);
+
+			// enable DMA
+			//ä½¿èƒ½DMA
+			__HAL_DMA_ENABLE(&hdma_usart3_rx);
+
+			if (this_time_rx_len == RC_FRAME_LENGTH)
+			{
+				//å¤„ç†é¥æ§å™¨æ•°æ®
+				sbus_to_rc(sbus_rx_buf[1], &rc_ctrl);
+				detect_hook(DBUS_TOE);
+			}
+		}
+	}
 }
-
 
 /**
   * @brief          remote control protocol resolution
@@ -161,36 +158,162 @@ void USART3_IRQHandler(void)
   * @retval         none
   */
 /**
-  * @brief          Ò£¿ØÆ÷Ğ­Òé½âÎö
-  * @param[in]      sbus_buf: Ô­ÉúÊı¾İÖ¸Õë
-  * @param[out]     rc_ctrl: Ò£¿ØÆ÷Êı¾İÖ¸
+  * @brief          é¥æ§å™¨åè®®è§£æ
+  * @param[in]      sbus_buf: åŸç”Ÿæ•°æ®æŒ‡é’ˆ
+  * @param[out]     rc_ctrl: é¥æ§å™¨æ•°æ®æŒ‡
   * @retval         none
   */
 static void sbus_to_rc(volatile const uint8_t *sbus_buf, RC_ctrl_t *rc_ctrl)
 {
-    if (sbus_buf == NULL || rc_ctrl == NULL)
-    {
-        return;
-    }
+	if (sbus_buf == NULL || rc_ctrl == NULL)
+	{
+		return;
+	}
 
-    rc_ctrl->rc.ch[0] = (sbus_buf[0] | (sbus_buf[1] << 8)) & 0x07ff;        //!< Channel 0
-    rc_ctrl->rc.ch[1] = ((sbus_buf[1] >> 3) | (sbus_buf[2] << 5)) & 0x07ff; //!< Channel 1
-    rc_ctrl->rc.ch[2] = ((sbus_buf[2] >> 6) | (sbus_buf[3] << 2) |          //!< Channel 2
-                         (sbus_buf[4] << 10)) &0x07ff;
-    rc_ctrl->rc.ch[3] = ((sbus_buf[4] >> 1) | (sbus_buf[5] << 7)) & 0x07ff; //!< Channel 3
-    rc_ctrl->rc.s[0] = ((sbus_buf[5] >> 4) & 0x0003);                  //!< Switch left
-    rc_ctrl->rc.s[1] = ((sbus_buf[5] >> 4) & 0x000C) >> 2;                       //!< Switch right
-    rc_ctrl->mouse.x = sbus_buf[6] | (sbus_buf[7] << 8);                    //!< Mouse X axis
-    rc_ctrl->mouse.y = sbus_buf[8] | (sbus_buf[9] << 8);                    //!< Mouse Y axis
-    rc_ctrl->mouse.z = sbus_buf[10] | (sbus_buf[11] << 8);                  //!< Mouse Z axis
-    rc_ctrl->mouse.press_l = sbus_buf[12];                                  //!< Mouse Left Is Press ?
-    rc_ctrl->mouse.press_r = sbus_buf[13];                                  //!< Mouse Right Is Press ?
-    rc_ctrl->key.v = sbus_buf[14] | (sbus_buf[15] << 8);                    //!< KeyBoard value
-    rc_ctrl->rc.ch[4] = sbus_buf[16] | (sbus_buf[17] << 8);                 //NULL
+	rc_ctrl->rc.ch[0] = (sbus_buf[0] | (sbus_buf[1] << 8)) & 0x07ff;		//!< Channel 0
+	rc_ctrl->rc.ch[1] = ((sbus_buf[1] >> 3) | (sbus_buf[2] << 5)) & 0x07ff; //!< Channel 1
+	rc_ctrl->rc.ch[2] = ((sbus_buf[2] >> 6) | (sbus_buf[3] << 2) |			//!< Channel 2
+						 (sbus_buf[4] << 10)) &
+						0x07ff;
+	rc_ctrl->rc.ch[3] = ((sbus_buf[4] >> 1) | (sbus_buf[5] << 7)) & 0x07ff; //!< Channel 3
+	rc_ctrl->rc.s[0] = ((sbus_buf[5] >> 4) & 0x0003);						//!< Switch left
+	rc_ctrl->rc.s[1] = ((sbus_buf[5] >> 4) & 0x000C) >> 2;					//!< Switch right
+	rc_ctrl->mouse.x = sbus_buf[6] | (sbus_buf[7] << 8);					//!< Mouse X axis
+	rc_ctrl->mouse.y = sbus_buf[8] | (sbus_buf[9] << 8);					//!< Mouse Y axis
+	rc_ctrl->mouse.z = sbus_buf[10] | (sbus_buf[11] << 8);					//!< Mouse Z axis
+	rc_ctrl->mouse.press_l = sbus_buf[12];									//!< Mouse Left Is Press ?
+	rc_ctrl->mouse.press_r = sbus_buf[13];									//!< Mouse Right Is Press ?
+	rc_ctrl->key.v = sbus_buf[14] | (sbus_buf[15] << 8);					//!< KeyBoard value
+	rc_ctrl->rc.ch[4] = sbus_buf[16] | (sbus_buf[17] << 8);					// NULL
 
-    rc_ctrl->rc.ch[0] -= RC_CH_VALUE_OFFSET;
-    rc_ctrl->rc.ch[1] -= RC_CH_VALUE_OFFSET;
-    rc_ctrl->rc.ch[2] -= RC_CH_VALUE_OFFSET;
-    rc_ctrl->rc.ch[3] -= RC_CH_VALUE_OFFSET;
-    rc_ctrl->rc.ch[4] -= RC_CH_VALUE_OFFSET;
+	rc_ctrl->rc.ch[0] -= RC_CH_VALUE_OFFSET;
+	rc_ctrl->rc.ch[1] -= RC_CH_VALUE_OFFSET;
+	rc_ctrl->rc.ch[2] -= RC_CH_VALUE_OFFSET;
+	rc_ctrl->rc.ch[3] -= RC_CH_VALUE_OFFSET;
+	rc_ctrl->rc.ch[4] -= RC_CH_VALUE_OFFSET;
+}
+
+/**
+ * @brief       åˆ¤æ–­æŒ‰é”®æ˜¯å¦è¢«æŒ‰ä¸‹æˆ–æ‘‡æ†æ˜¯å¦åœ¨æŒ‡å®šä½ç½®
+ * @param[in]   channelï¼šè¦åˆ¤æ–­çš„é€šé“
+ * @retval      æŒ‡å®šé€šé“è¢«æ¿€æ´»è¿”å›1ï¼Œå¦åˆ™è¿”å›0
+ * @attention   æœ¬å‡½æ•°åªç”±RC_time_countå‡½æ•°è°ƒç”¨
+ */
+static bool_t is_channel_activate(CHANNEL_int channel)
+{
+	switch (channel)
+	{
+	case MOUSE_L:
+		return IF_MOUSE_PRESSED_LEFT;
+	case MOUSE_R:
+		return IF_MOUSE_PRESSED_RIGH;
+	case RIGHT_ROCKER_RIGHT_TOP:
+		return IF_RIGHT_ROCKER_RIGHT_TOP;
+	case RIGHT_ROCKER_LEFT_TOP:
+		return IF_RIGHT_ROCKER_LEFT_TOP;
+	case RIGHT_ROCKER_LEFT_BOTTOM:
+		return IF_RIGHT_ROCKER_LEFT_BOTTOM;
+	case RIGHT_ROCKER_RIGHT_BOTTOM:
+		return IF_RIGHT_ROCKER_RIGHT_BOTTOM;
+	case LEFT_ROCKER_RIGHT_TOP:
+		return IF_LEFT_ROCKER_RIGHT_TOP;
+	case LEFT_ROCKER_LEFT_TOP:
+		return IF_LEFT_ROCKER_LEFT_TOP;
+	case LEFT_ROCKER_LEFT_BOTTOM:
+		return IF_LEFT_ROCKER_LEFT_BOTTOM;
+	case LEFT_ROCKER_RIGHT_BOTTOM:
+		return IF_LEFT_ROCKER_RIGHT_BOTTOM;
+	default:
+		return (rc_ctrl.key.v & ((uint16_t)1 << channel) != 0);
+	}
+}
+
+/**
+ * @brief       åˆ¤æ–­æŒ‰é”®ä¿æŒæŒ‰ä¸‹æˆ–æ‘‡æ†ä¿æŒåœ¨æŒ‡å®šä½ç½®çš„æ—¶é—´æ˜¯å¦è¶…è¿‡é˜ˆå€¼
+ * @param[in]   channelï¼šè¦æ£€æµ‹çš„é€šé“
+ * @param[in]   timeï¼šä¿æŒçš„æ—¶é—´é˜ˆå€¼
+ * @retval      å¦‚æœé€šé“è¿ç»­ä¿æŒäº†æŒ‡å®šçš„æ—¶é—´ï¼Œè¿”å›1ï¼›å¦åˆ™è¿”å›0
+ */
+bool_t RC_held_continuous_return(CHANNEL_int channel, uint16_t time)
+{
+	static uint16_t active_time[25];
+
+	if (is_channel_activate(channel))
+	{
+		if (active_time[channel] < time)
+		{
+			active_time[channel]++;
+			return 0;
+		}
+		else
+		{
+			return 1;
+		}
+	}
+	else
+	{
+		active_time[channel] = 0;
+		return 0;
+	}
+}
+
+/**
+ * @brief       åˆ¤æ–­æŒ‰é”®ä¿æŒæŒ‰ä¸‹æˆ–æ‘‡æ†ä¿æŒåœ¨æŒ‡å®šä½ç½®çš„æ—¶é—´æ˜¯å¦è¶…è¿‡é˜ˆå€¼ï¼Œå¹¶åœ¨æ»¡è¶³æ¡ä»¶æ—¶åªè¿”å›ä¸€æ¬¡1
+ * @param[in]   channelï¼šè¦æ£€æµ‹çš„é€šé“
+ * @param[in]   timeï¼šä¿æŒçš„æ—¶é—´é˜ˆå€¼
+ * @retval      å¦‚æœé€šé“è¿ç»­ä¿æŒäº†æŒ‡å®šçš„æ—¶é—´ï¼Œåªè¿”å›ä¸€æ¬¡1ï¼›å¦åˆ™è¿”å›0
+ */
+bool_t RC_held_single_return(CHANNEL_int channel, uint16_t time)
+{
+	static bool_t has_returned_one[25];
+
+	if (RC_held_continuous_return(channel, time))
+	{
+		if (has_returned_one[channel])
+		{
+			return 0;
+		}
+		else
+		{
+			has_returned_one[channel] = 1;
+			return 1;
+		}
+	}
+	else
+	{
+		has_returned_one[channel] = 0;
+		return 0;
+	}
+}
+
+/**
+ * @brief       åˆ¤æ–­åŒç»„åˆé”®ä¿æŒæŒ‰ä¸‹æˆ–å·¦å³æ‘‡æ†åŒæ—¶ä¿æŒåœ¨æŒ‡å®šä½ç½®çš„æ—¶é—´æ˜¯å¦è¶…è¿‡é˜ˆå€¼ï¼Œå¹¶åœ¨æ»¡è¶³æ¡ä»¶æ—¶åªè¿”å›ä¸€æ¬¡1
+ * @param[in]   channel_1ï¼šè¦æ£€æµ‹çš„ç¬¬ä¸€ä¸ªé€šé“
+ * @param[in]	channel_2ï¼šè¦æ£€æµ‹çš„ç¬¬äºŒä¸ªé€šé“
+ * @param[in]   timeï¼šä¿æŒçš„æ—¶é—´é˜ˆå€¼
+ * @retval      å¦‚æœé€šé“è¿ç»­ä¿æŒäº†æŒ‡å®šçš„æ—¶é—´ï¼Œåªè¿”å›ä¸€æ¬¡1ï¼›å¦åˆ™è¿”å›0
+ */
+bool_t RC_double_held_single_return(CHANNEL_int channel_1, CHANNEL_int channel_2, uint16_t time)
+{
+	static bool_t has_returned_one[25];
+
+	if (RC_held_continuous_return(channel_1, time) && RC_held_continuous_return(channel_2, time))
+	{
+		if (has_returned_one[channel_1] || has_returned_one[channel_2])
+		{
+			return 0;
+		}
+		else
+		{
+			has_returned_one[channel_1] = 1;
+			has_returned_one[channel_2] = 1;
+			return 1;
+		}
+	}
+	else
+	{
+		has_returned_one[channel_1] = 0;
+		has_returned_one[channel_2] = 0;
+		return 0;
+	}
 }
