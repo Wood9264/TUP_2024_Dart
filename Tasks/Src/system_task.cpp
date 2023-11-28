@@ -53,8 +53,7 @@ system_t::system_t()
 {
 	system_rc_ctrl = get_remote_control_point();
 	sys_mode = ZERO_FORCE;
-	adjust_mode = SLIPPER;
-	shoot_mode = READY;
+	last_sys_mode = ZERO_FORCE;
 }
 
 /**
@@ -65,7 +64,6 @@ system_t::system_t()
 void system_t::mode_set()
 {
 	last_sys_mode = sys_mode;
-	last_shoot_mode = shoot_mode;
 
 	if (IF_RC_SW0_DOWN || toe_is_error(DBUS_TOE))
 	{
@@ -73,29 +71,11 @@ void system_t::mode_set()
 	}
 	else if (IF_RC_SW0_MID)
 	{
-		sys_mode = ADJUST;
-
-		if (IF_RC_SW1_DOWN || IF_RC_SW1_MID)
-		{
-			adjust_mode = SLIPPER;
-		}
-		else if (IF_RC_SW1_UP)
-		{
-			adjust_mode = CALIBRATE;
-		}
+		sys_mode = CALIBRATE;
 	}
 	else if (IF_RC_SW0_UP)
 	{
 		sys_mode = SHOOT;
-
-		if (IF_RC_SW1_DOWN)
-		{
-			shoot_mode = READY;
-		}
-		else if (IF_RC_SW1_MID || IF_RC_SW1_UP)
-		{
-			shoot_mode = SHOOTING;
-		}
 	}
 }
 
@@ -106,7 +86,7 @@ void system_t::mode_set()
  */
 void system_t::Transit()
 {
-	if (sys_mode == ADJUST && last_sys_mode != ADJUST)
+	if (sys_mode == CALIBRATE && last_sys_mode != CALIBRATE)
 	{
 		revolver_point()->slipper_motor.ecd_set = revolver_point()->slipper_motor.accumulate_ecd;
 		revolver_point()->slipper_motor.speed_set = 0;

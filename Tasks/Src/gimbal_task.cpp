@@ -51,8 +51,8 @@ gimbal_control_t::gimbal_control_t()
 {
 	add_pit = add_yaw = 0.0f;
 	//电机数据指针获取
-	Yaw_motor.get_gimbal_motor = get_motor_measure_class(YAW);
-	Pitch_motor.get_gimbal_motor = get_motor_measure_class(PITCH);
+	// Yaw_motor.get_gimbal_motor = get_motor_measure_class(YAW);
+	// Pitch_motor.get_gimbal_motor = get_motor_measure_class(PITCH);
 	//陀螺仪数据指针获取
 	gimbal_INT_angle_point = get_INS_angle_point();
 	gimbal_INT_gyro_point = get_gyro_data_point();

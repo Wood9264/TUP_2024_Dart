@@ -71,7 +71,7 @@ revolver_task_t::revolver_task_t()
 	slipper_motor.if_shoot_begin = 0;
 
 	//电机指针
-	slipper_motor.motor_measure = get_motor_measure_class(SLIPPER_MOTOR);
+	slipper_motor.motor_measure = get_motor_measure_class(LOADER_MOTOR);
 	fric_motor[0].motor_measure = get_motor_measure_class(FL);
 	fric_motor[1].motor_measure = get_motor_measure_class(FR);
 	fric_motor[2].motor_measure = get_motor_measure_class(BL);
