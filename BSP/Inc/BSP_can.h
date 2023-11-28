@@ -23,10 +23,9 @@ extern "C"
 
 	enum CAN2_msg_ID
 	{
-		CAN2_SLIPPER_MOTOR_ID = 0x201,
-		CAN2_YAW_MOTOR_ID = 0x202,
-		CAN2_3508_BL_ID = 0X203,
-		CAN2_3508_BR_ID = 0x204,
+		CAN2_YAW_MOTOR_ID = 0x201,
+		CAN2_ROTARY_MOTOR_ID = 0x202,
+		CAN2_LOEADER_MOTOR_ID = 0X203,
 	};
 
 	//可在此处加入所需电机编号
@@ -36,11 +35,9 @@ extern "C"
 		FR,
 		BL,
 		BR,
-		SLIPPER_MOTOR,
-		YAW,
-		FireR,
-		TRIGGER,
-		PITCH,
+		YAW_MOTOR,		
+		ROTARY_MOTOR,
+		LOADER_MOTOR,
 	};
 
 	extern void CAN1_200_cmd_motor(int16_t can1_motor1, int16_t can1_motor2, int16_t can1_motor3, int16_t can1_motor4);

@@ -96,26 +96,19 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 
 		switch (rx_header.StdId)
 		{
-		case CAN2_SLIPPER_MOTOR_ID:
-		{
-			get_motor_measure(SLIPPER_MOTOR, rx_data2);
-			break;
-		}
 		case CAN2_YAW_MOTOR_ID:
 		{
-			get_motor_measure(YAW, rx_data2);
+			get_motor_measure(YAW_MOTOR, rx_data2);
 			break;
 		}
-		case CAN2_3508_BL_ID:
+		case CAN2_ROTARY_MOTOR_ID:
 		{
-			get_motor_measure(BL, rx_data2);
-			// rate3++;
+			get_motor_measure(ROTARY_MOTOR, rx_data2);
 			break;
 		}
-		case CAN2_3508_BR_ID:
+		case CAN2_LOEADER_MOTOR_ID:
 		{
-			get_motor_measure(BR, rx_data2);
-			// rate4++;
+			get_motor_measure(LOADER_MOTOR, rx_data2);
 			break;
 		}
 		}
