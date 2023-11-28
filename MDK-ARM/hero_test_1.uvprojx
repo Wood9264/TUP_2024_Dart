@@ -1387,6 +1387,11 @@
               <FileType>8</FileType>
               <FilePath>..\Tasks\Src\OLED_task.cpp</FilePath>
             </File>
+            <File>
+              <FileName>load_task.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\Tasks\Src\load_task.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

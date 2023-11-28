@@ -38,6 +38,7 @@
 #include "monitor_task.h"
 #include "ui_task.h"
 #include "OLED_task.h"
+#include "load_task.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -61,6 +62,7 @@ osThreadId chassisTaskHandle;
 osThreadId imuTaskHandle;
 osThreadId judgeTaskHandle;
 osThreadId revolverTaskHandle;
+osThreadId loadTaskHandle;
 osThreadId gimbalTaskHandle;
 osThreadId SYSTEMHandle;
 osThreadId calibrate_tast_handle;
@@ -137,6 +139,9 @@ void MX_FREERTOS_Init(void) {
 	
 	osThreadDef(RevolverTask, revolver_task, osPriorityAboveNormal, 0, 512);//
   revolverTaskHandle = osThreadCreate(osThread(RevolverTask), NULL);
+  
+  osThreadDef(loadTask, load_task, osPriorityAboveNormal, 0, 512);
+  loadTaskHandle = osThreadCreate(osThread(loadTask), NULL);
 
 	// osThreadDef(ChassisTask, chassis_task, osPriorityAboveNormal, 0, 512);
   // chassisTaskHandle = osThreadCreate(osThread(ChassisTask), NULL);
