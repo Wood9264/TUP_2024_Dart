@@ -129,17 +129,17 @@ void gimbal_control_t::Get_info()
   */
 fp32 gimbal_control_t::motor_ecd_to_angle_change(uint16_t ecd, uint16_t offset_ecd)
 {
-    int32_t relative_ecd = ecd - offset_ecd;
-    if (relative_ecd > HALF_ECD_RANGE)
-    {
-        relative_ecd -= ECD_RANGE;
-    }
-    else if (relative_ecd < -HALF_ECD_RANGE)
-    {
-        relative_ecd += ECD_RANGE;
-    }
+    // int32_t relative_ecd = ecd - offset_ecd;
+    // if (relative_ecd > HALF_ECD_RANGE)
+    // {
+    //     relative_ecd -= ECD_RANGE;
+    // }
+    // else if (relative_ecd < -HALF_ECD_RANGE)
+    // {
+    //     relative_ecd += ECD_RANGE;
+    // }
 
-    return relative_ecd * MOTOR_ECD_TO_RAD;
+    // return relative_ecd * MOTOR_ECD_TO_RAD;
 }
 
 
