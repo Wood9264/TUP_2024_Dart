@@ -88,17 +88,19 @@ void system_t::Transit()
 {
 	if (sys_mode == CALIBRATE && last_sys_mode != CALIBRATE)
 	{
-		revolver_point()->slipper_motor.ecd_set = revolver_point()->slipper_motor.accumulate_ecd;
-		revolver_point()->slipper_motor.speed_set = 0;
-		revolver_point()->slipper_motor.calibrate_begin = 0;
+		// revolver_point()->slipper_motor.ecd_set = revolver_point()->slipper_motor.accumulate_ecd;
+		// revolver_point()->slipper_motor.speed_set = 0;
+		// revolver_point()->slipper_motor.calibrate_begin = 0;
+		revolver_point()->yaw_motor.ecd_set = revolver_point()->yaw_motor.accumulate_ecd;
 	}
 	if (sys_mode == SHOOT && last_sys_mode != SHOOT)
 	{
 		revolver_point()->is_fric_wheel_on = 0;
-		revolver_point()->slipper_motor.speed_set = 0;
-		revolver_point()->slipper_motor.ecd_set = revolver_point()->slipper_motor.accumulate_ecd;
-		revolver_point()->slipper_motor.bullet_num_cal();
-		revolver_point()->slipper_motor.bullet_num_set = revolver_point()->slipper_motor.bullet_num;
-		revolver_point()->slipper_motor.if_shoot_begin = 0;
+		revolver_point()->yaw_motor.ecd_set = revolver_point()->yaw_motor.accumulate_ecd;
+		// revolver_point()->slipper_motor.speed_set = 0;
+		// revolver_point()->slipper_motor.ecd_set = revolver_point()->slipper_motor.accumulate_ecd;
+		// revolver_point()->slipper_motor.bullet_num_cal();
+		// revolver_point()->slipper_motor.bullet_num_set = revolver_point()->slipper_motor.bullet_num;
+		// revolver_point()->slipper_motor.if_shoot_begin = 0;
 	}
 }

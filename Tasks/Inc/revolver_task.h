@@ -18,6 +18,20 @@
 #define SLIPPER_POSITION_PID_MAX_OUT 10.0f // 45.0f
 #define SLIPPER_POSITION_PID_MAX_IOUT 10.0f
 
+//yaw轴速度环PID
+#define YAW_SPEED_PID_KP 700.0f
+#define YAW_SPEED_PID_KI 0.0f
+#define YAW_SPEED_PID_KD 3000.0f
+#define YAW_SPEED_PID_MAX_OUT 9000.0f
+#define YAW_SPEED_PID_MAX_IOUT 5000.0f
+
+//yaw轴位置环PID
+#define YAW_POSITION_PID_KP 0.001f
+#define YAW_POSITION_PID_KI 0
+#define YAW_POSITION_PID_KD 0.01f
+#define YAW_POSITION_PID_MAX_OUT 10.0f
+#define YAW_POSITION_PID_MAX_IOUT 10.0f
+
 //摩擦轮速度环PID
 #define FRIC_SPEED_PID_KP 8.0f
 #define FRIC_SPEED_PID_KI 0.0f
@@ -46,6 +60,8 @@
 #define SLIPPER_SHOOTING_SPEED 10 //发射时滑块上移的速度
 #define SLIPPER_BACK_SPEED 5 //滑块自动返回零点时的速度
 
+#define RC_TO_YAW_ECD_SET 0.1 //遥控器通道到yaw轴位置增量的比例
+
 #define REVOLVER_TASK_INIT_TIME 200
 #ifdef __cplusplus
 extern "C"
@@ -57,12 +73,27 @@ class fric_motor_t
 		public:
 		const motor_t *motor_measure;
 		PID_t speed_pid;
-
 		fp32 speed_set;		
+		int16_t give_current;
+
+		
+
+		void current_calculate();
+	};
+
+class yaw_motor_t
+	{
+		public:
+		const motor_t *motor_measure;
+		PID_t speed_pid;
+		PID_t position_pid;
+
+		int64_t accumulate_ecd;
+		int64_t ecd_set;
 
 		int16_t give_current;
 
-		void current_calculate();
+		
 	};
 
 	class slipper_motor_t
@@ -106,20 +137,31 @@ class fric_motor_t
 		const RC_ctrl_t *revolver_rc_ctrl;
 
 		fric_motor_t fric_motor[4];
-		slipper_motor_t slipper_motor;
+		yaw_motor_t yaw_motor;
+		
+
+		int16_t outpost_speed_offset[4];
+		int16_t base_speed_offset[4];
 
 		fp32 fric_speed_offset;
 		bool_t is_fric_wheel_on;
 
-		void revolver_feedback_update();
+		void data_update();
 		void control();
 		void ZERO_FORCE_control();
 		void fric_speed_offset_control();
-		void ADJUST_control();
+		void CALIBRATE_control();
 		void SHOOT_control();
 		void READY_control();
 		void SHOOTING_control();
 		void fric_speed_buzzer(); 
+		
+
+
+
+		
+		//将要移除的内容
+		slipper_motor_t slipper_motor;
 	};
 
 	
