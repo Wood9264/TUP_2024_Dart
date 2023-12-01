@@ -5,6 +5,7 @@
 #include "pid.h"
 #include "ladrc_feedforward.h"
 #include "arm_math.h"
+#include "remote_control.h"
 
 #define LOAD_TASK_INIT_TIME 200
 
@@ -25,6 +26,8 @@
 #define LOADER_MOTOR_RMP_TO_FILTER_SPEED 0.00290888208665721596153948461415f
 //电机编码值转化成角度值
 #define MOTOR_ECD_TO_RAD (2 * PI / 8192)
+//遥控器通道到装填电机位置增量的比例
+#define RC_TO_LOADER_MOTOR_ECD_SET 0.1f
 
 //转盘电机LADRC参数
 #define ROTARY_LADRC_WC 0.0f
@@ -36,6 +39,13 @@
 
 //转盘电机零点编码值
 #define ROTARY_ZERO_POINT_ECD 0
+//装填电机前进距离的编码值
+#define LOADER_FORWARD_ECD 100000
+
+#define CALIBRATE_DOWN_PER_LENGTH 5 //校准时装填电机每次下移的编码值
+#define CALIBRATE_UP_PER_LENGTH 5   //校准时装填电机每次上移的编码值
+#define SLIPPER_SHOOTING_SPEED 10   //发射时滑块上移的速度
+#define SLIPPER_BACK_SPEED 5        //滑块自动返回零点时的速度
 
 #ifdef __cplusplus
 extern "C"
@@ -58,6 +68,17 @@ extern "C"
         PID_t position_pid;
 
         int16_t give_current;
+
+        int64_t zero_point_ecd;
+        int64_t max_point_ecd;
+
+        bool_t calibrate_begin;
+        bool_t has_calibrated;
+        bool_t bottom_tick;
+        void adjust_position();
+        void calibrate();
+        void auto_calibrate();
+        void manual_calibrate();
     };
 
     class rotary_motor_t
@@ -66,24 +87,30 @@ extern "C"
         const motor_t *motor_measure;
         fp32 motor_acceleration;
         fp32 relative_angle;
-        
-        uint16_t zero_point_ecd;
+        fp32 last_relative_angle;
 
         fp32 relative_angle_set;
 
         LADRC_FDW_t LADRC_FDW;
 
         int16_t give_current;
-        fp32 motor_ecd_to_relative_angle(uint16_t ecd, uint16_t zero_point_ecd);
+        void motor_ecd_to_relative_angle();
+        void acceleration_update();
     };
 
     class load_task_t
     {
     public:
+        const RC_ctrl_t *load_rc_ctrl;
         loader_motor_t loader_motor;
         rotary_motor_t rotary_motor;
+
         load_task_t();
         void data_update();
+        void control();
+        void ZERO_FORCE_control();
+        void CALIBRATE_control();
+        void SHOOT_control();
     };
 
 #endif

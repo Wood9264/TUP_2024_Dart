@@ -55,10 +55,10 @@
 #define POSITION_LIMIT_BUFFER_DISTANCE (8192 * 36 / 36) //滑块接近限位开始减速缓冲时与限位的距离
 #define ANGLE_LOOP_SWITCH_DISTANCE (8192) //速度环切换到角度环时，设定编码值与实际编码值的距离
 
-#define CALIBRATE_DOWN_SPEED (-5) //校准时滑块下移的速度
-#define CALIBRATE_UP_SPEED 5 //校准时滑块上移的速度
-#define SLIPPER_SHOOTING_SPEED 10 //发射时滑块上移的速度
-#define SLIPPER_BACK_SPEED 5 //滑块自动返回零点时的速度
+// #define CALIBRATE_DOWN_SPEED (-5) //校准时滑块下移的速度
+// #define CALIBRATE_UP_SPEED 5 //校准时滑块上移的速度
+// #define SLIPPER_SHOOTING_SPEED 10 //发射时滑块上移的速度
+// #define SLIPPER_BACK_SPEED 5 //滑块自动返回零点时的速度
 
 #define RC_TO_YAW_ECD_SET 0.1 //遥控器通道到yaw轴位置增量的比例
 
