@@ -8,6 +8,16 @@
 
 load_task_t load;
 
+loader_motor_t *loader_motor_point()
+{
+    return &load.loader_motor;
+}
+
+rotary_motor_t *rotary_motor_point()
+{
+    return &load.rotary_motor;
+}
+
 /**
  * @brief   装填任务
  * @param[in]   none
@@ -71,8 +81,6 @@ void load_task_t::data_update()
     loader_motor.motor_speed = speed_fliter_3;
     //累计编码值
     loader_motor.accumulate_ecd = loader_motor.motor_measure->num * 8192 + loader_motor.motor_measure->ecd;
-    //更新限位开关状态
-    loader_motor.bottom_tick = HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_11);
 
     //更新转盘电机数据
     rotary_motor.last_relative_angle = rotary_motor.relative_angle;
@@ -105,7 +113,56 @@ void rotary_motor_t::motor_ecd_to_relative_angle()
  */
 void rotary_motor_t::acceleration_update()
 {
-    motor_acceleration = (relative_angle - last_relative_angle) * 1000;
+    acceleration = (relative_angle - last_relative_angle) * 1000;
+}
+
+/**
+ * @brief   装填任务标志位更新
+ */
+void load_task_t::flag_update()
+{
+    //更新装填电机标志位
+    loader_motor.flag_update();
+    //更新转盘电机标志位
+    rotary_motor.flag_update();
+}
+
+/**
+ * @brief   装填电机标志位更新
+ */
+void loader_motor_t::flag_update()
+{
+    //更新限位开关状态
+    bottom_tick = HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_11);
+
+    //转盘电机处在四个角度区间时，装填电机受限
+    if ((rotary_motor_point()->relative_angle > ROTARY_HALF_MOVABLE_ANGLE && rotary_motor_point()->relative_angle < PI / 2 - ROTARY_HALF_MOVABLE_ANGLE) ||
+        (rotary_motor_point()->relative_angle > PI / 2 + ROTARY_HALF_MOVABLE_ANGLE && rotary_motor_point()->relative_angle < PI - ROTARY_HALF_MOVABLE_ANGLE) ||
+        (rotary_motor_point()->relative_angle > -PI + ROTARY_HALF_MOVABLE_ANGLE && rotary_motor_point()->relative_angle < -PI / 2 - ROTARY_HALF_MOVABLE_ANGLE) ||
+        (rotary_motor_point()->relative_angle > -PI / 2 + ROTARY_HALF_MOVABLE_ANGLE && rotary_motor_point()->relative_angle < -ROTARY_HALF_MOVABLE_ANGLE))
+    {
+        is_restricted_state = 1;
+    }
+    else
+    {
+        is_restricted_state = 0;
+    }
+}
+
+/**
+ * @brief   转盘电机标志位更新
+ */
+void rotary_motor_t::flag_update()
+{
+    //更新转盘电机锁定状态
+    if (loader_motor_point()->accumulate_ecd > loader_motor_point()->restrict_point_ecd)
+    {
+        should_lock = 1;
+    }
+    else
+    {
+        should_lock = 0;
+    }
 }
 
 /**
@@ -123,7 +180,7 @@ void load_task_t::control()
     }
     else if (syspoint()->sys_mode == SHOOT)
     {
-        SHOOT_control();
+        // SHOOT_control();
     }
 }
 
@@ -165,6 +222,20 @@ void loader_motor_t::adjust_position()
     }
 
     ecd_set += load.load_rc_ctrl->rc.ch[1] * RC_TO_LOADER_MOTOR_ECD_SET;
+    //限位
+    if (ecd_set > max_point_ecd)
+    {
+        ecd_set = max_point_ecd;
+    }
+    else if (ecd_set > restrict_point_ecd && is_restricted_state)
+    {
+        ecd_set = restrict_point_ecd;
+    }
+    else if (ecd_set < zero_point_ecd)
+    {
+        ecd_set = zero_point_ecd;
+    }
+
     speed_set = position_pid.calc(accumulate_ecd, ecd_set);
     give_current = speed_pid.calc(motor_speed, speed_set);
 }
@@ -232,8 +303,9 @@ void loader_motor_t::auto_calibrate()
         found_zero_point = 0;
         calibrate_begin = 0;
 
-        //设置零点和最大点
+        //设置零点、受限点和最大点
         zero_point_ecd = accumulate_ecd;
+        restrict_point_ecd = accumulate_ecd + LOADER_RESTRICT_FORWARD_ECD;
         max_point_ecd = accumulate_ecd + LOADER_FORWARD_ECD;
     }
 }
@@ -251,4 +323,23 @@ void loader_motor_t::manual_calibrate()
     zero_point_ecd = accumulate_ecd;
     max_point_ecd = accumulate_ecd + LOADER_FORWARD_ECD;
     buzzer_warn(0, 0, 3, 10000);
+}
+
+/**
+ * @brief   调整转盘电机位置
+ */
+void rotary_motor_t::adjust_position()
+{
+    static fp32 add_angle = 0.0f;
+    
+    //装填电机未校准时或转盘电机锁定时不能调整位置
+    if (!loader_motor_point()->has_calibrated || should_lock)
+    {
+        LADRC_FDW.FDW_calc(relative_angle, relative_angle_set, acceleration);
+        return;
+    }
+
+    add_angle = load.load_rc_ctrl->rc.ch[0] * RC_TO_ROTARY_MOTOR_ANGLE_SET;
+    relative_angle_set = rad_format(relative_angle_set + add_angle);
+    LADRC_FDW.FDW_calc(relative_angle, relative_angle_set, acceleration);
 }

@@ -22,13 +22,6 @@
 #define LOADER_POSITION_PID_MAX_OUT 0.0f
 #define LOADER_POSITION_PID_MAX_IOUT 0.0f
 
-//装填电机转速滤波参数
-#define LOADER_MOTOR_RMP_TO_FILTER_SPEED 0.00290888208665721596153948461415f
-//电机编码值转化成角度值
-#define MOTOR_ECD_TO_RAD (2 * PI / 8192)
-//遥控器通道到装填电机位置增量的比例
-#define RC_TO_LOADER_MOTOR_ECD_SET 0.1f
-
 //转盘电机LADRC参数
 #define ROTARY_LADRC_WC 0.0f
 #define ROTARY_LADRC_B0 0.0f
@@ -37,10 +30,23 @@
 #define ROTARY_LADRC_W 0.0f
 #define ROTARY_LADRC_GAIN 0.0f
 
+//装填电机转速滤波参数
+#define LOADER_MOTOR_RMP_TO_FILTER_SPEED 0.00290888208665721596153948461415f
+//电机编码值转化成角度值
+#define MOTOR_ECD_TO_RAD (2 * PI / 8192)
+//遥控器通道到装填电机位置增量的比例
+#define RC_TO_LOADER_MOTOR_ECD_SET 0.1f
+//遥控器通道到转盘电机角度设定值增量的比例
+#define RC_TO_ROTARY_MOTOR_ANGLE_SET 0.00001f
+
 //转盘电机零点编码值
 #define ROTARY_ZERO_POINT_ECD 0
-//装填电机前进距离的编码值
+//装填机构处在载弹架中时转盘电机可转动角度的一半，单位为弧度
+#define ROTARY_HALF_MOVABLE_ANGLE 0.17f
+//装填电机最大前进距离的编码值
 #define LOADER_FORWARD_ECD 100000
+//装填电机受限时最大前进距离的编码值
+#define LOADER_RESTRICT_FORWARD_ECD 80000
 
 #define CALIBRATE_DOWN_PER_LENGTH 5 //校准时装填电机每次下移的编码值
 #define CALIBRATE_UP_PER_LENGTH 5   //校准时装填电机每次上移的编码值
@@ -71,10 +77,14 @@ extern "C"
 
         int64_t zero_point_ecd;
         int64_t max_point_ecd;
+        int64_t restrict_point_ecd;
 
         bool_t calibrate_begin;
         bool_t has_calibrated;
         bool_t bottom_tick;
+        bool_t is_restricted_state;
+
+        void flag_update();
         void adjust_position();
         void calibrate();
         void auto_calibrate();
@@ -85,7 +95,7 @@ extern "C"
     {
     public:
         const motor_t *motor_measure;
-        fp32 motor_acceleration;
+        fp32 acceleration;
         fp32 relative_angle;
         fp32 last_relative_angle;
 
@@ -94,8 +104,13 @@ extern "C"
         LADRC_FDW_t LADRC_FDW;
 
         int16_t give_current;
+
+        bool_t should_lock;
+
         void motor_ecd_to_relative_angle();
         void acceleration_update();
+        void flag_update();
+        void adjust_position();
     };
 
     class load_task_t
@@ -107,15 +122,19 @@ extern "C"
 
         load_task_t();
         void data_update();
+        void flag_update();
         void control();
         void ZERO_FORCE_control();
         void CALIBRATE_control();
         void SHOOT_control();
     };
 
+    loader_motor_t *loader_motor_point();
+    rotary_motor_t *rotary_motor_point();
 #endif
 
     extern void load_task(void const *pvParameters);
+
 #ifdef __cplusplus
 }
 #endif
