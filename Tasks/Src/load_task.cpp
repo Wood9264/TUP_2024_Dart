@@ -8,6 +8,11 @@
 
 load_task_t load;
 
+load_task_t *load_point()
+{
+    return &load;
+}
+
 loader_motor_t *loader_motor_point()
 {
     return &load.loader_motor;
@@ -180,7 +185,7 @@ void load_task_t::control()
     }
     else if (syspoint()->sys_mode == SHOOT)
     {
-        // SHOOT_control();
+        SHOOT_control();
     }
 }
 
@@ -202,7 +207,7 @@ void load_task_t::CALIBRATE_control()
     {
         loader_motor.adjust_position();
     }
-    if (IF_RC_SW1_MID && IF_RC_SW1_UP)
+    else if (IF_RC_SW1_MID && IF_RC_SW1_UP)
     {
         loader_motor.calibrate();
     }
@@ -248,7 +253,7 @@ void loader_motor_t::calibrate()
     //遥控器↙↘开始自动校准
     if (RC_double_held_single_return(LEFT_ROCKER_LEFT_BOTTOM, RIGHT_ROCKER_RIGHT_BOTTOM, 400))
     {
-        calibrate_begin = 1;
+        has_calibrate_begun = 1;
     }
 
     //遥控器↘↙手动校准，适用于触点开关失效的情况
@@ -257,7 +262,7 @@ void loader_motor_t::calibrate()
         manual_calibrate();
     }
 
-    if (calibrate_begin == 1)
+    if (has_calibrate_begun == 1)
     {
         auto_calibrate();
     }
@@ -284,14 +289,14 @@ void loader_motor_t::auto_calibrate()
     //滑块下移
     if (found_zero_point == 0)
     {
-        ecd_set -= CALIBRATE_DOWN_PER_LENGTH;
+        ecd_set -= LOADER_CALIBRATE_DOWN_PER_LENGTH;
         speed_set = position_pid.calc(accumulate_ecd, ecd_set);
         give_current = speed_pid.calc(motor_speed, speed_set);
     }
     //压下触点开关后上移
     else if (found_zero_point == 1 && bottom_tick == 1)
     {
-        ecd_set += CALIBRATE_DOWN_PER_LENGTH;
+        ecd_set += LOADER_CALIBRATE_UP_PER_LENGTH;
         speed_set = position_pid.calc(accumulate_ecd, ecd_set);
         give_current = speed_pid.calc(motor_speed, speed_set);
     }
@@ -301,7 +306,7 @@ void loader_motor_t::auto_calibrate()
         speed_set = 0;
         has_calibrated = 1;
         found_zero_point = 0;
-        calibrate_begin = 0;
+        has_calibrate_begun = 0;
 
         //设置零点、受限点和最大点
         zero_point_ecd = accumulate_ecd;
@@ -317,7 +322,7 @@ void loader_motor_t::manual_calibrate()
 {
     speed_set = 0;
     has_calibrated = 1;
-    calibrate_begin = 0;
+    has_calibrate_begun = 0;
 
     //设置零点和最大点
     zero_point_ecd = accumulate_ecd;
@@ -331,15 +336,117 @@ void loader_motor_t::manual_calibrate()
 void rotary_motor_t::adjust_position()
 {
     static fp32 add_angle = 0.0f;
-    
+
     //装填电机未校准时或转盘电机锁定时不能调整位置
     if (!loader_motor_point()->has_calibrated || should_lock)
     {
-        LADRC_FDW.FDW_calc(relative_angle, relative_angle_set, acceleration);
+        give_current = LADRC_FDW.FDW_calc(relative_angle, relative_angle_set, acceleration);
         return;
     }
 
     add_angle = load.load_rc_ctrl->rc.ch[0] * RC_TO_ROTARY_MOTOR_ANGLE_SET;
     relative_angle_set = rad_format(relative_angle_set + add_angle);
-    LADRC_FDW.FDW_calc(relative_angle, relative_angle_set, acceleration);
+    give_current = LADRC_FDW.FDW_calc(relative_angle, relative_angle_set, acceleration);
+}
+
+/**
+ * @brief   发射模式
+ */
+void load_task_t::SHOOT_control()
+{
+    if (IF_RC_SW1_DOWN)
+    {
+        rotary_motor.shoot_init();
+        loader_motor.shoot_init();
+    }
+}
+
+/**
+ * @brief   转盘电机发射初始化
+ */
+void rotary_motor_t::shoot_init()
+{
+    //装填电机未校准时不能初始化
+    if (!loader_motor_point()->has_calibrated)
+    {
+        return;
+    }
+
+    if (RC_held_continuous_return(RIGHT_ROCKER_LEFT_TOP, 100))
+    {
+        //↗↖初始化为1号弹体位置
+        if (RC_held_continuous_return(LEFT_ROCKER_RIGHT_TOP, 100))
+        {
+            final_relative_angle_set = 0;
+            has_shoot_init_started = 1;
+            has_shoot_init_finished = 0;
+        }
+        //↖↖初始化为2号弹体位置
+        else if (RC_held_continuous_return(LEFT_ROCKER_LEFT_TOP, 100))
+        {
+            final_relative_angle_set = PI / 2;
+            has_shoot_init_started = 1;
+            has_shoot_init_finished = 0;
+        }
+        //↙↖初始化为3号弹体位置
+        else if (RC_held_continuous_return(LEFT_ROCKER_LEFT_BOTTOM, 100))
+        {
+            final_relative_angle_set = PI;
+            has_shoot_init_started = 1;
+            has_shoot_init_finished = 0;
+        }
+        //↘↖初始化为4号弹体位置
+        else if (RC_held_continuous_return(LEFT_ROCKER_RIGHT_BOTTOM, 100))
+        {
+            final_relative_angle_set = -PI / 2;
+            has_shoot_init_started = 1;
+            has_shoot_init_finished = 0;
+        }
+    }
+
+    //锁定时转盘不动
+    if (should_lock)
+    {
+        give_current = LADRC_FDW.FDW_calc(relative_angle, relative_angle_set, acceleration);
+    }
+    //不锁定时设定值逐渐向final增加
+    else
+    {
+        relative_angle_set = RAMP_float(final_relative_angle_set, relative_angle, ROTARY_SHOOT_INIT_RAMP_BUFF);
+        give_current = LADRC_FDW.FDW_calc(relative_angle, relative_angle_set, acceleration);
+    }
+
+    //角度差小于一定值时初始化结束
+    if (fabs(final_relative_angle_set - relative_angle) < ROTARY_INIT_ANGLE_ERROR)
+    {
+        has_shoot_init_finished = 1;
+    }
+}
+
+/**
+ * @brief   装填电机发射初始化
+ */
+void loader_motor_t::shoot_init()
+{
+    //装填电机未校准时不能初始化
+    if (!has_calibrated)
+    {
+        return;
+    }
+
+    //转盘初始化时装填电机一起初始化
+    if (rotary_motor_point()->has_shoot_init_started)
+    {
+        ecd_set = zero_point_ecd;
+        has_shoot_init_finished = 0;
+    }
+
+    speed_set = position_pid.DLcalc(accumulate_ecd, ecd_set, LOADER_SHOOT_INIT_SPEED);
+    give_current = speed_pid.calc(motor_speed, speed_set);
+
+    //装填电机初始化结束
+    if (fabs(ecd_set - accumulate_ecd) < LOADER_INIT_ECD_ERROR)
+    {
+        has_shoot_init_finished = 1;
+    }
 }

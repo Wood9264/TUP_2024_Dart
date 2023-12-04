@@ -39,6 +39,14 @@
 //遥控器通道到转盘电机角度设定值增量的比例
 #define RC_TO_ROTARY_MOTOR_ANGLE_SET 0.00001f
 
+//转盘电机发射初始化时角度的斜坡增加量
+#define ROTARY_SHOOT_INIT_RAMP_BUFF 0.007f
+
+//转盘电机判定为初始化完毕时允许的角度误差，单位为弧度
+#define ROTARY_INIT_ANGLE_ERROR 0.01f
+//装填电机判定为初始化完毕时允许的编码值误差
+#define LOADER_INIT_ECD_ERROR 100
+
 //转盘电机零点编码值
 #define ROTARY_ZERO_POINT_ECD 0
 //装填机构处在载弹架中时转盘电机可转动角度的一半，单位为弧度
@@ -48,10 +56,11 @@
 //装填电机受限时最大前进距离的编码值
 #define LOADER_RESTRICT_FORWARD_ECD 80000
 
-#define CALIBRATE_DOWN_PER_LENGTH 5 //校准时装填电机每次下移的编码值
-#define CALIBRATE_UP_PER_LENGTH 5   //校准时装填电机每次上移的编码值
-#define SLIPPER_SHOOTING_SPEED 10   //发射时滑块上移的速度
-#define SLIPPER_BACK_SPEED 5        //滑块自动返回零点时的速度
+#define LOADER_CALIBRATE_DOWN_PER_LENGTH 5 //校准时装填电机每次下移的编码值
+#define LOADER_CALIBRATE_UP_PER_LENGTH 5   //校准时装填电机每次上移的编码值
+#define LOADER_SHOOT_INIT_SPEED 5          //发射初始化时装填电机下移的速度
+#define SLIPPER_SHOOTING_SPEED 10          //发射时滑块上移的速度
+#define SLIPPER_BACK_SPEED 5               //滑块自动返回零点时的速度
 
 #ifdef __cplusplus
 extern "C"
@@ -79,16 +88,18 @@ extern "C"
         int64_t max_point_ecd;
         int64_t restrict_point_ecd;
 
-        bool_t calibrate_begin;
+        bool_t has_calibrate_begun;
         bool_t has_calibrated;
         bool_t bottom_tick;
         bool_t is_restricted_state;
+        bool_t has_shoot_init_finished;
 
         void flag_update();
         void adjust_position();
         void calibrate();
         void auto_calibrate();
         void manual_calibrate();
+        void shoot_init();
     };
 
     class rotary_motor_t
@@ -100,17 +111,21 @@ extern "C"
         fp32 last_relative_angle;
 
         fp32 relative_angle_set;
+        fp32 final_relative_angle_set;
 
         LADRC_FDW_t LADRC_FDW;
 
         int16_t give_current;
 
         bool_t should_lock;
+        bool_t has_shoot_init_started;
+        bool_t has_shoot_init_finished;
 
         void motor_ecd_to_relative_angle();
         void acceleration_update();
         void flag_update();
         void adjust_position();
+        void shoot_init();
     };
 
     class load_task_t
@@ -129,6 +144,7 @@ extern "C"
         void SHOOT_control();
     };
 
+    extern load_task_t *load_point();
     loader_motor_t *loader_motor_point();
     rotary_motor_t *rotary_motor_point();
 #endif

@@ -6,6 +6,7 @@
 #include "revolver_task.h"
 #include "bsp_buzzer.h"
 #include "revolver_task.h"
+#include "load_task.h"
 
 system_t sys;
 
@@ -88,15 +89,22 @@ void system_t::Transit()
 {
 	if (sys_mode == CALIBRATE && last_sys_mode != CALIBRATE)
 	{
-		// revolver_point()->slipper_motor.ecd_set = revolver_point()->slipper_motor.accumulate_ecd;
-		// revolver_point()->slipper_motor.speed_set = 0;
-		// revolver_point()->slipper_motor.calibrate_begin = 0;
 		revolver_point()->yaw_motor.ecd_set = revolver_point()->yaw_motor.accumulate_ecd;
+		load_point()->loader_motor.ecd_set = load_point()->loader_motor.accumulate_ecd;
+		load_point()->loader_motor.speed_set = 0;
+		load_point()->loader_motor.has_calibrate_begun = 0;
+		load_point()->loader_motor.ecd_set = load_point()->loader_motor.accumulate_ecd;
+		load_point()->rotary_motor.relative_angle_set = load_point()->rotary_motor.relative_angle;
 	}
 	if (sys_mode == SHOOT && last_sys_mode != SHOOT)
 	{
 		revolver_point()->is_fric_wheel_on = 0;
 		revolver_point()->yaw_motor.ecd_set = revolver_point()->yaw_motor.accumulate_ecd;
+		load_point()->loader_motor.ecd_set = load_point()->loader_motor.accumulate_ecd;
+		load_point()->loader_motor.has_shoot_init_finished = 0;
+		load_point()->rotary_motor.final_relative_angle_set = load_point()->rotary_motor.relative_angle;
+		load_point()->rotary_motor.relative_angle_set = load_point()->rotary_motor.relative_angle;
+		load_point()->rotary_motor.has_shoot_init_finished = 0;
 		// revolver_point()->slipper_motor.speed_set = 0;
 		// revolver_point()->slipper_motor.ecd_set = revolver_point()->slipper_motor.accumulate_ecd;
 		// revolver_point()->slipper_motor.bullet_num_cal();
