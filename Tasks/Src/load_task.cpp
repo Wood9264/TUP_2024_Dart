@@ -359,6 +359,10 @@ void load_task_t::SHOOT_control()
         rotary_motor.shoot_init();
         loader_motor.shoot_init();
     }
+    if (IF_RC_SW1_MID && IF_RC_SW1_UP)
+    {
+        shooting();
+    }
 }
 
 /**
@@ -369,6 +373,7 @@ void rotary_motor_t::shoot_init()
     //装填电机未校准时不能初始化
     if (!loader_motor_point()->has_calibrated)
     {
+        give_current = LADRC_FDW.FDW_calc(relative_angle, relative_angle_set, acceleration);
         return;
     }
 
@@ -380,6 +385,7 @@ void rotary_motor_t::shoot_init()
             final_relative_angle_set = 0;
             has_shoot_init_started = 1;
             has_shoot_init_finished = 0;
+            syspoint()->active_dart_index = 1;
         }
         //↖↖初始化为2号弹体位置
         else if (RC_held_continuous_return(LEFT_ROCKER_LEFT_TOP, 100))
@@ -387,6 +393,7 @@ void rotary_motor_t::shoot_init()
             final_relative_angle_set = PI / 2;
             has_shoot_init_started = 1;
             has_shoot_init_finished = 0;
+            syspoint()->active_dart_index = 2;
         }
         //↙↖初始化为3号弹体位置
         else if (RC_held_continuous_return(LEFT_ROCKER_LEFT_BOTTOM, 100))
@@ -394,6 +401,7 @@ void rotary_motor_t::shoot_init()
             final_relative_angle_set = PI;
             has_shoot_init_started = 1;
             has_shoot_init_finished = 0;
+            syspoint()->active_dart_index = 3;
         }
         //↘↖初始化为4号弹体位置
         else if (RC_held_continuous_return(LEFT_ROCKER_RIGHT_BOTTOM, 100))
@@ -401,6 +409,7 @@ void rotary_motor_t::shoot_init()
             final_relative_angle_set = -PI / 2;
             has_shoot_init_started = 1;
             has_shoot_init_finished = 0;
+            syspoint()->active_dart_index = 4;
         }
     }
 
@@ -417,7 +426,7 @@ void rotary_motor_t::shoot_init()
     }
 
     //角度差小于一定值时初始化结束
-    if (fabs(final_relative_angle_set - relative_angle) < ROTARY_INIT_ANGLE_ERROR)
+    if (fabs(final_relative_angle_set - relative_angle) < ROTARY_ANGLE_TOLERANCE)
     {
         has_shoot_init_finished = 1;
     }
@@ -431,6 +440,8 @@ void loader_motor_t::shoot_init()
     //装填电机未校准时不能初始化
     if (!has_calibrated)
     {
+        speed_set = position_pid.calc(accumulate_ecd, ecd_set);
+        give_current = speed_pid.calc(motor_speed, speed_set);
         return;
     }
 
@@ -445,8 +456,117 @@ void loader_motor_t::shoot_init()
     give_current = speed_pid.calc(motor_speed, speed_set);
 
     //装填电机初始化结束
-    if (fabs(ecd_set - accumulate_ecd) < LOADER_INIT_ECD_ERROR)
+    if (fabs(ecd_set - accumulate_ecd) < LOADER_ECD_TOLERANCE)
     {
         has_shoot_init_finished = 1;
+    }
+}
+
+/**
+ * @brief   发射
+ */
+void load_task_t::shooting()
+{
+    //装填电机未校准时或装填电机和转盘电机未初始化时不能发射
+    if (!loader_motor.has_calibrated || !loader_motor.has_shoot_init_finished || !rotary_motor.has_shoot_init_finished)
+    {
+        loader_motor.speed_set = loader_motor.position_pid.calc(loader_motor.accumulate_ecd, loader_motor.ecd_set);
+        loader_motor.give_current = loader_motor.speed_pid.calc(loader_motor.motor_speed, loader_motor.speed_set);
+        rotary_motor.give_current = rotary_motor.LADRC_FDW.FDW_calc(rotary_motor.relative_angle, rotary_motor.relative_angle_set, rotary_motor.acceleration);
+        return;
+    }
+
+    //装填电机上移
+    if (loader_motor.shoot_move_up())
+    {
+        //装填电机上移完毕后下移，同时转盘转到下一个位置
+        if (loader_motor.shoot_move_down() && rotary_motor.shoot_move_to_next())
+        {
+            //装填电机下移完毕且转盘转到位后，可用遥控器控制打下一发飞镖
+            dart_index_add();
+        }
+        //不执行dart_index_add时将标志位置零
+        else
+        {
+            has_index_added = 0;
+        }
+    }
+}
+
+/**
+ * @brief   装填电机上移
+ * @retval  1:上移完毕 0:未上移完毕
+ */
+bool_t loader_motor_t::shoot_move_up()
+{
+    static bool_t has_shoot_up_finished = 0;
+
+    if (load_point()->has_index_added)
+    {
+        ecd_set = max_point_ecd;
+        has_shoot_up_finished = 0;
+    }
+
+    if (fabs(ecd_set - accumulate_ecd) < LOADER_ECD_TOLERANCE)
+    {
+        has_shoot_up_finished = 1;
+    }
+
+    if (has_shoot_up_finished)
+    {
+        return 1;
+    }
+    else
+    {
+        speed_set = position_pid.DLcalc(accumulate_ecd, ecd_set, LOADER_SHOOT_UP_SPEED);
+        give_current = speed_pid.calc(motor_speed, speed_set);
+        return 0;
+    }
+}
+
+/**
+ * @brief   装填电机下移
+ * @retval  1:下移完毕 0:未下移完毕
+ */
+bool_t loader_motor_t::shoot_move_down()
+{
+    ecd_set = zero_point_ecd;
+    speed_set = position_pid.DLcalc(accumulate_ecd, ecd_set, LOADER_SHOOT_DOWN_SPEED);
+    give_current = speed_pid.calc(motor_speed, speed_set);
+    return (fabs(accumulate_ecd - ecd_set) < LOADER_ECD_TOLERANCE);
+}
+
+/**
+ * @brief   转盘电机转到下一个位置
+ * @retval  1:转到位 0:未转到位
+ */
+bool_t rotary_motor_t::shoot_move_to_next()
+{
+    //根据当前发射的飞镖编号计算最终角度设定值
+    final_relative_angle_set = rad_format((PI / 2) * (syspoint()->active_dart_index - 1));
+
+    //转盘电机锁定时不能发射
+    if (should_lock)
+    {
+        give_current = LADRC_FDW.FDW_calc(relative_angle, relative_angle_set, acceleration);
+        return 0;
+    }
+
+    relative_angle_set = RAMP_float(final_relative_angle_set, relative_angle, ROTARY_SHOOT_RAMP_BUFF);
+    give_current = LADRC_FDW.FDW_calc(relative_angle, relative_angle_set, acceleration);
+
+    return (fabs(final_relative_angle_set - relative_angle) < ROTARY_ANGLE_TOLERANCE);
+}
+
+/**
+ * @brief   打下一发飞镖
+ */
+void load_task_t::dart_index_add()
+{
+    //左摇杆↖打出下一发飞镖
+    if (RC_held_continuous_return(LEFT_ROCKER_LEFT_TOP, 0) && has_index_added == 0 && syspoint()->active_dart_index < 4)
+    {
+        syspoint()->active_dart_index++;
+        has_index_added = 1;
     }
 }

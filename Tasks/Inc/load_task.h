@@ -41,11 +41,13 @@
 
 //转盘电机发射初始化时角度的斜坡增加量
 #define ROTARY_SHOOT_INIT_RAMP_BUFF 0.007f
+//转盘电机发射时角度的斜坡增加量
+#define ROTARY_SHOOT_RAMP_BUFF 0.007f
 
-//转盘电机判定为初始化完毕时允许的角度误差，单位为弧度
-#define ROTARY_INIT_ANGLE_ERROR 0.01f
-//装填电机判定为初始化完毕时允许的编码值误差
-#define LOADER_INIT_ECD_ERROR 100
+//转盘电机运动到指定位置时允许的角度误差，单位为弧度
+#define ROTARY_ANGLE_TOLERANCE 0.01f
+//装填电机运动到指定位置时允许的编码值误差
+#define LOADER_ECD_TOLERANCE 100
 
 //转盘电机零点编码值
 #define ROTARY_ZERO_POINT_ECD 0
@@ -59,8 +61,8 @@
 #define LOADER_CALIBRATE_DOWN_PER_LENGTH 5 //校准时装填电机每次下移的编码值
 #define LOADER_CALIBRATE_UP_PER_LENGTH 5   //校准时装填电机每次上移的编码值
 #define LOADER_SHOOT_INIT_SPEED 5          //发射初始化时装填电机下移的速度
-#define SLIPPER_SHOOTING_SPEED 10          //发射时滑块上移的速度
-#define SLIPPER_BACK_SPEED 5               //滑块自动返回零点时的速度
+#define LOADER_SHOOT_UP_SPEED 10           //发射时装填电机上移的速度
+#define LOADER_SHOOT_DOWN_SPEED 5          //发射时装填电机下移的速度
 
 #ifdef __cplusplus
 extern "C"
@@ -100,6 +102,8 @@ extern "C"
         void auto_calibrate();
         void manual_calibrate();
         void shoot_init();
+        bool_t shoot_move_up();
+        bool_t shoot_move_down();
     };
 
     class rotary_motor_t
@@ -126,6 +130,7 @@ extern "C"
         void flag_update();
         void adjust_position();
         void shoot_init();
+        bool_t shoot_move_to_next();
     };
 
     class load_task_t
@@ -135,6 +140,8 @@ extern "C"
         loader_motor_t loader_motor;
         rotary_motor_t rotary_motor;
 
+        bool_t has_index_added;
+
         load_task_t();
         void data_update();
         void flag_update();
@@ -142,6 +149,8 @@ extern "C"
         void ZERO_FORCE_control();
         void CALIBRATE_control();
         void SHOOT_control();
+        void shooting();
+        void dart_index_add();
     };
 
     extern load_task_t *load_point();
