@@ -34,8 +34,8 @@ void revolver_task(void const *pvParameters)
 		//分任务控制
 		revolver.control();
 		//发送电流
-		CAN1_200_cmd_motor(revolver.fric_motor[0].give_current, revolver.fric_motor[1].give_current, 0, 0);
-		CAN2_200_cmd_motor(revolver.slipper_motor.give_current, 0, revolver.fric_motor[2].give_current, revolver.fric_motor[3].give_current);
+		CAN1_200_cmd_motor(revolver.fric_motor[0].give_current, revolver.fric_motor[1].give_current, revolver.fric_motor[2].give_current, revolver.fric_motor[3].give_current);
+		CAN2_200_cmd_motor(revolver.yaw_motor.give_current, 0, 0, 0);
 		vTaskDelayUntil(&currentTime, 1);
 
 		for(int i = 0; i < 4; i++)

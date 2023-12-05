@@ -24,8 +24,8 @@ extern "C"
 	enum CAN2_msg_ID
 	{
 		CAN2_YAW_MOTOR_ID = 0x201,
-		CAN2_ROTARY_MOTOR_ID = 0x202,
-		CAN2_LOEADER_MOTOR_ID = 0X203,
+		CAN2_ROTARY_MOTOR_ID = 0x205,
+		CAN2_LOEADER_MOTOR_ID = 0X206,
 	};
 
 	//可在此处加入所需电机编号
