@@ -263,8 +263,6 @@ void revolver_task_t::ZERO_FORCE_control()
 */
 void revolver_task_t::CALIBRATE_control()
 {
-	static fp32 yaw_angle_out = 0;
-
 	for (int i = 0; i < 4; i++)
 	{
 		fric_motor[i].speed_set = RAMP_float(0, fric_motor[i].speed_set, FRIC_RAMP_BUFF);
@@ -272,8 +270,8 @@ void revolver_task_t::CALIBRATE_control()
 	}
 
 	yaw_motor.ecd_set += revolver_rc_ctrl->rc.ch[2] * RC_TO_YAW_ECD_SET;
-	yaw_angle_out = yaw_motor.position_pid.calc(yaw_motor.accumulate_ecd, yaw_motor.ecd_set);
-	yaw_motor.give_current = yaw_motor.speed_pid.calc(yaw_motor.motor_measure->speed_rpm, yaw_angle_out);
+	yaw_motor.speed_set = yaw_motor.position_pid.calc(yaw_motor.accumulate_ecd, yaw_motor.ecd_set);
+	yaw_motor.give_current = yaw_motor.speed_pid.calc(yaw_motor.motor_measure->speed_rpm, yaw_motor.speed_set);
 }
 
 /**
@@ -447,6 +445,9 @@ void revolver_task_t::SHOOT_control()
 	{
 		fric_motor[i].current_calculate();
 	}
+
+	yaw_motor.speed_set = yaw_motor.position_pid.calc(yaw_motor.accumulate_ecd, yaw_motor.ecd_set);
+	yaw_motor.give_current = yaw_motor.speed_pid.calc(yaw_motor.motor_measure->speed_rpm, yaw_motor.speed_set);
 }
 
 /**
