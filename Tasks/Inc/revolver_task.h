@@ -19,17 +19,17 @@
 #define SLIPPER_POSITION_PID_MAX_IOUT 10.0f
 
 //yaw轴速度环PID
-#define YAW_SPEED_PID_KP 700.0f
+#define YAW_SPEED_PID_KP 8.0f
 #define YAW_SPEED_PID_KI 0.0f
-#define YAW_SPEED_PID_KD 3000.0f
+#define YAW_SPEED_PID_KD 5.0f
 #define YAW_SPEED_PID_MAX_OUT 9000.0f
 #define YAW_SPEED_PID_MAX_IOUT 5000.0f
 
 //yaw轴位置环PID
-#define YAW_POSITION_PID_KP 0.001f
+#define YAW_POSITION_PID_KP 1.0f
 #define YAW_POSITION_PID_KI 0
-#define YAW_POSITION_PID_KD 0.01f
-#define YAW_POSITION_PID_MAX_OUT 10.0f
+#define YAW_POSITION_PID_KD 11.5f
+#define YAW_POSITION_PID_MAX_OUT 6000.0f
 #define YAW_POSITION_PID_MAX_IOUT 10.0f
 
 //摩擦轮速度环PID
@@ -41,7 +41,7 @@
 
 #define FRIC_RAMP_BUFF 20	//摩擦轮启动时的斜坡增加量
 
-#define BASE_SPEED 2000 //四个摩擦轮的基础转速
+#define BASE_SPEED 500 //四个摩擦轮的基础转速
 
 #define ONE_DART_ECD 134985 //每发飞镖的滑块电机编码值增加量
 #define MAX_DART_NUM 2 //发射架可装填的最大飞镖数量
@@ -60,7 +60,7 @@
 // #define SLIPPER_SHOOTING_SPEED 10 //发射时滑块上移的速度
 // #define SLIPPER_BACK_SPEED 5 //滑块自动返回零点时的速度
 
-#define RC_TO_YAW_ECD_SET 0.1 //遥控器通道到yaw轴位置增量的比例
+#define RC_TO_YAW_ECD_SET 1 //遥控器通道到yaw轴位置增量的比例
 
 #define REVOLVER_TASK_INIT_TIME 200
 #ifdef __cplusplus
@@ -89,7 +89,8 @@ class yaw_motor_t
 		PID_t position_pid;
 
 		int64_t accumulate_ecd;
-		int64_t ecd_set;
+		fp32 ecd_set;
+		fp32 speed_set;
 
 		int16_t give_current;
 
