@@ -416,10 +416,10 @@ void revolver_task_t::SHOOT_control()
 		}
 		else if (is_fric_wheel_on == 1)
 		{
-			fric_motor[0].speed_set = RAMP_float((BASE_SPEED + fric_speed_offset), fric_motor[0].speed_set, FRIC_RAMP_BUFF);
-			fric_motor[1].speed_set = RAMP_float(-(BASE_SPEED + fric_speed_offset), fric_motor[1].speed_set, FRIC_RAMP_BUFF);
-			fric_motor[2].speed_set = RAMP_float((BASE_SPEED + fric_speed_offset), fric_motor[2].speed_set, FRIC_RAMP_BUFF);
-			fric_motor[3].speed_set = RAMP_float(-(BASE_SPEED + fric_speed_offset), fric_motor[3].speed_set, FRIC_RAMP_BUFF);
+			fric_motor[0].speed_set = RAMP_float(-(BASE_SPEED + fric_speed_offset), fric_motor[0].speed_set, FRIC_RAMP_BUFF);
+			fric_motor[1].speed_set = RAMP_float((BASE_SPEED + fric_speed_offset), fric_motor[1].speed_set, FRIC_RAMP_BUFF);
+			fric_motor[2].speed_set = RAMP_float(-(BASE_SPEED + fric_speed_offset), fric_motor[2].speed_set, FRIC_RAMP_BUFF);
+			fric_motor[3].speed_set = RAMP_float((BASE_SPEED + fric_speed_offset), fric_motor[3].speed_set, FRIC_RAMP_BUFF);
 		}
 	}
 	else if (IF_RC_SW1_MID)
@@ -434,10 +434,10 @@ void revolver_task_t::SHOOT_control()
 		}
 		else if (is_fric_wheel_on == 1)
 		{
-			fric_motor[0].speed_set = (BASE_SPEED + fric_speed_offset + 1000);
-			fric_motor[1].speed_set = -(BASE_SPEED + fric_speed_offset + 1000);
-			fric_motor[2].speed_set = (BASE_SPEED + fric_speed_offset);
-			fric_motor[3].speed_set = -(BASE_SPEED + fric_speed_offset);
+			fric_motor[0].speed_set = -(BASE_SPEED + fric_speed_offset + 1000);
+			fric_motor[1].speed_set = (BASE_SPEED + fric_speed_offset + 1000);
+			fric_motor[2].speed_set = -(BASE_SPEED + fric_speed_offset);
+			fric_motor[3].speed_set = (BASE_SPEED + fric_speed_offset);
 		}
 	}
 
