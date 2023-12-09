@@ -10,16 +10,16 @@
 #define LOAD_TASK_INIT_TIME 200
 
 //装填电机速度环PID参数
-#define LOADER_SPEED_PID_KP 0.0f
+#define LOADER_SPEED_PID_KP 700.0f
 #define LOADER_SPEED_PID_KI 0.0f
-#define LOADER_SPEED_PID_KD 0.0f
-#define LOADER_SPEED_PID_MAX_OUT 0.0f
+#define LOADER_SPEED_PID_KD 3000.0f
+#define LOADER_SPEED_PID_MAX_OUT 9000.0f
 #define LOADER_SPEED_PID_MAX_IOUT 0.0f
 //装填电机位置环PID参数
-#define LOADER_POSITION_PID_KP 1.0f
+#define LOADER_POSITION_PID_KP 0.001f
 #define LOADER_POSITION_PID_KI 0.0f
-#define LOADER_POSITION_PID_KD 0.0f
-#define LOADER_POSITION_PID_MAX_OUT 0.0f
+#define LOADER_POSITION_PID_KD 0.01f
+#define LOADER_POSITION_PID_MAX_OUT 10.0f
 #define LOADER_POSITION_PID_MAX_IOUT 0.0f
 
 //转盘电机LADRC参数
@@ -35,7 +35,7 @@
 //电机编码值转化成角度值
 #define MOTOR_ECD_TO_RAD (2 * PI / 8192)
 //遥控器通道到装填电机位置增量的比例
-#define RC_TO_LOADER_MOTOR_ECD_SET 0.1f
+#define RC_TO_LOADER_MOTOR_ECD_SET 0.8f
 //遥控器通道到转盘电机角度设定值增量的比例
 #define RC_TO_ROTARY_MOTOR_ANGLE_SET 0.00001f
 
@@ -49,20 +49,23 @@
 //装填电机运动到指定位置时允许的编码值误差
 #define LOADER_ECD_TOLERANCE 100
 
+//校准时零点编码值的补偿量。防止滑块回退时因为超调碰到触点开关
+#define ZERO_POINT_OFFSET 8192
+
 //转盘电机零点编码值
 #define ROTARY_ZERO_POINT_ECD 0
 //装填机构处在载弹架中时转盘电机可转动角度的一半，单位为弧度
 #define ROTARY_HALF_MOVABLE_ANGLE 0.17f
 //装填电机最大前进距离的编码值
-#define LOADER_FORWARD_ECD 100000
+#define LOADER_FORWARD_ECD 253000
 //装填电机受限时最大前进距离的编码值
-#define LOADER_RESTRICT_FORWARD_ECD 80000
+#define LOADER_RESTRICT_FORWARD_ECD 20000
 
-#define LOADER_CALIBRATE_DOWN_PER_LENGTH 5 //校准时装填电机每次下移的编码值
-#define LOADER_CALIBRATE_UP_PER_LENGTH 5   //校准时装填电机每次上移的编码值
-#define LOADER_SHOOT_INIT_SPEED 5          //发射初始化时装填电机下移的速度
-#define LOADER_SHOOT_UP_SPEED 10           //发射时装填电机上移的速度
-#define LOADER_SHOOT_DOWN_SPEED 5          //发射时装填电机下移的速度
+#define LOADER_CALIBRATE_DOWN_PER_LENGTH 300 //校准时装填电机每次下移的编码值
+#define LOADER_CALIBRATE_UP_PER_LENGTH 300   //校准时装填电机每次上移的编码值
+#define LOADER_SHOOT_INIT_SPEED 5            //发射初始化时装填电机下移的速度
+#define LOADER_SHOOT_UP_SPEED 10             //发射时装填电机上移的速度
+#define LOADER_SHOOT_DOWN_SPEED 5            //发射时装填电机下移的速度
 
 #ifdef __cplusplus
 extern "C"

@@ -38,6 +38,8 @@ void load_task(void const *pvParameters)
         currentTime = xTaskGetTickCount();
         //装填任务数据更新
         load.data_update();
+        //装填任务标志位更新
+        load.flag_update();
         //分任务控制
         load.control();
         //发送电流
@@ -207,10 +209,12 @@ void load_task_t::CALIBRATE_control()
     if (IF_RC_SW1_DOWN)
     {
         loader_motor.adjust_position();
+        rotary_motor.adjust_position();
     }
-    else if (IF_RC_SW1_MID && IF_RC_SW1_UP)
+    else if (IF_RC_SW1_MID || IF_RC_SW1_UP)
     {
         loader_motor.calibrate();
+        rotary_motor.calibrate();
     }
 }
 
@@ -310,7 +314,7 @@ void loader_motor_t::auto_calibrate()
         has_calibrate_begun = 0;
 
         //设置零点、受限点和最大点
-        zero_point_ecd = accumulate_ecd;
+        zero_point_ecd = accumulate_ecd + ZERO_POINT_OFFSET;
         restrict_point_ecd = accumulate_ecd + LOADER_RESTRICT_FORWARD_ECD;
         max_point_ecd = accumulate_ecd + LOADER_FORWARD_ECD;
     }
@@ -326,7 +330,7 @@ void loader_motor_t::manual_calibrate()
     has_calibrate_begun = 0;
 
     //设置零点和最大点
-    zero_point_ecd = accumulate_ecd;
+    zero_point_ecd = accumulate_ecd + ZERO_POINT_OFFSET;
     max_point_ecd = accumulate_ecd + LOADER_FORWARD_ECD;
     buzzer_warn(0, 0, 3, 10000);
 }
