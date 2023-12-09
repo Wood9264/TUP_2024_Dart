@@ -22,13 +22,18 @@
 #define LOADER_POSITION_PID_MAX_OUT 10.0f
 #define LOADER_POSITION_PID_MAX_IOUT 0.0f
 
-//转盘电机LADRC参数
-#define ROTARY_LADRC_WC 0.0f
-#define ROTARY_LADRC_B0 0.0f
-#define ROTARY_LADRC_W0 0.0f
-#define ROTARY_LADRC_MAXOUT 0.0f
-#define ROTARY_LADRC_W 0.0f
-#define ROTARY_LADRC_GAIN 0.0f
+//转盘电机速度环PID参数
+#define ROTARY_SPEED_PID_KP 60.0f
+#define ROTARY_SPEED_PID_KI 3.0f
+#define ROTARY_SPEED_PID_KD 70.0f
+#define ROTARY_SPEED_PID_MAX_OUT 25000.0f
+#define ROTARY_SPEED_PID_MAX_IOUT 25000.0f
+//转盘电机位置环PID参数
+#define ROTARY_POSITION_PID_KP 200.0f
+#define ROTARY_POSITION_PID_KI 0.0f
+#define ROTARY_POSITION_PID_KD 200.0f
+#define ROTARY_POSITION_PID_MAX_OUT 300.0f
+#define ROTARY_POSITION_PID_MAX_IOUT 250.0f
 
 //装填电机转速滤波参数
 #define LOADER_MOTOR_RMP_TO_FILTER_SPEED 0.00290888208665721596153948461415f
@@ -40,7 +45,7 @@
 #define RC_TO_ROTARY_MOTOR_ANGLE_SET 0.00001f
 
 //转盘电机发射初始化时角度的斜坡增加量
-#define ROTARY_SHOOT_INIT_RAMP_BUFF 0.007f
+#define ROTARY_SHOOT_INIT_RAMP_BUFF 0.2f
 //转盘电机发射时角度的斜坡增加量
 #define ROTARY_SHOOT_RAMP_BUFF 0.007f
 
@@ -113,14 +118,16 @@ extern "C"
     {
     public:
         const motor_t *motor_measure;
-        fp32 acceleration;
+
         fp32 relative_angle;
         fp32 last_relative_angle;
 
         fp32 relative_angle_set;
         fp32 final_relative_angle_set;
+        fp32 speed_set;
 
-        LADRC_FDW_t LADRC_FDW;
+        PID_t speed_pid;
+        PID_t position_pid;
 
         int16_t give_current;
 
@@ -132,7 +139,9 @@ extern "C"
         void acceleration_update();
         void flag_update();
         void adjust_position();
+        void calibrate();
         void shoot_init();
+        void calculate_current();
         bool_t shoot_move_to_next();
     };
 

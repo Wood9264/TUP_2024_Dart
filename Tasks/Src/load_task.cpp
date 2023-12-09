@@ -63,7 +63,10 @@ load_task_t::load_task_t()
     loader_motor.has_calibrated = 0;
 
     //初始化转盘电机
-    rotary_motor.LADRC_FDW.init(ROTARY_LADRC_WC, ROTARY_LADRC_B0, ROTARY_LADRC_W0, ROTARY_LADRC_MAXOUT, ROTARY_LADRC_W, ROTARY_LADRC_GAIN);
+    fp32 rotary_speed_pid[3] = {ROTARY_SPEED_PID_KP, ROTARY_SPEED_PID_KI, ROTARY_SPEED_PID_KD};
+    fp32 rotary_position_pid[3] = {ROTARY_POSITION_PID_KP, ROTARY_POSITION_PID_KI, ROTARY_POSITION_PID_KD};
+    rotary_motor.speed_pid.init(PID_POSITION, rotary_speed_pid, ROTARY_SPEED_PID_MAX_OUT, ROTARY_SPEED_PID_MAX_IOUT);
+    rotary_motor.position_pid.init(PID_POSITION, rotary_position_pid, ROTARY_POSITION_PID_MAX_OUT, ROTARY_POSITION_PID_MAX_IOUT);
     rotary_motor.relative_angle = 0;
     rotary_motor.last_relative_angle = 0;
     rotary_motor.give_current = 0;
@@ -93,7 +96,7 @@ void load_task_t::data_update()
     //更新转盘电机数据
     rotary_motor.last_relative_angle = rotary_motor.relative_angle;
     rotary_motor.motor_ecd_to_relative_angle();
-    rotary_motor.acceleration_update();
+    // rotary_motor.acceleration_update();
 }
 
 /**
@@ -116,13 +119,13 @@ void rotary_motor_t::motor_ecd_to_relative_angle()
     relative_angle = delta_angle;
 }
 
-/**
- * @brief   计算转盘电机加速度
- */
-void rotary_motor_t::acceleration_update()
-{
-    acceleration = (relative_angle - last_relative_angle) * 1000;
-}
+// /**
+//  * @brief   计算转盘电机加速度
+//  */
+// void rotary_motor_t::acceleration_update()
+// {
+//     acceleration = (relative_angle - last_relative_angle) * 1000;
+// }
 
 /**
  * @brief   装填任务标志位更新
@@ -342,16 +345,24 @@ void rotary_motor_t::adjust_position()
 {
     static fp32 add_angle = 0.0f;
 
-    //装填电机未校准时或转盘电机锁定时不能调整位置
+    // 装填电机未校准时或转盘电机锁定时不能调整位置
     if (!loader_motor_point()->has_calibrated || should_lock)
     {
-        give_current = LADRC_FDW.FDW_calc(relative_angle, relative_angle_set, acceleration);
+        calculate_current();
         return;
     }
 
     add_angle = load.load_rc_ctrl->rc.ch[0] * RC_TO_ROTARY_MOTOR_ANGLE_SET;
     relative_angle_set = rad_format(relative_angle_set + add_angle);
-    give_current = LADRC_FDW.FDW_calc(relative_angle, relative_angle_set, acceleration);
+    calculate_current();
+}
+
+/**
+ * @brief   校准模式下转盘电机不转动，但仍需计算电流
+ */
+void rotary_motor_t::calibrate()
+{
+    calculate_current();
 }
 
 /**
@@ -378,7 +389,7 @@ void rotary_motor_t::shoot_init()
     //装填电机未校准时不能初始化
     if (!loader_motor_point()->has_calibrated)
     {
-        give_current = LADRC_FDW.FDW_calc(relative_angle, relative_angle_set, acceleration);
+        calculate_current();
         return;
     }
 
@@ -421,13 +432,13 @@ void rotary_motor_t::shoot_init()
     //锁定时转盘不动
     if (should_lock)
     {
-        give_current = LADRC_FDW.FDW_calc(relative_angle, relative_angle_set, acceleration);
+        calculate_current();
     }
     //不锁定时设定值逐渐向final增加
     else
     {
         relative_angle_set = RAMP_float(final_relative_angle_set, relative_angle, ROTARY_SHOOT_INIT_RAMP_BUFF);
-        give_current = LADRC_FDW.FDW_calc(relative_angle, relative_angle_set, acceleration);
+        calculate_current();
     }
 
     //角度差小于一定值时初始化结束
@@ -477,7 +488,7 @@ void load_task_t::shooting()
     {
         loader_motor.speed_set = loader_motor.position_pid.calc(loader_motor.accumulate_ecd, loader_motor.ecd_set);
         loader_motor.give_current = loader_motor.speed_pid.calc(loader_motor.motor_speed, loader_motor.speed_set);
-        rotary_motor.give_current = rotary_motor.LADRC_FDW.FDW_calc(rotary_motor.relative_angle, rotary_motor.relative_angle_set, rotary_motor.acceleration);
+        rotary_motor.calculate_current();
         return;
     }
 
@@ -553,12 +564,12 @@ bool_t rotary_motor_t::shoot_move_to_next()
     //转盘电机锁定时不能发射
     if (should_lock)
     {
-        give_current = LADRC_FDW.FDW_calc(relative_angle, relative_angle_set, acceleration);
+        calculate_current();
         return 0;
     }
 
     relative_angle_set = RAMP_float(final_relative_angle_set, relative_angle, ROTARY_SHOOT_RAMP_BUFF);
-    give_current = LADRC_FDW.FDW_calc(relative_angle, relative_angle_set, acceleration);
+    calculate_current();
 
     return (fabs(final_relative_angle_set - relative_angle) < ROTARY_ANGLE_TOLERANCE);
 }
@@ -574,4 +585,13 @@ void load_task_t::dart_index_add()
         syspoint()->active_dart_index++;
         has_index_added = 1;
     }
+}
+
+/**
+ * @brief   计算电流
+*/
+void rotary_motor_t::calculate_current()
+{
+    speed_set = position_pid.relative_angle_calc(relative_angle, relative_angle_set);
+    give_current = speed_pid.calc(motor_measure->speed_rpm, speed_set);
 }
