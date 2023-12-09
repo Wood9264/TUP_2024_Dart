@@ -269,7 +269,10 @@ void revolver_task_t::CALIBRATE_control()
 		fric_motor[i].current_calculate();
 	}
 
-	yaw_motor.ecd_set += revolver_rc_ctrl->rc.ch[2] * RC_TO_YAW_ECD_SET;
+	if(IF_RC_SW1_DOWN)
+	{
+		yaw_motor.ecd_set += revolver_rc_ctrl->rc.ch[2] * RC_TO_YAW_ECD_SET;
+	}
 	yaw_motor.speed_set = yaw_motor.position_pid.calc(yaw_motor.accumulate_ecd, yaw_motor.ecd_set);
 	yaw_motor.give_current = yaw_motor.speed_pid.calc(yaw_motor.motor_measure->speed_rpm, yaw_motor.speed_set);
 }
