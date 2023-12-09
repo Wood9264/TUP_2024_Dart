@@ -64,6 +64,7 @@ extern fp32 loop_fp32_constrain(fp32 Input, fp32 minValue, fp32 maxValue);
 //角度 °限幅 180 ~ -180
 extern  fp32 theta_format(fp32 Ang);
 float RAMP_float( float final, float now, float ramp );
+extern fp32 RAMP_float_loop_constrain(float final, float now, float ramp);
 extern float Get_Diff(uint8_t queue_len, QueueObj *Data,float add_data);
 extern void Clear_Queue(QueueObj* queue);
 

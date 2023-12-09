@@ -228,6 +228,44 @@ float RAMP_float( float final, float now, float ramp )
 }
 
 /**
+  * @brief  带循环限幅的斜坡函数,使目标输出值缓慢等于期望值
+  * @param  期望最终输出,当前输出,变化速度(越大越快)
+  * @retval 当前输出
+  * @attention  
+  */
+fp32 RAMP_float_loop_constrain(float final, float now, float ramp)
+{
+    fp32 buffer = 0;
+
+    buffer = rad_format(final - now);
+
+    if (buffer > 0)
+    {
+        if (buffer > ramp)
+        {
+            now += ramp;
+        }
+        else
+        {
+            now += buffer; // now=final
+        }
+    }
+    else
+    {
+        if (buffer < -ramp)
+        {
+            now += -ramp;
+        }
+        else
+        {
+            now += buffer;
+        }
+    }
+
+    return now;
+}
+
+/**
 * @brief 获取目标的差分
 * @param void
 * @return void

@@ -437,7 +437,7 @@ void rotary_motor_t::shoot_init()
     //不锁定时设定值逐渐向final增加
     else
     {
-        relative_angle_set = RAMP_float(final_relative_angle_set, relative_angle, ROTARY_SHOOT_INIT_RAMP_BUFF);
+        relative_angle_set = RAMP_float_loop_constrain(final_relative_angle_set, relative_angle, ROTARY_SHOOT_INIT_RAMP_BUFF);
         calculate_current();
     }
 
