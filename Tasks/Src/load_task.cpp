@@ -375,7 +375,7 @@ void load_task_t::SHOOT_control()
         rotary_motor.shoot_init();
         loader_motor.shoot_init();
     }
-    if (IF_RC_SW1_MID && IF_RC_SW1_UP)
+    if (IF_RC_SW1_MID || IF_RC_SW1_UP)
     {
         shooting();
     }
@@ -437,13 +437,14 @@ void rotary_motor_t::shoot_init()
     //不锁定时设定值逐渐向final增加
     else
     {
-        relative_angle_set = RAMP_float_loop_constrain(final_relative_angle_set, relative_angle, ROTARY_SHOOT_INIT_RAMP_BUFF);
+        relative_angle_set = RAMP_float_loop_constrain(final_relative_angle_set, relative_angle_set, ROTARY_SHOOT_INIT_RAMP_BUFF);
         calculate_current();
     }
 
     //角度差小于一定值时初始化结束
-    if (fabs(final_relative_angle_set - relative_angle) < ROTARY_ANGLE_TOLERANCE)
+    if (fabs(final_relative_angle_set - relative_angle) < ROTARY_ANGLE_TOLERANCE && has_shoot_init_started == 1)
     {
+        has_shoot_init_started = 0;
         has_shoot_init_finished = 1;
     }
 }
@@ -465,6 +466,7 @@ void loader_motor_t::shoot_init()
     if (rotary_motor_point()->has_shoot_init_started)
     {
         ecd_set = zero_point_ecd;
+        has_shoot_init_started = 1;
         has_shoot_init_finished = 0;
     }
 
@@ -472,8 +474,9 @@ void loader_motor_t::shoot_init()
     give_current = speed_pid.calc(motor_speed, speed_set);
 
     //装填电机初始化结束
-    if (fabs(ecd_set - accumulate_ecd) < LOADER_ECD_TOLERANCE)
+    if (fabs(ecd_set - accumulate_ecd) < LOADER_ECD_TOLERANCE && has_shoot_init_started == 1)
     {
+        has_shoot_init_started = 0;
         has_shoot_init_finished = 1;
     }
 }
@@ -568,7 +571,7 @@ bool_t rotary_motor_t::shoot_move_to_next()
         return 0;
     }
 
-    relative_angle_set = RAMP_float(final_relative_angle_set, relative_angle, ROTARY_SHOOT_RAMP_BUFF);
+    relative_angle_set = RAMP_float_loop_constrain(final_relative_angle_set, relative_angle_set, ROTARY_SHOOT_RAMP_BUFF);
     calculate_current();
 
     return (fabs(final_relative_angle_set - relative_angle) < ROTARY_ANGLE_TOLERANCE);
@@ -580,7 +583,7 @@ bool_t rotary_motor_t::shoot_move_to_next()
 void load_task_t::dart_index_add()
 {
     //左摇杆↖打出下一发飞镖
-    if (RC_held_continuous_return(LEFT_ROCKER_LEFT_TOP, 0) && has_index_added == 0 && syspoint()->active_dart_index < 4)
+    if (RC_held_continuous_return(LEFT_ROCKER_LEFT_TOP, 0) && has_index_added == 0 && syspoint()->active_dart_index <= 4)
     {
         syspoint()->active_dart_index++;
         has_index_added = 1;

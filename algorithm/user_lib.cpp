@@ -220,7 +220,7 @@ float RAMP_float( float final, float now, float ramp )
 				}
 				else
 				{
-						now += buffer;
+						now += -buffer;
 				}
         }
 		

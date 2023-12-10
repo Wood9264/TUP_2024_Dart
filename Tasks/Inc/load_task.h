@@ -45,14 +45,14 @@
 #define RC_TO_ROTARY_MOTOR_ANGLE_SET 0.00001f
 
 //转盘电机发射初始化时角度的斜坡增加量
-#define ROTARY_SHOOT_INIT_RAMP_BUFF 0.2f
+#define ROTARY_SHOOT_INIT_RAMP_BUFF 0.004f
 //转盘电机发射时角度的斜坡增加量
-#define ROTARY_SHOOT_RAMP_BUFF 0.007f
+#define ROTARY_SHOOT_RAMP_BUFF 0.005f
 
 //转盘电机运动到指定位置时允许的角度误差，单位为弧度
-#define ROTARY_ANGLE_TOLERANCE 0.01f
+#define ROTARY_ANGLE_TOLERANCE 0.0001f
 //装填电机运动到指定位置时允许的编码值误差
-#define LOADER_ECD_TOLERANCE 100
+#define LOADER_ECD_TOLERANCE 8192
 
 //校准时零点编码值的补偿量。防止滑块回退时因为超调碰到触点开关
 #define ZERO_POINT_OFFSET 8192
@@ -70,7 +70,7 @@
 #define LOADER_CALIBRATE_UP_PER_LENGTH 300   //校准时装填电机每次上移的编码值
 #define LOADER_SHOOT_INIT_SPEED 5            //发射初始化时装填电机下移的速度
 #define LOADER_SHOOT_UP_SPEED 10             //发射时装填电机上移的速度
-#define LOADER_SHOOT_DOWN_SPEED 5            //发射时装填电机下移的速度
+#define LOADER_SHOOT_DOWN_SPEED 10            //发射时装填电机下移的速度
 
 #ifdef __cplusplus
 extern "C"
@@ -102,6 +102,7 @@ extern "C"
         bool_t has_calibrated;
         bool_t bottom_tick;
         bool_t is_restricted_state;
+        bool_t has_shoot_init_started;
         bool_t has_shoot_init_finished;
 
         void flag_update();
