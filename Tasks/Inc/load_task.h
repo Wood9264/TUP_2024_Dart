@@ -55,7 +55,7 @@
 #define LOADER_ECD_TOLERANCE 8192
 
 //校准时零点编码值的补偿量。防止滑块回退时因为超调碰到触点开关
-#define ZERO_POINT_OFFSET 8192
+#define ZERO_POINT_OFFSET 16384
 
 //转盘电机零点编码值
 #define ROTARY_ZERO_POINT_ECD 0
@@ -104,6 +104,8 @@ extern "C"
         bool_t is_restricted_state;
         bool_t has_shoot_init_started;
         bool_t has_shoot_init_finished;
+        bool_t has_shoot_up_finished;
+        bool_t has_shoot_down_finished;
 
         void flag_update();
         void adjust_position();
@@ -111,8 +113,8 @@ extern "C"
         void auto_calibrate();
         void manual_calibrate();
         void shoot_init();
-        bool_t shoot_move_up();
-        bool_t shoot_move_down();
+        void shoot_move_up();
+        void shoot_move_down();
     };
 
     class rotary_motor_t
@@ -135,6 +137,7 @@ extern "C"
         bool_t should_lock;
         bool_t has_shoot_init_started;
         bool_t has_shoot_init_finished;
+        bool_t has_move_to_next_finished;
 
         void motor_ecd_to_relative_angle();
         void acceleration_update();
@@ -143,7 +146,7 @@ extern "C"
         void calibrate();
         void shoot_init();
         void calculate_current();
-        bool_t shoot_move_to_next();
+        void shoot_move_to_next();
     };
 
     class load_task_t
