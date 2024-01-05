@@ -5,6 +5,7 @@
 #include "BSP_can.h"
 #include "system_task.h"
 #include "monitor_task.h"
+#include "revolver_task.h"
 
 load_task_t load;
 
@@ -594,8 +595,19 @@ void rotary_motor_t::shoot_move_to_next()
  */
 void load_task_t::dart_index_add()
 {
-    //装填电机下移完毕且转盘电机转到位后，可打下一发飞镖
-    if (loader_motor.has_shoot_down_finished && rotary_motor.has_move_to_next_finished)
+    static uint16_t settled_time = 0;
+
+    //装填电机下移完毕且转盘电机转到位且yaw轴转到位一定时间后，可打下一发飞镖
+    if(loader_motor.has_shoot_down_finished && rotary_motor.has_move_to_next_finished && revolver_point()->yaw_motor.has_move_to_next_finished)
+    {
+        settled_time++;
+    }
+    else
+    {
+        settled_time = 0;
+    }
+
+    if (settled_time > 500)
     {
         //左摇杆↖打出下一发飞镖
         if (RC_held_continuous_return(LEFT_ROCKER_LEFT_TOP, 0) && syspoint()->active_dart_index < 4)
