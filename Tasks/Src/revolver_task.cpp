@@ -502,7 +502,7 @@ void yaw_motor_t::init()
 	// give_current = speed_pid.calc(motor_measure->speed_rpm, speed_set);
 
 	//YAW轴电机初始化结束
-    if (fabs(ecd_set - accumulate_ecd) < YAW_GIMBAL_MOTOR_TOE && has_shoot_init_started == 1)
+    if (fabs(ecd_set - accumulate_ecd) < YAW_ECD_TOLERANCE && has_shoot_init_started == 1)
     {
         has_shoot_init_started = 0;
         has_shoot_init_finished = 1;
