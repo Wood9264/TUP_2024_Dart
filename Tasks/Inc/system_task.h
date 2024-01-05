@@ -76,7 +76,7 @@ extern "C"
 
 		system_mode_e sys_mode;
 		system_mode_e last_sys_mode;
-		uint8_t active_dart_index;//当前发射的飞镖编号，从1开始
+		uint8_t active_dart_index;//当前正在发射的飞镖编号，范围0~4
 		/*下面的东西都没用*/
 
 

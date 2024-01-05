@@ -416,7 +416,7 @@ void rotary_motor_t::shoot_init()
             final_relative_angle_set = 0;
             has_shoot_init_started = 1;
             has_shoot_init_finished = 0;
-            syspoint()->active_dart_index = 1;
+            syspoint()->active_dart_index = 0;
         }
         //↖↖初始化为2号弹体位置
         else if (RC_held_continuous_return(LEFT_ROCKER_LEFT_TOP, 100))
@@ -424,7 +424,7 @@ void rotary_motor_t::shoot_init()
             final_relative_angle_set = PI / 2;
             has_shoot_init_started = 1;
             has_shoot_init_finished = 0;
-            syspoint()->active_dart_index = 2;
+            syspoint()->active_dart_index = 1;
         }
         //↙↖初始化为3号弹体位置
         else if (RC_held_continuous_return(LEFT_ROCKER_LEFT_BOTTOM, 100))
@@ -432,7 +432,7 @@ void rotary_motor_t::shoot_init()
             final_relative_angle_set = PI;
             has_shoot_init_started = 1;
             has_shoot_init_finished = 0;
-            syspoint()->active_dart_index = 3;
+            syspoint()->active_dart_index = 2;
         }
         //↘↖初始化为4号弹体位置
         else if (RC_held_continuous_return(LEFT_ROCKER_RIGHT_BOTTOM, 100))
@@ -440,7 +440,7 @@ void rotary_motor_t::shoot_init()
             final_relative_angle_set = -PI / 2;
             has_shoot_init_started = 1;
             has_shoot_init_finished = 0;
-            syspoint()->active_dart_index = 4;
+            syspoint()->active_dart_index = 3;
         }
     }
 
@@ -572,7 +572,7 @@ void loader_motor_t::shoot_move_down()
 void rotary_motor_t::shoot_move_to_next()
 {
     //设定最终角度
-    final_relative_angle_set = rad_format((PI / 2) * (syspoint()->active_dart_index - 1));
+    final_relative_angle_set = rad_format((PI / 2) * (syspoint()->active_dart_index));
 
     //装填电机上移完毕且转盘电机不锁定时，设定值逐渐向final增加
     if (loader_motor_point()->has_shoot_up_finished && !should_lock)
@@ -598,7 +598,7 @@ void load_task_t::dart_index_add()
     if (loader_motor.has_shoot_down_finished && rotary_motor.has_move_to_next_finished)
     {
         //左摇杆↖打出下一发飞镖
-        if (RC_held_continuous_return(LEFT_ROCKER_LEFT_TOP, 0) && syspoint()->active_dart_index <= 4)
+        if (RC_held_continuous_return(LEFT_ROCKER_LEFT_TOP, 0) && syspoint()->active_dart_index < 4)
         {
             syspoint()->active_dart_index++;
             has_index_added = 1;
