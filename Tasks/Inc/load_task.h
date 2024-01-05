@@ -50,7 +50,7 @@
 #define ROTARY_SHOOT_RAMP_BUFF 0.005f
 
 //转盘电机运动到指定位置时允许的角度误差，单位为弧度
-#define ROTARY_ANGLE_TOLERANCE 0.0001f
+#define ROTARY_ANGLE_TOLERANCE 0.01f
 //装填电机运动到指定位置时允许的编码值误差
 #define LOADER_ECD_TOLERANCE 8192
 

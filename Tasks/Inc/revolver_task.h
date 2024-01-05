@@ -56,7 +56,7 @@
 #define ANGLE_LOOP_SWITCH_DISTANCE (8192) //速度环切换到角度环时，设定编码值与实际编码值的距离
 
 // YAW轴电机运动到指定位置时允许的编码值误差
-#define YAW_ECD_TOLERANCE 10
+#define YAW_ECD_TOLERANCE 100
 
 #define YAW_SHOOT_INIT_SPEED 1000 //发射初始化时YAW轴电机的转速
 #define YAW_SHOOT_SPEED 1000 //发射时YAW轴电机的转速
