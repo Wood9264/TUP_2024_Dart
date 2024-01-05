@@ -173,6 +173,8 @@ class yaw_motor_t
 		void SHOOT_control();
 		void READY_control();
 		void SHOOTING_control();
+		void fric_motor_init();
+		void fric_motor_shooting();
 		void fric_speed_buzzer(); 
 		
 

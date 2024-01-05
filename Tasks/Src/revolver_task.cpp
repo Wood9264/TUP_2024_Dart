@@ -430,59 +430,49 @@ void revolver_task_t::SHOOT_control()
 {
 	if (IF_RC_SW1_DOWN)
 	{
-		//YAW电机发射初始化
+		// YAW电机发射初始化
 		yaw_motor.init();
-
-		//遥控器↖↗，开启摩擦轮
-		if (RC_double_held_single_return(LEFT_ROCKER_LEFT_TOP, RIGHT_ROCKER_RIGHT_TOP, 400))
-		{
-			is_fric_wheel_on = 1;
-		}
-
-		if (is_fric_wheel_on == 0)
-		{
-			for (int i = 0; i < 4; i++)
-			{
-				fric_motor[i].speed_set = 0;
-			}
-		}
-		else if (is_fric_wheel_on == 1)
-		{
-			fric_motor[0].speed_set = RAMP_float(-(BASE_SPEED + fric_speed_offset), fric_motor[0].speed_set, FRIC_RAMP_BUFF);
-			fric_motor[1].speed_set = RAMP_float((BASE_SPEED + fric_speed_offset), fric_motor[1].speed_set, FRIC_RAMP_BUFF);
-			fric_motor[2].speed_set = RAMP_float(-(BASE_SPEED + fric_speed_offset), fric_motor[2].speed_set, FRIC_RAMP_BUFF);
-			fric_motor[3].speed_set = RAMP_float((BASE_SPEED + fric_speed_offset), fric_motor[3].speed_set, FRIC_RAMP_BUFF);
-		}
+		//摩擦轮发射初始化
+		fric_motor_init();
 	}
 	else if (IF_RC_SW1_MID)
 	{
-		//YAW电机发射
+		// YAW电机发射
 		yaw_motor.shooting();
+		fric_motor_shooting();
+	}
+}
 
-		//摩擦轮转速设定
-		if (is_fric_wheel_on == 0)
+/**
+ * @brief	摩擦轮发射初始化
+ */
+void revolver_task_t::fric_motor_init()
+{
+	//遥控器↖↗，开启摩擦轮
+	if (RC_double_held_single_return(LEFT_ROCKER_LEFT_TOP, RIGHT_ROCKER_RIGHT_TOP, 400))
+	{
+		is_fric_wheel_on = 1;
+	}
+
+	if (is_fric_wheel_on == 0)
+	{
+		for (int i = 0; i < 4; i++)
 		{
-			for (int i = 0; i < 4; i++)
-			{
-				fric_motor[i].speed_set = 0;
-			}
+			fric_motor[i].speed_set = 0;
 		}
-		else if (is_fric_wheel_on == 1)
-		{
-			fric_motor[0].speed_set = -(BASE_SPEED + fric_speed_offset + 1000);
-			fric_motor[1].speed_set = (BASE_SPEED + fric_speed_offset + 1000);
-			fric_motor[2].speed_set = -(BASE_SPEED + fric_speed_offset);
-			fric_motor[3].speed_set = (BASE_SPEED + fric_speed_offset);
-		}
+	}
+	else if (is_fric_wheel_on == 1)
+	{
+		fric_motor[0].speed_set = RAMP_float(-(BASE_SPEED + fric_speed_offset), fric_motor[0].speed_set, FRIC_RAMP_BUFF);
+		fric_motor[1].speed_set = RAMP_float((BASE_SPEED + fric_speed_offset), fric_motor[1].speed_set, FRIC_RAMP_BUFF);
+		fric_motor[2].speed_set = RAMP_float(-(BASE_SPEED + fric_speed_offset), fric_motor[2].speed_set, FRIC_RAMP_BUFF);
+		fric_motor[3].speed_set = RAMP_float((BASE_SPEED + fric_speed_offset), fric_motor[3].speed_set, FRIC_RAMP_BUFF);
 	}
 
 	for (int i = 0; i < 4; i++)
 	{
 		fric_motor[i].current_calculate();
 	}
-
-	yaw_motor.speed_set = yaw_motor.position_pid.calc(yaw_motor.accumulate_ecd, yaw_motor.ecd_set);
-	yaw_motor.give_current = yaw_motor.speed_pid.calc(yaw_motor.motor_measure->speed_rpm, yaw_motor.speed_set);
 }
 
 /**
@@ -504,19 +494,46 @@ void yaw_motor_t::init()
         has_shoot_init_finished = 0;
     }
 
-	// speed_set = position_pid.calc(accumulate_ecd, ecd_set);
-	// give_current = speed_pid.calc(motor_measure->speed_rpm, speed_set);
-
 	//YAW轴电机初始化结束
     if (fabs(ecd_set - accumulate_ecd) < YAW_ECD_TOLERANCE && has_shoot_init_started == 1)
     {
         has_shoot_init_started = 0;
         has_shoot_init_finished = 1;
     }
+
+	speed_set = position_pid.calc(accumulate_ecd, ecd_set);
+	give_current = speed_pid.calc(motor_measure->speed_rpm, speed_set);
 }
 
 /**
- * @brief	发射
+ * @brief	摩擦轮发射时的控制
+*/
+void revolver_task_t::fric_motor_shooting()
+{
+	//摩擦轮转速设定
+	if (is_fric_wheel_on == 0)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			fric_motor[i].speed_set = 0;
+		}
+	}
+	else if (is_fric_wheel_on == 1)
+	{
+		fric_motor[0].speed_set = -(BASE_SPEED + fric_speed_offset + 1000);
+		fric_motor[1].speed_set = (BASE_SPEED + fric_speed_offset + 1000);
+		fric_motor[2].speed_set = -(BASE_SPEED + fric_speed_offset);
+		fric_motor[3].speed_set = (BASE_SPEED + fric_speed_offset);
+	}
+
+	for (int i = 0; i < 4; i++)
+	{
+		fric_motor[i].current_calculate();
+	}
+}
+
+/**
+ * @brief	yaw发射时的控制
 */
 void yaw_motor_t::shooting()
 {
@@ -526,20 +543,20 @@ void yaw_motor_t::shooting()
 		return;
 	}
 
-	//装填电机上移完毕且转盘电机不锁定时，设定值变为final
+	//装填电机上移完毕且转盘电机不锁定时，改变设定值
     if (loader_motor_point()->has_shoot_up_finished && !rotary_motor_point()->should_lock)
     {
         ecd_set = calibrated_point + offset_num[syspoint()->active_dart_index] * 8192;
     }
-
-	// speed_set = position_pid.calc(accumulate_ecd, ecd_set);
-	// give_current = speed_pid.calc(motor_measure->speed_rpm, speed_set);
 
 	//目标值和实际值之差小于一定值，可认为转到位
     if (fabs(ecd_set - accumulate_ecd) < YAW_ECD_TOLERANCE)
     {
         has_move_to_next_finished = 1;
     }
+
+	speed_set = position_pid.calc(accumulate_ecd, ecd_set);
+	give_current = speed_pid.calc(motor_measure->speed_rpm, speed_set);
 }
 
 /**
