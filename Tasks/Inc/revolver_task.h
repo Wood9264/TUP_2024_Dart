@@ -55,6 +55,12 @@
 #define POSITION_LIMIT_BUFFER_DISTANCE (8192 * 36 / 36) //滑块接近限位开始减速缓冲时与限位的距离
 #define ANGLE_LOOP_SWITCH_DISTANCE (8192) //速度环切换到角度环时，设定编码值与实际编码值的距离
 
+// YAW轴电机运动到指定位置时允许的编码值误差
+#define YAW_ECD_TOLERANCE 10
+
+#define YAW_SHOOT_INIT_SPEED 1000 //发射初始化时YAW轴电机的转速
+#define YAW_SHOOT_SPEED 1000 //发射时YAW轴电机的转速
+
 // #define CALIBRATE_DOWN_SPEED (-5) //校准时滑块下移的速度
 // #define CALIBRATE_UP_SPEED 5 //校准时滑块上移的速度
 // #define SLIPPER_SHOOTING_SPEED 10 //发射时滑块上移的速度
@@ -91,10 +97,22 @@ class yaw_motor_t
 		int64_t accumulate_ecd;
 		fp32 ecd_set;
 		fp32 speed_set;
+		fp32 final_ecd_set;
 
 		int16_t give_current;
 
-		
+		int64_t calibrated_point;
+		fp32 offset_num[5];
+
+		bool_t has_calibrated;
+		bool_t has_shoot_init_started;
+		bool_t has_shoot_init_finished;
+		bool_t has_shoot_move_finished;
+		bool_t has_move_to_next_finished;
+
+		void calibrate();
+		void init();
+		void shooting();
 	};
 
 	class slipper_motor_t

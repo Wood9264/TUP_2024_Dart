@@ -100,6 +100,7 @@ void system_t::Transit()
 	{
 		revolver_point()->is_fric_wheel_on = 0;
 		revolver_point()->yaw_motor.ecd_set = revolver_point()->yaw_motor.accumulate_ecd;
+		revolver_point()->yaw_motor.has_shoot_init_finished = 0;
 		load_point()->loader_motor.ecd_set = load_point()->loader_motor.accumulate_ecd;
 		load_point()->loader_motor.has_shoot_init_finished = 0;
 		load_point()->rotary_motor.final_relative_angle_set = load_point()->rotary_motor.relative_angle;

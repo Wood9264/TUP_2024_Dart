@@ -5,6 +5,7 @@
 #include "judge_task.h"
 #include "BSP_buzzer.h"
 #include "monitor_task.h"
+#include "load_task.h"
 
 revolver_task_t  revolver; 
 
@@ -70,6 +71,13 @@ revolver_task_t::revolver_task_t()
 	}
 	
 	fric_speed_offset = 0;
+	yaw_motor.has_calibrated = 0;
+
+	yaw_motor.offset_num[0] = 5.3;
+	yaw_motor.offset_num[1] = 10.5;
+	yaw_motor.offset_num[2] = -5.5;
+	yaw_motor.offset_num[3] = -10.3;
+	yaw_motor.offset_num[4] = -10.3;
 	// slipper_motor.calibrate_begin = 0;
 	// slipper_motor.has_calibrated = 0;
 	// slipper_motor.if_shoot_begin = 0;
@@ -273,8 +281,26 @@ void revolver_task_t::CALIBRATE_control()
 	{
 		yaw_motor.ecd_set += revolver_rc_ctrl->rc.ch[2] * RC_TO_YAW_ECD_SET;
 	}
+	else if(IF_RC_SW1_MID)
+	{
+		yaw_motor.calibrate();
+	}
 	yaw_motor.speed_set = yaw_motor.position_pid.calc(yaw_motor.accumulate_ecd, yaw_motor.ecd_set);
 	yaw_motor.give_current = yaw_motor.speed_pid.calc(yaw_motor.motor_measure->speed_rpm, yaw_motor.speed_set);
+}
+
+/**
+ * @brief	校准YAW轴电机
+*/
+void yaw_motor_t::calibrate()
+{
+	//遥控器↖↗校准yaw轴
+	if(RC_double_held_single_return(LEFT_ROCKER_LEFT_TOP,RIGHT_ROCKER_RIGHT_TOP, 400))
+	{
+		calibrated_point = accumulate_ecd;
+		has_calibrated = 1;
+		buzzer_warn(0, 0, 3, 10000);
+	}
 }
 
 /**
@@ -404,6 +430,9 @@ void revolver_task_t::SHOOT_control()
 {
 	if (IF_RC_SW1_DOWN)
 	{
+		//YAW电机发射初始化
+		yaw_motor.init();
+
 		//遥控器↖↗，开启摩擦轮
 		if (RC_double_held_single_return(LEFT_ROCKER_LEFT_TOP, RIGHT_ROCKER_RIGHT_TOP, 400))
 		{
@@ -427,6 +456,9 @@ void revolver_task_t::SHOOT_control()
 	}
 	else if (IF_RC_SW1_MID)
 	{
+		//YAW电机发射
+		yaw_motor.shooting();
+
 		//摩擦轮转速设定
 		if (is_fric_wheel_on == 0)
 		{
@@ -451,6 +483,54 @@ void revolver_task_t::SHOOT_control()
 
 	yaw_motor.speed_set = yaw_motor.position_pid.calc(yaw_motor.accumulate_ecd, yaw_motor.ecd_set);
 	yaw_motor.give_current = yaw_motor.speed_pid.calc(yaw_motor.motor_measure->speed_rpm, yaw_motor.speed_set);
+}
+
+/**
+ * @brief	YAW电机发射初始化
+*/
+void yaw_motor_t::init()
+{
+	//转盘初始化时YAW轴电机一起初始化
+    if (rotary_motor_point()->has_shoot_init_started)
+    {
+        ecd_set = calibrated_point + offset_num[syspoint()->active_dart_index - 1] * 8192;
+        has_shoot_init_started = 1;
+        has_shoot_init_finished = 0;
+    }
+
+	// speed_set = position_pid.calc(accumulate_ecd, ecd_set);
+	// give_current = speed_pid.calc(motor_measure->speed_rpm, speed_set);
+
+	//YAW轴电机初始化结束
+    if (fabs(ecd_set - accumulate_ecd) < YAW_GIMBAL_MOTOR_TOE && has_shoot_init_started == 1)
+    {
+        has_shoot_init_started = 0;
+        has_shoot_init_finished = 1;
+    }
+}
+
+/**
+ * @brief	发射
+*/
+void yaw_motor_t::shooting()
+{
+	//设定最终角度
+	final_ecd_set = calibrated_point + offset_num[syspoint()->active_dart_index - 1] * 8192;
+
+	//装填电机上移完毕且转盘电机不锁定时，设定值变为final
+    if (loader_motor_point()->has_shoot_up_finished && !rotary_motor_point()->should_lock)
+    {
+        ecd_set = final_ecd_set;
+    }
+
+	// speed_set = position_pid.calc(accumulate_ecd, ecd_set);
+	// give_current = speed_pid.calc(motor_measure->speed_rpm, speed_set);
+
+	//目标值和实际值之差小于一定值，可认为转到位
+    if (fabs(final_ecd_set - motor_measure->ecd) < YAW_ECD_TOLERANCE)
+    {
+        has_move_to_next_finished = 1;
+    }
 }
 
 /**
