@@ -490,6 +490,12 @@ void revolver_task_t::SHOOT_control()
 */
 void yaw_motor_t::init()
 {
+	// yaw轴未校准时不能初始化
+	if (has_calibrated == 0)
+	{
+		return;
+	}
+
 	//转盘初始化时YAW轴电机一起初始化
     if (rotary_motor_point()->has_shoot_init_started)
     {
@@ -514,6 +520,12 @@ void yaw_motor_t::init()
 */
 void yaw_motor_t::shooting()
 {
+	// yaw轴未初始化时不能发射
+	if (has_shoot_init_finished == 0)
+	{
+		return;
+	}
+
 	//设定最终角度
 	final_ecd_set = calibrated_point + offset_num[syspoint()->active_dart_index] * 8192;
 
