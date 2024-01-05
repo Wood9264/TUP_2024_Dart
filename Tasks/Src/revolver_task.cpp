@@ -527,7 +527,7 @@ void yaw_motor_t::shooting()
 	// give_current = speed_pid.calc(motor_measure->speed_rpm, speed_set);
 
 	//目标值和实际值之差小于一定值，可认为转到位
-    if (fabs(final_ecd_set - motor_measure->ecd) < YAW_ECD_TOLERANCE)
+    if (fabs(final_ecd_set - accumulate_ecd) < YAW_ECD_TOLERANCE)
     {
         has_move_to_next_finished = 1;
     }
