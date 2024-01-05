@@ -526,20 +526,17 @@ void yaw_motor_t::shooting()
 		return;
 	}
 
-	//设定最终角度
-	final_ecd_set = calibrated_point + offset_num[syspoint()->active_dart_index] * 8192;
-
 	//装填电机上移完毕且转盘电机不锁定时，设定值变为final
     if (loader_motor_point()->has_shoot_up_finished && !rotary_motor_point()->should_lock)
     {
-        ecd_set = final_ecd_set;
+        ecd_set = calibrated_point + offset_num[syspoint()->active_dart_index] * 8192;
     }
 
 	// speed_set = position_pid.calc(accumulate_ecd, ecd_set);
 	// give_current = speed_pid.calc(motor_measure->speed_rpm, speed_set);
 
 	//目标值和实际值之差小于一定值，可认为转到位
-    if (fabs(final_ecd_set - accumulate_ecd) < YAW_ECD_TOLERANCE)
+    if (fabs(ecd_set - accumulate_ecd) < YAW_ECD_TOLERANCE)
     {
         has_move_to_next_finished = 1;
     }
