@@ -103,7 +103,7 @@ class yaw_motor_t
 		int16_t give_current;
 
 		int64_t calibrated_point;
-		fp32 offset_num[5];
+		fp32 offset_num[4];
 
 		bool_t has_calibrated;
 		bool_t has_shoot_init_started;

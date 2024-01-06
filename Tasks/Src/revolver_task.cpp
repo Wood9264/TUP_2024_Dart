@@ -73,10 +73,10 @@ revolver_task_t::revolver_task_t()
 	fric_speed_offset = 0;
 	yaw_motor.has_calibrated = 0;
 
-	yaw_motor.offset_num[0] = 5.3;
-	yaw_motor.offset_num[1] = 10.5;
-	yaw_motor.offset_num[2] = -5.5;
-	yaw_motor.offset_num[3] = -10.3;
+	yaw_motor.offset_num[0] = 30.3;
+	yaw_motor.offset_num[1] = 70.5;
+	yaw_motor.offset_num[2] = -0.5;
+	yaw_motor.offset_num[3] = -30.3;
 
 	outpost_speed_offset[0]	= 0;
 	outpost_speed_offset[1]	= 500;
@@ -552,8 +552,8 @@ void yaw_motor_t::shooting()
 		return;
 	}
 
-	//装填电机上移完毕且转盘电机不锁定时，改变设定值
-    if (loader_motor_point()->has_shoot_up_finished && !rotary_motor_point()->should_lock)
+	//装填电机上移完毕且转盘电机不锁定且没打完飞镖时，改变设定值
+    if (loader_motor_point()->has_shoot_up_finished && !rotary_motor_point()->should_lock && syspoint()->active_dart_index < 4)
     {
         ecd_set = calibrated_point + offset_num[syspoint()->active_dart_index] * 8192;
     }

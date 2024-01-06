@@ -580,8 +580,11 @@ void loader_motor_t::shoot_move_down()
 void rotary_motor_t::shoot_move_to_next()
 {
     //设定最终角度
-    final_relative_angle_set = rad_format((PI / 2) * (syspoint()->active_dart_index));
-
+    if(syspoint()->active_dart_index < 4)
+    {
+        final_relative_angle_set = rad_format((PI / 2) * syspoint()->active_dart_index);
+    }
+    
     //装填电机上移完毕且转盘电机不锁定时，设定值逐渐向final增加
     if (loader_motor_point()->has_shoot_up_finished && !should_lock)
     {
