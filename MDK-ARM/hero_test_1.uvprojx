@@ -1261,6 +1261,11 @@
               <FileType>1</FileType>
               <FilePath>..\Hardware\Src\pm01.c</FilePath>
             </File>
+            <File>
+              <FileName>tjc_usart_hmi.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\Hardware\Src\tjc_usart_hmi.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1390,6 +1395,11 @@
               <FileName>load_task.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\Tasks\Src\load_task.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>screen_task.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\Tasks\Src\screen_task.cpp</FilePath>
             </File>
           </Files>
         </Group>
