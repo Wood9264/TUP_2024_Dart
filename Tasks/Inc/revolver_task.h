@@ -41,7 +41,8 @@
 
 #define FRIC_RAMP_BUFF 20	//摩擦轮启动时的斜坡增加量
 
-#define BASE_SPEED 500 //四个摩擦轮的基础转速
+#define BASE_SPEED 1000 //四个摩擦轮的基础转速
+#define SPEED_DIFFERENCE 1000 //前后摩擦轮的转速差，正数为前轮快，负数为后轮快
 
 #define ONE_DART_ECD 134985 //每发飞镖的滑块电机编码值增加量
 #define MAX_DART_NUM 2 //发射架可装填的最大飞镖数量

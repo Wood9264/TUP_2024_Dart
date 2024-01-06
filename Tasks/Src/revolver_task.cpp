@@ -77,7 +77,11 @@ revolver_task_t::revolver_task_t()
 	yaw_motor.offset_num[1] = 10.5;
 	yaw_motor.offset_num[2] = -5.5;
 	yaw_motor.offset_num[3] = -10.3;
-	yaw_motor.offset_num[4] = -10.3;
+
+	outpost_speed_offset[0]	= 0;
+	outpost_speed_offset[1]	= 500;
+	outpost_speed_offset[2]	= 1000;
+	outpost_speed_offset[3]	= -500;
 	// slipper_motor.calibrate_begin = 0;
 	// slipper_motor.has_calibrated = 0;
 	// slipper_motor.if_shoot_begin = 0;
@@ -509,6 +513,12 @@ void yaw_motor_t::init()
 */
 void revolver_task_t::fric_motor_shooting()
 {
+	//发射完最后一个飞镖后，摩擦轮停止转动
+	if (syspoint()->active_dart_index == 4 && loader_motor_point()->has_shoot_down_finished)
+	{
+		is_fric_wheel_on = 0;
+	}
+
 	//摩擦轮转速设定
 	if (is_fric_wheel_on == 0)
 	{
@@ -519,10 +529,10 @@ void revolver_task_t::fric_motor_shooting()
 	}
 	else if (is_fric_wheel_on == 1)
 	{
-		fric_motor[0].speed_set = -(BASE_SPEED + fric_speed_offset + 1000);
-		fric_motor[1].speed_set = (BASE_SPEED + fric_speed_offset + 1000);
-		fric_motor[2].speed_set = -(BASE_SPEED + fric_speed_offset);
-		fric_motor[3].speed_set = (BASE_SPEED + fric_speed_offset);
+		fric_motor[0].speed_set = -(BASE_SPEED + (SPEED_DIFFERENCE / 2) + (loader_motor_point()->has_shoot_down_finished ? outpost_speed_offset[syspoint()->active_dart_index] : outpost_speed_offset[syspoint()->active_dart_index - 1]));
+		fric_motor[1].speed_set = (BASE_SPEED + (SPEED_DIFFERENCE / 2) + (loader_motor_point()->has_shoot_down_finished ? outpost_speed_offset[syspoint()->active_dart_index] : outpost_speed_offset[syspoint()->active_dart_index - 1]));
+		fric_motor[2].speed_set = -(BASE_SPEED - (SPEED_DIFFERENCE / 2) + (loader_motor_point()->has_shoot_down_finished ? outpost_speed_offset[syspoint()->active_dart_index] : outpost_speed_offset[syspoint()->active_dart_index - 1]));
+		fric_motor[3].speed_set = (BASE_SPEED - (SPEED_DIFFERENCE / 2) + (loader_motor_point()->has_shoot_down_finished ? outpost_speed_offset[syspoint()->active_dart_index] : outpost_speed_offset[syspoint()->active_dart_index - 1]));
 	}
 
 	for (int i = 0; i < 4; i++)
