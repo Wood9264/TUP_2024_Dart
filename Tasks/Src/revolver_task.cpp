@@ -487,10 +487,9 @@ void yaw_motor_t::init()
 	}
 
 	//转盘初始化时YAW轴电机一起初始化
-    if (rotary_motor_point()->has_shoot_init_started)
+    if (has_shoot_init_started)
     {
         ecd_set = calibrated_point + offset_num[syspoint()->active_dart_index] * 8192;
-        has_shoot_init_started = 1;
         has_shoot_init_finished = 0;
     }
 

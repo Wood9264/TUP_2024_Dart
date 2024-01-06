@@ -417,6 +417,8 @@ void rotary_motor_t::shoot_init()
             final_relative_angle_set = 0;
             has_shoot_init_started = 1;
             has_shoot_init_finished = 0;
+            loader_motor_point()->has_shoot_init_started = 1;
+            revolver_point()->yaw_motor.has_shoot_init_started = 1;
             syspoint()->active_dart_index = 0;
         }
         //↖↖初始化为2号弹体位置
@@ -425,6 +427,8 @@ void rotary_motor_t::shoot_init()
             final_relative_angle_set = PI / 2;
             has_shoot_init_started = 1;
             has_shoot_init_finished = 0;
+            loader_motor_point()->has_shoot_init_started = 1;
+            revolver_point()->yaw_motor.has_shoot_init_started = 1;
             syspoint()->active_dart_index = 1;
         }
         //↙↖初始化为3号弹体位置
@@ -433,6 +437,8 @@ void rotary_motor_t::shoot_init()
             final_relative_angle_set = PI;
             has_shoot_init_started = 1;
             has_shoot_init_finished = 0;
+            loader_motor_point()->has_shoot_init_started = 1;
+            revolver_point()->yaw_motor.has_shoot_init_started = 1;
             syspoint()->active_dart_index = 2;
         }
         //↘↖初始化为4号弹体位置
@@ -441,6 +447,8 @@ void rotary_motor_t::shoot_init()
             final_relative_angle_set = -PI / 2;
             has_shoot_init_started = 1;
             has_shoot_init_finished = 0;
+            loader_motor_point()->has_shoot_init_started = 1;
+            revolver_point()->yaw_motor.has_shoot_init_started = 1;
             syspoint()->active_dart_index = 3;
         }
     }
@@ -479,10 +487,9 @@ void loader_motor_t::shoot_init()
     }
 
     //转盘初始化时装填电机一起初始化
-    if (rotary_motor_point()->has_shoot_init_started)
+    if (has_shoot_init_started)
     {
         ecd_set = zero_point_ecd;
-        has_shoot_init_started = 1;
         has_shoot_init_finished = 0;
     }
 
