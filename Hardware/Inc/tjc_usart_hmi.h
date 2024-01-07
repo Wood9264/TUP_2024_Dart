@@ -23,6 +23,7 @@ void USART1_Init(uint32_t bound);
 void USART1_printf(char* fmt,...); //串口1的专用printf函数
 
 #define RINGBUFF_LEN	(500)     //定义最大接收字节数 500
+#define HMI_USART_RX_BUF_LENGHT 16
 
 #define usize getRingBuffLenght()
 #define code_c() initRingBuff()
@@ -30,7 +31,7 @@ void USART1_printf(char* fmt,...); //串口1的专用printf函数
 #define u(x) read1BFromRingBuff(x)
 
 
-extern uint8_t RxBuff[1];	
+extern uint8_t RxBuff[HMI_USART_RX_BUF_LENGHT];	
 	
 #endif
 #ifdef __cplusplus

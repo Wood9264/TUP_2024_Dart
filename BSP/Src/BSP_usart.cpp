@@ -4,11 +4,11 @@
 #include "string.h"
 #include "stm32f4xx_hal.h"
 #include "judge_task.h"
+#include "tjc_usart_hmi.h"
 
 extern DMA_HandleTypeDef hdma_usart1_rx;
 extern DMA_HandleTypeDef hdma_usart1_tx;
 extern UART_HandleTypeDef huart1;
-extern uint8_t Judge_Buffer[JUDGE_BUFFER_LEN];
 
 void usart1_init()
 {
@@ -34,7 +34,7 @@ void usart1_init()
 		| DMA_FLAG_HTIF1_5);
 		
 	hdma_usart1_rx.Instance->PAR = (uint32_t) & (USART1->DR);
-	hdma_usart1_rx.Instance->M0AR = (uint32_t)(Judge_Buffer);
+	hdma_usart1_rx.Instance->M0AR = (uint32_t)(RxBuff);
 	
 	
 	__HAL_DMA_SET_COUNTER(huart1.hdmarx, USART_RX_BUF_LENGHT);

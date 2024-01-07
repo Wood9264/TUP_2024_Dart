@@ -6,7 +6,12 @@
 #include "tjc_usart_hmi.h"
 #include "stm32f4xx_hal_uart.h"
 #include "usart.h"
+#include "stm32f4xx_hal_dma.h"
+#include "judge_task.h"
+
 #define STR_LENGTH 100
+
+extern DMA_HandleTypeDef hdma_usart1_rx;
 
 //发送已修改，未修改接收
 //Copy还未修改
@@ -19,7 +24,7 @@ typedef struct
 }RingBuff_t;
 
 RingBuff_t ringBuff;	//创建一个ringBuff的缓冲区
-uint8_t RxBuff[1];
+uint8_t RxBuff[HMI_USART_RX_BUF_LENGHT] = {0};
 
 
 
@@ -89,8 +94,30 @@ void TJCPrintf (const char *str, ...){
 //	}
 //}
 
+extern "C"
+{
 
+    void USART1_IRQHandler(void)
+    {
+        if (USART1->SR & UART_FLAG_IDLE)
+        {
+            __HAL_UART_CLEAR_PEFLAG(&huart1);
+        }
+        __HAL_DMA_DISABLE(huart1.hdmarx);
 
+        __HAL_DMA_CLEAR_FLAG(&hdma_usart1_rx, DMA_FLAG_TCIF1_5 | DMA_FLAG_HTIF1_5);
+
+        __HAL_DMA_SET_COUNTER(&hdma_usart1_rx, HMI_USART_RX_BUF_LENGHT);
+
+        __HAL_DMA_ENABLE(huart1.hdmarx);
+        HAL_UART_Receive_DMA(&huart1, RxBuff, HMI_USART_RX_BUF_LENGHT);
+
+        for (int i = 0; i < HMI_USART_RX_BUF_LENGHT; i++)
+        {
+            writeRingBuff(RxBuff[i]);
+        }
+    }
+}
 /********************************************************
 函数名：  	initRingBuff
 作者：
