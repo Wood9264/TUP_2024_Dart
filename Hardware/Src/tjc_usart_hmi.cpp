@@ -13,10 +13,8 @@
 
 extern DMA_HandleTypeDef hdma_usart1_rx;
 
-RingBuff_t ringBuff;	//创建一个ringBuff的缓冲区
+RingBuff_t ringBuff; //创建一个ringBuff的缓冲区
 uint8_t RxBuff[HMI_USART_RX_BUF_LENGHT] = {0};
-
-
 
 /********************************************************
 函数名：  	TJCPrintf
@@ -27,39 +25,45 @@ uint8_t RxBuff[HMI_USART_RX_BUF_LENGHT] = {0};
 返回值： 		打印到串口的数量
 修改记录：
 **********************************************************/
-//void USART1_printf (char *fmt, ...){ 
+// void USART1_printf (char *fmt, ...){
 //	char buffer[STR_LENGTH+1];  // 数据长度
-//	u8 i = 0;	
+//	u8 i = 0;
 //	va_list arg_ptr;
-//	va_start(arg_ptr, fmt);  
+//	va_start(arg_ptr, fmt);
 //	vsnprintf(buffer, STR_LENGTH+1, fmt, arg_ptr);
 //	while ((i < STR_LENGTH) && (i < strlen(buffer))){
-//        USART_SendData(USART1, (u8) buffer[i++]);
-//        while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET); 
+//         USART_SendData(USART1, (u8) buffer[i++]);
+//         while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET);
 //	}
 //	va_end(arg_ptr);
-//	
-//}
+//
+// }
 
-uint8_t frame_tail[] = {0xff,0xff,0xff};
-void TJCPrintf (const char *str, ...){ 
-	uint8_t buffer[STR_LENGTH+1];  // 数据长度
-	uint8_t i = 0;	
-	va_list arg_ptr;
-	va_start(arg_ptr, str);  
-	vsnprintf((char *)buffer, STR_LENGTH+1, str, arg_ptr);
-	va_end(arg_ptr);
-	while ((i < STR_LENGTH) && (i < strlen((char *)buffer)))
-	{
-		HAL_UART_Transmit(&huart1,&buffer[i++],1,100);
-        while (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_TXE) == RESET); 
-	}
-	HAL_UART_Transmit(&huart1,frame_tail,3,100);
-	while (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_TXE) == RESET); 
+uint8_t frame_tail[] = {0xff, 0xff, 0xff};
+
+/**
+ * @brief   串口打印函数
+ * @param   str 要打印的字符串
+ * @param   ... 可变参数
+ */
+void TJCPrintf(const char *str, ...)
+{
+    uint8_t buffer[STR_LENGTH + 1]; // 数据长度
+    uint8_t i = 0;
+    va_list arg_ptr;
+    va_start(arg_ptr, str);
+    vsnprintf((char *)buffer, STR_LENGTH + 1, str, arg_ptr);
+    va_end(arg_ptr);
+    while ((i < STR_LENGTH) && (i < strlen((char *)buffer)))
+    {
+        HAL_UART_Transmit(&huart1, &buffer[i++], 1, 100);
+        while (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_TXE) == RESET)
+            ;
+    }
+    HAL_UART_Transmit(&huart1, frame_tail, 3, 100);
+    while (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_TXE) == RESET)
+        ;
 }
-
-
-
 
 /********************************************************
 函数名：  	USART1_IRQHandler
@@ -70,23 +74,19 @@ void TJCPrintf (const char *str, ...){
 返回值： 		void
 修改记录：
 **********************************************************/
-//void USART1_IRQHandler(void)
-//{
-//	if (USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)
-//	{
-//		USART_ClearITPendingBit(USART1, USART_IT_RXNE);
-//		RxBuff[0] = USART_ReceiveData(USART1);
-//		writeRingBuff(RxBuff[0]);
-//		
-//		
-//		
-//		
-//	}
-//}
+// void USART1_IRQHandler(void)
+// {
+//     if (USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)
+//     {
+//         USART_ClearITPendingBit(USART1, USART_IT_RXNE);
+//         RxBuff[0] = USART_ReceiveData(USART1);
+//         writeRingBuff(RxBuff[0]);
+//     }
+// }
 
 extern "C"
 {
-
+    //串口1接收中断
     void USART1_IRQHandler(void)
     {
         if (USART1->SR & UART_FLAG_IDLE)
@@ -107,7 +107,6 @@ extern "C"
             writeRingBuff(RxBuff[i]);
         }
     }
-    
 }
 /********************************************************
 函数名：  	initRingBuff
@@ -120,13 +119,11 @@ extern "C"
 **********************************************************/
 void initRingBuff(void)
 {
-  //初始化相关信息
-  ringBuff.Head = 0;
-  ringBuff.Tail = 0;
-  ringBuff.Lenght = 0;
+    //初始化相关信息
+    ringBuff.Head = 0;
+    ringBuff.Tail = 0;
+    ringBuff.Lenght = 0;
 }
-
-
 
 /********************************************************
 函数名：  	writeRingBuff
@@ -139,18 +136,14 @@ void initRingBuff(void)
 **********************************************************/
 void writeRingBuff(uint8_t data)
 {
-  if(ringBuff.Lenght >= RINGBUFF_LEN) //判断缓冲区是否已满
-  {
-    return ;
-  }
-  ringBuff.Ring_data[ringBuff.Tail]=data;
-  ringBuff.Tail = (ringBuff.Tail+1)%RINGBUFF_LEN;//防止越界非法访问
-  ringBuff.Lenght++;
-
+    if (ringBuff.Lenght >= RINGBUFF_LEN) //判断缓冲区是否已满
+    {
+        return;
+    }
+    ringBuff.Ring_data[ringBuff.Tail] = data;
+    ringBuff.Tail = (ringBuff.Tail + 1) % RINGBUFF_LEN; //防止越界非法访问
+    ringBuff.Lenght++;
 }
-
-
-
 
 /********************************************************
 函数名：  	deleteRingBuff
@@ -163,27 +156,23 @@ void writeRingBuff(uint8_t data)
 **********************************************************/
 void deleteRingBuff(uint16_t size)
 {
-	if(size >= ringBuff.Lenght)
-	{
-	    initRingBuff();
-	    return;
-	}
-	for(int i = 0; i < size; i++)
-	{
+    if (size >= ringBuff.Lenght)
+    {
+        initRingBuff();
+        return;
+    }
+    for (int i = 0; i < size; i++)
+    {
 
-		if(ringBuff.Lenght == 0)//判断非空
-		{
-		initRingBuff();
-		return;
-		}
-		ringBuff.Head = (ringBuff.Head+1)%RINGBUFF_LEN;//防止越界非法访问
-		ringBuff.Lenght--;
-
-	}
-
+        if (ringBuff.Lenght == 0) //判断非空
+        {
+            initRingBuff();
+            return;
+        }
+        ringBuff.Head = (ringBuff.Head + 1) % RINGBUFF_LEN; //防止越界非法访问
+        ringBuff.Lenght--;
+    }
 }
-
-
 
 /********************************************************
 函数名：  	read1BFromRingBuff
@@ -196,13 +185,10 @@ void deleteRingBuff(uint16_t size)
 **********************************************************/
 uint8_t read1BFromRingBuff(uint16_t position)
 {
-	uint16_t realPosition = (ringBuff.Head + position) % RINGBUFF_LEN;
+    uint16_t realPosition = (ringBuff.Head + position) % RINGBUFF_LEN;
 
-	return ringBuff.Ring_data[realPosition];
+    return ringBuff.Ring_data[realPosition];
 }
-
-
-
 
 /********************************************************
 函数名：  	getRingBuffLenght
@@ -215,9 +201,8 @@ uint8_t read1BFromRingBuff(uint16_t position)
 **********************************************************/
 uint16_t getRingBuffLenght()
 {
-	return ringBuff.Lenght;
+    return ringBuff.Lenght;
 }
-
 
 /********************************************************
 函数名：  	isRingBuffOverflow
@@ -230,36 +215,34 @@ uint16_t getRingBuffLenght()
 **********************************************************/
 uint8_t isRingBuffOverflow()
 {
-	return ringBuff.Lenght == RINGBUFF_LEN;
+    return ringBuff.Lenght == RINGBUFF_LEN;
 }
 
-
-
-////初始化IO 串口1 
+////初始化IO 串口1
 ////bound:波特率
-//void USART1_Init(uint32_t bound){ 
-//	
+// void USART1_Init(uint32_t bound){
+//
 //	//串口1初始化并启动
 //	//GPIO端口设置
 //	GPIO_InitTypeDef GPIO_InitStructure;
 //	USART_InitTypeDef USART_InitStructure;
-//	NVIC_InitTypeDef NVIC_InitStructure;	 
+//	NVIC_InitTypeDef NVIC_InitStructure;
 //	RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1|RCC_APB2Periph_GPIOA, ENABLE);	//使能USART1，GPIOA时钟
 //	 //USART1_TX   PA.9
 //	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9; //PA.9
 //	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 //	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;	//复用推挽输出
-//	GPIO_Init(GPIOA, &GPIO_InitStructure);  
+//	GPIO_Init(GPIOA, &GPIO_InitStructure);
 //	//USART1_RX	  PA.10
 //	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
 //	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;//浮空输入
-//	GPIO_Init(GPIOA, &GPIO_InitStructure); 
+//	GPIO_Init(GPIOA, &GPIO_InitStructure);
 //	//Usart1 NVIC 配置
 //	NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
 //	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=3 ;//抢占优先级3
 //	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;		//子优先级3
 //	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ通道使能
-//	NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始化VIC寄存器 
+//	NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始化VIC寄存器
 //	//USART 初始化设置
 //	USART_InitStructure.USART_BaudRate = bound;//一般设置为9600;
 //	USART_InitStructure.USART_WordLength = USART_WordLength_8b;//字长为8位数据格式
@@ -269,7 +252,5 @@ uint8_t isRingBuffOverflow()
 //	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;	//收发模式
 //	USART_Init(USART1, &USART_InitStructure); //初始化串口
 //	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);//开启ENABLE/关闭DISABLE中断
-//	USART_Cmd(USART1, ENABLE);                    //使能串口 
-//}
-
-
+//	USART_Cmd(USART1, ENABLE);                    //使能串口
+// }

@@ -8,7 +8,8 @@ screen_t screen;
 
 void screen_task(void const *pvParameters)
 {
-    vTaskDelay(3000);
+    vTaskDelay(SCREEN_TASK_INIT_TIME);
+    //串口屏数据初始化
     screen.screen_data_init();
 
     while (1)
@@ -84,8 +85,6 @@ void screen_t::send_data()
     TJCPrintf("t28.txt=\"%.2f\"", revolver_point()->yaw_motor.offset_num[3]);
 }
 
-uint8_t CONTENT[HMI_USART_RX_BUF_LENGHT];
-
 /**
  * @brief   串口屏数据解析
  */
@@ -93,12 +92,12 @@ void screen_t::data_analysis()
 {
     //帧内容
     uint8_t frame_content[HMI_USART_RX_BUF_LENGHT] = {0};
+    //单个字节数据
     uint8_t data;
 
     //判断缓冲区中是否有数据
     if (getRingBuffLenght() > 0)
     {
-
         if (read1BFromRingBuff(0) == SCREEN_FRAME_HEADER)
         {
             deleteRingBuff(1);
