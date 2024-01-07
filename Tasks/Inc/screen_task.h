@@ -5,6 +5,7 @@
 
 #define SCREEN_FRAME_HEADER 0xA5
 #define SCREEN_FRAME_TAIL 0xFF
+#define CMD_ID_LENTH 1
 
 #ifdef __cplusplus
 extern "C"
@@ -13,13 +14,37 @@ extern "C"
 
 #ifdef __cplusplus
 
+    enum
+    {
+        ID_speed_offset_1 = 22,
+        ID_speed_offset_2 = 23,
+        ID_speed_offset_3 = 24,
+        ID_speed_offset_4 = 25,
+        ID_yaw_offset_num_1 = 30,
+        ID_yaw_offset_num_2 = 31,
+        ID_yaw_offset_num_3 = 32,
+        ID_yaw_offset_num_4 = 33,
+    } cmd_ID_e;
+
     class screen_t
     {
     public:
+        int16_t speed_offset_1;
+        int16_t speed_offset_2;
+        int16_t speed_offset_3;
+        int16_t speed_offset_4;
+        fp32 yaw_offset_num_1;
+        fp32 yaw_offset_num_2;
+        fp32 yaw_offset_num_3;
+        fp32 yaw_offset_num_4;
 
         screen_t();
+        void screen_data_init();
         void send_data();
         void data_analysis();
+        void frame_content_analysis(uint8_t *frame_content);
+        int16_t ascii_to_int16_t(const uint8_t *str);
+        fp32 ascii_to_fp32(const uint8_t *str);
     };
 
 #endif

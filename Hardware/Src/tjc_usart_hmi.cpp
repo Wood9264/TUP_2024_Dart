@@ -107,6 +107,7 @@ extern "C"
             writeRingBuff(RxBuff[i]);
         }
     }
+    
 }
 /********************************************************
 函数名：  	initRingBuff
