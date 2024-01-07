@@ -30,6 +30,13 @@ void USART1_printf(char* fmt,...); //串口1的专用printf函数
 #define udelete(x) deleteRingBuff(x)
 #define u(x) read1BFromRingBuff(x)
 
+typedef struct
+{
+    uint16_t Head;
+    uint16_t Tail;
+    uint16_t Lenght;
+    uint8_t  Ring_data[RINGBUFF_LEN];
+}RingBuff_t;
 
 extern uint8_t RxBuff[HMI_USART_RX_BUF_LENGHT];	
 	

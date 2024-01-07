@@ -13,16 +13,6 @@
 
 extern DMA_HandleTypeDef hdma_usart1_rx;
 
-//发送已修改，未修改接收
-//Copy还未修改
-typedef struct
-{
-    uint16_t Head;
-    uint16_t Tail;
-    uint16_t Lenght;
-    uint8_t  Ring_data[RINGBUFF_LEN];
-}RingBuff_t;
-
 RingBuff_t ringBuff;	//创建一个ringBuff的缓冲区
 uint8_t RxBuff[HMI_USART_RX_BUF_LENGHT] = {0};
 
