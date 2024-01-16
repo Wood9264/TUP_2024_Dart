@@ -582,11 +582,11 @@ void loader_motor_t::shoot_move_down()
 void rotary_motor_t::shoot_move_to_next()
 {
     //设定最终角度
-    if(syspoint()->active_dart_index < 4)
+    if (syspoint()->active_dart_index < 4)
     {
         final_relative_angle_set = rad_format((PI / 2) * syspoint()->active_dart_index);
     }
-    
+
     //装填电机上移完毕且转盘电机不锁定时，设定值逐渐向final增加
     if (loader_motor_point()->has_shoot_up_finished && !should_lock)
     {
@@ -610,7 +610,7 @@ void load_task_t::dart_index_add()
     static uint16_t settled_time = 0;
 
     //装填电机下移完毕且转盘电机转到位且yaw轴转到位一定时间后，可打下一发飞镖
-    if(loader_motor.has_shoot_down_finished && rotary_motor.has_move_to_next_finished && revolver_point()->yaw_motor.has_move_to_next_finished)
+    if (loader_motor.has_shoot_down_finished && rotary_motor.has_move_to_next_finished && revolver_point()->yaw_motor.has_move_to_next_finished)
     {
         settled_time++;
     }

@@ -37,25 +37,11 @@
 
 //装填电机转速滤波参数
 #define LOADER_MOTOR_RMP_TO_FILTER_SPEED 0.00290888208665721596153948461415f
-//电机编码值转化成角度值
-#define MOTOR_ECD_TO_RAD (2 * PI / 8192)
-//遥控器通道到装填电机位置增量的比例
-#define RC_TO_LOADER_MOTOR_ECD_SET 0.8f
-//遥控器通道到转盘电机角度设定值增量的比例
-#define RC_TO_ROTARY_MOTOR_ANGLE_SET 0.00001f
 
 //转盘电机发射初始化时角度的斜坡增加量
 #define ROTARY_SHOOT_INIT_RAMP_BUFF 0.0008f
 //转盘电机发射时角度的斜坡增加量
 #define ROTARY_SHOOT_RAMP_BUFF 0.0008f
-
-//转盘电机运动到指定位置时允许的角度误差，单位为弧度
-#define ROTARY_ANGLE_TOLERANCE 0.01f
-//装填电机运动到指定位置时允许的编码值误差
-#define LOADER_ECD_TOLERANCE 8192
-
-//校准时零点编码值的补偿量。防止滑块回退时因为超调碰到触点开关
-#define ZERO_POINT_OFFSET 16384
 
 //转盘电机零点编码值
 #define ROTARY_ZERO_POINT_ECD 1252
@@ -65,12 +51,31 @@
 #define LOADER_FORWARD_ECD 535283
 //装填电机受限时最大前进距离的编码值
 #define LOADER_RESTRICT_FORWARD_ECD 16385
+//校准时零点编码值的补偿量。防止滑块回退时因为超调碰到触点开关
+#define ZERO_POINT_OFFSET 16384
 
-#define LOADER_CALIBRATE_DOWN_PER_LENGTH 300 //校准时装填电机每次下移的编码值
-#define LOADER_CALIBRATE_UP_PER_LENGTH 300   //校准时装填电机每次上移的编码值
-#define LOADER_SHOOT_INIT_SPEED 5            //发射初始化时装填电机下移的速度
-#define LOADER_SHOOT_UP_SPEED 5             //发射时装填电机上移的速度
-#define LOADER_SHOOT_DOWN_SPEED 10            //发射时装填电机下移的速度
+//校准时装填电机下移的单位编码值
+#define LOADER_CALIBRATE_DOWN_PER_LENGTH 300
+//校准时装填电机上移的单位编码值
+#define LOADER_CALIBRATE_UP_PER_LENGTH 300
+//发射初始化时装填电机下移的速度
+#define LOADER_SHOOT_INIT_SPEED 5
+//发射时装填电机上移的速度
+#define LOADER_SHOOT_UP_SPEED 5
+//发射时装填电机下移的速度
+#define LOADER_SHOOT_DOWN_SPEED 10
+
+//转盘电机运动到指定位置时允许的角度误差，单位为弧度
+#define ROTARY_ANGLE_TOLERANCE 0.01f
+//装填电机运动到指定位置时允许的编码值误差
+#define LOADER_ECD_TOLERANCE 8192
+
+//电机编码值转化成角度值
+#define MOTOR_ECD_TO_RAD (2 * PI / 8192)
+//遥控器通道到装填电机位置增量的比例
+#define RC_TO_LOADER_MOTOR_ECD_SET 0.8f
+//遥控器通道到转盘电机角度设定值增量的比例
+#define RC_TO_ROTARY_MOTOR_ANGLE_SET 0.00001f
 
 #ifdef __cplusplus
 extern "C"
