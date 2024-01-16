@@ -148,8 +148,8 @@ void MX_FREERTOS_Init(void) {
 	// osThreadDef(ChassisTask, chassis_task, osPriorityAboveNormal, 0, 512);
   // chassisTaskHandle = osThreadCreate(osThread(ChassisTask), NULL);
 	
-	osThreadDef(imuTask, INS_task, osPriorityRealtime, 0, 512);
-  imuTaskHandle = osThreadCreate(osThread(imuTask), NULL);
+	// osThreadDef(imuTask, INS_task, osPriorityRealtime, 0, 512);
+  // imuTaskHandle = osThreadCreate(osThread(imuTask), NULL);
 		
 	// osThreadDef(gimbalTask, gimbal_task, osPriorityHigh, 0, 512);
   // gimbalTaskHandle = osThreadCreate(osThread(gimbalTask), NULL);
@@ -160,8 +160,8 @@ void MX_FREERTOS_Init(void) {
 	osThreadDef(Judge, Judge_Task, osPriorityHigh , 0, 128);
   judgeTaskHandle = osThreadCreate(osThread(Judge), NULL);
 	
-	osThreadDef(cali, calibrate_task, osPriorityNormal, 0, 128);
-  calibrate_tast_handle = osThreadCreate(osThread(cali), NULL);
+	// osThreadDef(cali, calibrate_task, osPriorityNormal, 0, 128);
+  // calibrate_tast_handle = osThreadCreate(osThread(cali), NULL);
 		
 	// osThreadDef(communicateTask, communi_task, osPriorityHigh, 0, 128);
   // communiTask_handel = osThreadCreate(osThread(communicateTask), NULL);

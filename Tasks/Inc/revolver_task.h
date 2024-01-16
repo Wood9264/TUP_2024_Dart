@@ -33,13 +33,13 @@
 #define YAW_POSITION_PID_MAX_IOUT 10.0f
 
 //摩擦轮速度环PID
-#define FRIC_SPEED_PID_KP 8.0f
+#define FRIC_SPEED_PID_KP 30.0f
 #define FRIC_SPEED_PID_KI 0.0f
-#define FRIC_SPEED_PID_KD 5.0f
-#define FRIC_SPEED_PID_MAX_OUT 8192.0f
+#define FRIC_SPEED_PID_KD 0.0f
+#define FRIC_SPEED_PID_MAX_OUT 12000.0f
 #define FRIC_SPEED_PID_MAX_IOUT 5000.0f
 
-#define FRIC_RAMP_BUFF 20	//摩擦轮启动时的斜坡增加量
+#define FRIC_RAMP_BUFF 5	//摩擦轮启动时的斜坡增加量
 
 #define BASE_SPEED 1000 //四个摩擦轮的基础转速
 #define SPEED_DIFFERENCE 1000 //前后摩擦轮的转速差，正数为前轮快，负数为后轮快
@@ -177,6 +177,7 @@ class yaw_motor_t
 		void fric_motor_init();
 		void fric_motor_shooting();
 		void fric_speed_buzzer(); 
+
 		
 
 

@@ -24,14 +24,14 @@
 
 //转盘电机速度环PID参数
 #define ROTARY_SPEED_PID_KP 60.0f
-#define ROTARY_SPEED_PID_KI 3.0f
-#define ROTARY_SPEED_PID_KD 70.0f
+#define ROTARY_SPEED_PID_KI 1.0f
+#define ROTARY_SPEED_PID_KD 90.0f
 #define ROTARY_SPEED_PID_MAX_OUT 25000.0f
 #define ROTARY_SPEED_PID_MAX_IOUT 25000.0f
 //转盘电机位置环PID参数
-#define ROTARY_POSITION_PID_KP 200.0f
+#define ROTARY_POSITION_PID_KP 100.0f
 #define ROTARY_POSITION_PID_KI 0.0f
-#define ROTARY_POSITION_PID_KD 200.0f
+#define ROTARY_POSITION_PID_KD 100.0f
 #define ROTARY_POSITION_PID_MAX_OUT 300.0f
 #define ROTARY_POSITION_PID_MAX_IOUT 250.0f
 
@@ -45,9 +45,9 @@
 #define RC_TO_ROTARY_MOTOR_ANGLE_SET 0.00001f
 
 //转盘电机发射初始化时角度的斜坡增加量
-#define ROTARY_SHOOT_INIT_RAMP_BUFF 0.004f
+#define ROTARY_SHOOT_INIT_RAMP_BUFF 0.0008f
 //转盘电机发射时角度的斜坡增加量
-#define ROTARY_SHOOT_RAMP_BUFF 0.005f
+#define ROTARY_SHOOT_RAMP_BUFF 0.0008f
 
 //转盘电机运动到指定位置时允许的角度误差，单位为弧度
 #define ROTARY_ANGLE_TOLERANCE 0.01f
@@ -58,18 +58,18 @@
 #define ZERO_POINT_OFFSET 16384
 
 //转盘电机零点编码值
-#define ROTARY_ZERO_POINT_ECD 0
+#define ROTARY_ZERO_POINT_ECD 1252
 //装填机构处在载弹架中时转盘电机可转动角度的一半，单位为弧度
-#define ROTARY_HALF_MOVABLE_ANGLE 0.17f
+#define ROTARY_HALF_MOVABLE_ANGLE 0.146495f
 //装填电机最大前进距离的编码值
-#define LOADER_FORWARD_ECD 253000
+#define LOADER_FORWARD_ECD 535283
 //装填电机受限时最大前进距离的编码值
-#define LOADER_RESTRICT_FORWARD_ECD 20000
+#define LOADER_RESTRICT_FORWARD_ECD 16385
 
 #define LOADER_CALIBRATE_DOWN_PER_LENGTH 300 //校准时装填电机每次下移的编码值
 #define LOADER_CALIBRATE_UP_PER_LENGTH 300   //校准时装填电机每次上移的编码值
 #define LOADER_SHOOT_INIT_SPEED 5            //发射初始化时装填电机下移的速度
-#define LOADER_SHOOT_UP_SPEED 10             //发射时装填电机上移的速度
+#define LOADER_SHOOT_UP_SPEED 5             //发射时装填电机上移的速度
 #define LOADER_SHOOT_DOWN_SPEED 10            //发射时装填电机下移的速度
 
 #ifdef __cplusplus
