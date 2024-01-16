@@ -334,7 +334,7 @@ void loader_motor_t::auto_calibrate()
 
         //设置零点、受限点和最大点
         zero_point_ecd = accumulate_ecd + ZERO_POINT_OFFSET;
-        restrict_point_ecd = accumulate_ecd + LOADER_RESTRICT_FORWARD_ECD;
+        restrict_point_ecd = zero_point_ecd + LOADER_RESTRICT_FORWARD_ECD;
         max_point_ecd = accumulate_ecd + LOADER_FORWARD_ECD;
     }
 }
