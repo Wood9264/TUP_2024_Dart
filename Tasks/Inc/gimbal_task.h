@@ -43,7 +43,7 @@
 #define INIT_Relative_PITCH_SET -0.1f
 //电机编码值转化成角度值
 #ifndef MOTOR_ECD_TO_RAD
-#define MOTOR_ECD_TO_RAD 0.000766990394f //      2*  PI  /8192
+// #define MOTOR_ECD_TO_RAD 0.000766990394f //      2*  PI  /8192
 #define MOTOR_ECD_TO_RAD_DOUBLE  0.000383495197 //2*  PI  /8192*2
 
 #endif

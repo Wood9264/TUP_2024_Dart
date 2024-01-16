@@ -38,6 +38,8 @@
 #include "monitor_task.h"
 #include "ui_task.h"
 #include "OLED_task.h"
+#include "load_task.h"
+#include "screen_task.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -61,6 +63,7 @@ osThreadId chassisTaskHandle;
 osThreadId imuTaskHandle;
 osThreadId judgeTaskHandle;
 osThreadId revolverTaskHandle;
+osThreadId loadTaskHandle;
 osThreadId gimbalTaskHandle;
 osThreadId SYSTEMHandle;
 osThreadId calibrate_tast_handle;
@@ -69,6 +72,7 @@ osThreadId detect_handle;
 osThreadId monitor_handle;
 osThreadId ui_handle;
 osThreadId oledTaskHandle;
+osThreadId screenTaskHandle;
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
 
@@ -137,12 +141,15 @@ void MX_FREERTOS_Init(void) {
 	
 	osThreadDef(RevolverTask, revolver_task, osPriorityAboveNormal, 0, 512);//
   revolverTaskHandle = osThreadCreate(osThread(RevolverTask), NULL);
+  
+  osThreadDef(loadTask, load_task, osPriorityAboveNormal, 0, 512);
+  loadTaskHandle = osThreadCreate(osThread(loadTask), NULL);
 
 	// osThreadDef(ChassisTask, chassis_task, osPriorityAboveNormal, 0, 512);
   // chassisTaskHandle = osThreadCreate(osThread(ChassisTask), NULL);
 	
-	osThreadDef(imuTask, INS_task, osPriorityRealtime, 0, 512);
-  imuTaskHandle = osThreadCreate(osThread(imuTask), NULL);
+	// osThreadDef(imuTask, INS_task, osPriorityRealtime, 0, 512);
+  // imuTaskHandle = osThreadCreate(osThread(imuTask), NULL);
 		
 	// osThreadDef(gimbalTask, gimbal_task, osPriorityHigh, 0, 512);
   // gimbalTaskHandle = osThreadCreate(osThread(gimbalTask), NULL);
@@ -153,8 +160,8 @@ void MX_FREERTOS_Init(void) {
 	osThreadDef(Judge, Judge_Task, osPriorityHigh , 0, 128);
   judgeTaskHandle = osThreadCreate(osThread(Judge), NULL);
 	
-	osThreadDef(cali, calibrate_task, osPriorityNormal, 0, 128);
-  calibrate_tast_handle = osThreadCreate(osThread(cali), NULL);
+	// osThreadDef(cali, calibrate_task, osPriorityNormal, 0, 128);
+  // calibrate_tast_handle = osThreadCreate(osThread(cali), NULL);
 		
 	// osThreadDef(communicateTask, communi_task, osPriorityHigh, 0, 128);
   // communiTask_handel = osThreadCreate(osThread(communicateTask), NULL);
@@ -167,6 +174,9 @@ void MX_FREERTOS_Init(void) {
   
   osThreadDef(oledTask, OLED_task, osPriorityNormal, 0, 256);
   oledTaskHandle = osThreadCreate(osThread(oledTask), NULL);
+
+  osThreadDef(screenTask, screen_task, osPriorityNormal, 0, 256);
+  screenTaskHandle = osThreadCreate(osThread(screenTask), NULL);
 
   /* USER CODE END RTOS_THREADS */
 

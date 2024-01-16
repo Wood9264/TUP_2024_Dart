@@ -36,23 +36,23 @@ void Judge_Task(void const * argumt)
 extern "C"
 {
 /*串口1中断函数*/
-void USART1_IRQHandler(void)
-{
-    if(USART1->SR & UART_FLAG_IDLE)
-    {
-        __HAL_UART_CLEAR_PEFLAG(&huart1);
-		}	
-	  __HAL_DMA_DISABLE(huart1.hdmarx);
+// void USART1_IRQHandler(void)
+// {
+//     if(USART1->SR & UART_FLAG_IDLE)
+//     {
+//         __HAL_UART_CLEAR_PEFLAG(&huart1);
+// 		}	
+// 	  __HAL_DMA_DISABLE(huart1.hdmarx);
 	
 
-		__HAL_DMA_CLEAR_FLAG(&hdma_usart1_rx,DMA_FLAG_TCIF1_5 | DMA_FLAG_HTIF1_5);
+// 		__HAL_DMA_CLEAR_FLAG(&hdma_usart1_rx,DMA_FLAG_TCIF1_5 | DMA_FLAG_HTIF1_5);
 
-    __HAL_DMA_SET_COUNTER(&hdma_usart1_rx, JUDGE_BUFFER_LEN);
+//     __HAL_DMA_SET_COUNTER(&hdma_usart1_rx, 1);
 
-		__HAL_DMA_ENABLE(huart1.hdmarx);
-		HAL_UART_Receive_DMA(&huart1,Judge_Buffer,JUDGE_BUFFER_LEN);		
+// 		__HAL_DMA_ENABLE(huart1.hdmarx);
+// 		HAL_UART_Receive_DMA(&huart1,Judge_Buffer,1);		
 
-}
+// }
 
 }
 

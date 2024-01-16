@@ -6,6 +6,7 @@
 #include "revolver_task.h"
 #include "bsp_buzzer.h"
 #include "revolver_task.h"
+#include "load_task.h"
 
 system_t sys;
 
@@ -53,8 +54,7 @@ system_t::system_t()
 {
 	system_rc_ctrl = get_remote_control_point();
 	sys_mode = ZERO_FORCE;
-	adjust_mode = SLIPPER;
-	shoot_mode = READY;
+	last_sys_mode = ZERO_FORCE;
 }
 
 /**
@@ -65,7 +65,6 @@ system_t::system_t()
 void system_t::mode_set()
 {
 	last_sys_mode = sys_mode;
-	last_shoot_mode = shoot_mode;
 
 	if (IF_RC_SW0_DOWN || toe_is_error(DBUS_TOE))
 	{
@@ -73,29 +72,11 @@ void system_t::mode_set()
 	}
 	else if (IF_RC_SW0_MID)
 	{
-		sys_mode = ADJUST;
-
-		if (IF_RC_SW1_DOWN || IF_RC_SW1_MID)
-		{
-			adjust_mode = SLIPPER;
-		}
-		else if (IF_RC_SW1_UP)
-		{
-			adjust_mode = CALIBRATE;
-		}
+		sys_mode = CALIBRATE;
 	}
 	else if (IF_RC_SW0_UP)
 	{
 		sys_mode = SHOOT;
-
-		if (IF_RC_SW1_DOWN)
-		{
-			shoot_mode = READY;
-		}
-		else if (IF_RC_SW1_MID || IF_RC_SW1_UP)
-		{
-			shoot_mode = SHOOTING;
-		}
 	}
 }
 
@@ -106,19 +87,29 @@ void system_t::mode_set()
  */
 void system_t::Transit()
 {
-	if (sys_mode == ADJUST && last_sys_mode != ADJUST)
+	if (sys_mode == CALIBRATE && last_sys_mode != CALIBRATE)
 	{
-		revolver_point()->slipper_motor.ecd_set = revolver_point()->slipper_motor.accumulate_ecd;
-		revolver_point()->slipper_motor.speed_set = 0;
-		revolver_point()->slipper_motor.calibrate_begin = 0;
+		revolver_point()->yaw_motor.ecd_set = revolver_point()->yaw_motor.accumulate_ecd;
+		load_point()->loader_motor.ecd_set = load_point()->loader_motor.accumulate_ecd;
+		load_point()->loader_motor.speed_set = 0;
+		load_point()->loader_motor.has_calibrate_begun = 0;
+		load_point()->loader_motor.ecd_set = load_point()->loader_motor.accumulate_ecd;
+		load_point()->rotary_motor.relative_angle_set = load_point()->rotary_motor.relative_angle;
 	}
 	if (sys_mode == SHOOT && last_sys_mode != SHOOT)
 	{
 		revolver_point()->is_fric_wheel_on = 0;
-		revolver_point()->slipper_motor.speed_set = 0;
-		revolver_point()->slipper_motor.ecd_set = revolver_point()->slipper_motor.accumulate_ecd;
-		revolver_point()->slipper_motor.bullet_num_cal();
-		revolver_point()->slipper_motor.bullet_num_set = revolver_point()->slipper_motor.bullet_num;
-		revolver_point()->slipper_motor.if_shoot_begin = 0;
+		revolver_point()->yaw_motor.ecd_set = revolver_point()->yaw_motor.accumulate_ecd;
+		revolver_point()->yaw_motor.has_shoot_init_finished = 0;
+		load_point()->loader_motor.ecd_set = load_point()->loader_motor.accumulate_ecd;
+		load_point()->loader_motor.has_shoot_init_finished = 0;
+		load_point()->rotary_motor.final_relative_angle_set = load_point()->rotary_motor.relative_angle;
+		load_point()->rotary_motor.relative_angle_set = load_point()->rotary_motor.relative_angle;
+		load_point()->rotary_motor.has_shoot_init_finished = 0;
+		// revolver_point()->slipper_motor.speed_set = 0;
+		// revolver_point()->slipper_motor.ecd_set = revolver_point()->slipper_motor.accumulate_ecd;
+		// revolver_point()->slipper_motor.bullet_num_cal();
+		// revolver_point()->slipper_motor.bullet_num_set = revolver_point()->slipper_motor.bullet_num;
+		// revolver_point()->slipper_motor.if_shoot_begin = 0;
 	}
 }

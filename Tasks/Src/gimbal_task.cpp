@@ -51,8 +51,8 @@ gimbal_control_t::gimbal_control_t()
 {
 	add_pit = add_yaw = 0.0f;
 	//电机数据指针获取
-	Yaw_motor.get_gimbal_motor = get_motor_measure_class(YAW);
-	Pitch_motor.get_gimbal_motor = get_motor_measure_class(PITCH);
+	// Yaw_motor.get_gimbal_motor = get_motor_measure_class(YAW);
+	// Pitch_motor.get_gimbal_motor = get_motor_measure_class(PITCH);
 	//陀螺仪数据指针获取
 	gimbal_INT_angle_point = get_INS_angle_point();
 	gimbal_INT_gyro_point = get_gyro_data_point();
@@ -129,17 +129,17 @@ void gimbal_control_t::Get_info()
   */
 fp32 gimbal_control_t::motor_ecd_to_angle_change(uint16_t ecd, uint16_t offset_ecd)
 {
-    int32_t relative_ecd = ecd - offset_ecd;
-    if (relative_ecd > HALF_ECD_RANGE)
-    {
-        relative_ecd -= ECD_RANGE;
-    }
-    else if (relative_ecd < -HALF_ECD_RANGE)
-    {
-        relative_ecd += ECD_RANGE;
-    }
+    // int32_t relative_ecd = ecd - offset_ecd;
+    // if (relative_ecd > HALF_ECD_RANGE)
+    // {
+    //     relative_ecd -= ECD_RANGE;
+    // }
+    // else if (relative_ecd < -HALF_ECD_RANGE)
+    // {
+    //     relative_ecd += ECD_RANGE;
+    // }
 
-    return relative_ecd * MOTOR_ECD_TO_RAD;
+    // return relative_ecd * MOTOR_ECD_TO_RAD;
 }
 
 

@@ -35,6 +35,7 @@ class PID_t
 	  fp32 calc(fp32 ref,fp32 set);
 	  void clear(void);
 	  fp32 DLcalc(fp32 ref, fp32 set, fp32 max_out);
+	  fp32 relative_angle_calc(fp32 ref, fp32 set);
 };
 
 #endif	

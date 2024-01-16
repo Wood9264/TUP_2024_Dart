@@ -65,20 +65,8 @@ extern "C"
 	enum system_mode_e
 	{
 		ZERO_FORCE,
-		ADJUST,
-		SHOOT,
-	};
-
-	enum adjust_mode_e
-	{
-		SLIPPER,
 		CALIBRATE,
-	};
-
-	enum shoot_mode_e
-	{
-		READY,
-		SHOOTING,
+		SHOOT,
 	};
 
 	class system_t
@@ -88,9 +76,7 @@ extern "C"
 
 		system_mode_e sys_mode;
 		system_mode_e last_sys_mode;
-		adjust_mode_e adjust_mode;
-		shoot_mode_e shoot_mode;
-		shoot_mode_e last_shoot_mode;
+		uint8_t active_dart_index;//当前正在发射的飞镖编号，范围0~4
 		/*下面的东西都没用*/
 
 
