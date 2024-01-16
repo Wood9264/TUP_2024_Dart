@@ -155,6 +155,7 @@ void loader_motor_t::flag_update()
         if (recali_time > 20)
         {
             has_calibrated = 0;
+            buzzer_warn(0, 0, 3, 10000);
         }
     }
     else

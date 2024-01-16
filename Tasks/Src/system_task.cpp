@@ -106,10 +106,5 @@ void system_t::Transit()
 		load_point()->rotary_motor.final_relative_angle_set = load_point()->rotary_motor.relative_angle;
 		load_point()->rotary_motor.relative_angle_set = load_point()->rotary_motor.relative_angle;
 		load_point()->rotary_motor.has_shoot_init_finished = 0;
-		// revolver_point()->slipper_motor.speed_set = 0;
-		// revolver_point()->slipper_motor.ecd_set = revolver_point()->slipper_motor.accumulate_ecd;
-		// revolver_point()->slipper_motor.bullet_num_cal();
-		// revolver_point()->slipper_motor.bullet_num_set = revolver_point()->slipper_motor.bullet_num;
-		// revolver_point()->slipper_motor.if_shoot_begin = 0;
 	}
 }
