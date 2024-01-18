@@ -319,7 +319,7 @@ void yaw_motor_t::init()
         return;
     }
 
-    //转盘初始化时yaw轴电机一起初始化
+    //标志位被置一时开始初始化
     if (has_shoot_init_started)
     {
         ecd_set = calibrated_point + offset_num[syspoint()->active_dart_index] * 8192;

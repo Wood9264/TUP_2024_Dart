@@ -30,9 +30,15 @@ void system_task(void const *pvParameters)
     uint32_t currentTime;
     while (1)
     {
-        currentTime = xTaskGetTickCount(); //当前系统时间
+        //获取当前系统时间
+        currentTime = xTaskGetTickCount();
+        //模式设置
         sys.mode_set();
-        sys.Transit();
+        //模式转换
+        sys.mode_transit();
+        //分任务控制
+        sys.control();
+
         vTaskDelayUntil(&currentTime, 1);
     }
 }
@@ -81,11 +87,11 @@ void system_t::mode_set()
 }
 
 /**
- * @brief          云台模式转换
+ * @brief          模式转换
  * @param[in]      null
  * @retval         null
  */
-void system_t::Transit()
+void system_t::mode_transit()
 {
     if (sys_mode == CALIBRATE && last_sys_mode != CALIBRATE)
     {
@@ -106,5 +112,110 @@ void system_t::Transit()
         load_point()->rotary_motor.final_relative_angle_set = load_point()->rotary_motor.relative_angle;
         load_point()->rotary_motor.relative_angle_set = load_point()->rotary_motor.relative_angle;
         load_point()->rotary_motor.has_shoot_init_finished = 0;
+    }
+}
+
+/**
+ * @brief   分任务控制
+ */
+void system_t::control()
+{
+    if (sys_mode == SHOOT)
+    {
+        SHOOT_control();
+    }
+}
+
+/**
+ * @brief   发射模式
+ */
+void system_t::SHOOT_control()
+{
+    if (IF_RC_SW1_DOWN)
+    {
+        //发射初始化
+        shoot_init();
+    }
+    else if (IF_RC_SW1_MID || IF_RC_SW1_UP)
+    {
+        //遥控器控制打下一发飞镖
+        dart_index_add();
+    }
+}
+
+/**
+ * @brief   发射初始化
+ */
+void system_t::shoot_init()
+{
+    if (RC_held_continuous_return(RIGHT_ROCKER_LEFT_TOP, 100))
+    {
+        //↗↖初始化为1号弹体位置
+        if (RC_held_continuous_return(LEFT_ROCKER_RIGHT_TOP, 100))
+        {
+            rotary_motor_point()->has_shoot_init_started = 1;
+            loader_motor_point()->has_shoot_init_started = 1;
+            revolver_point()->yaw_motor.has_shoot_init_started = 1;
+            syspoint()->active_dart_index = 0;
+        }
+        //↖↖初始化为2号弹体位置
+        else if (RC_held_continuous_return(LEFT_ROCKER_LEFT_TOP, 100))
+        {
+            rotary_motor_point()->has_shoot_init_started = 1;
+            loader_motor_point()->has_shoot_init_started = 1;
+            revolver_point()->yaw_motor.has_shoot_init_started = 1;
+            syspoint()->active_dart_index = 1;
+        }
+        //↙↖初始化为3号弹体位置
+        else if (RC_held_continuous_return(LEFT_ROCKER_LEFT_BOTTOM, 100))
+        {
+            rotary_motor_point()->has_shoot_init_started = 1;
+            loader_motor_point()->has_shoot_init_started = 1;
+            revolver_point()->yaw_motor.has_shoot_init_started = 1;
+            syspoint()->active_dart_index = 2;
+        }
+        //↘↖初始化为4号弹体位置
+        else if (RC_held_continuous_return(LEFT_ROCKER_RIGHT_BOTTOM, 100))
+        {
+            rotary_motor_point()->has_shoot_init_started = 1;
+            loader_motor_point()->has_shoot_init_started = 1;
+            revolver_point()->yaw_motor.has_shoot_init_started = 1;
+            syspoint()->active_dart_index = 3;
+        }
+    }
+}
+
+/**
+ * @brief   打下一发飞镖
+ */
+void system_t::dart_index_add()
+{
+    static uint16_t settled_time = 0;
+
+    //装填电机下移完毕且转盘电机转到位且yaw轴转到位一定时间后，可打下一发飞镖
+    if (loader_motor_point()->has_shoot_down_finished && rotary_motor_point()->has_move_to_next_finished && revolver_point()->yaw_motor.has_move_to_next_finished)
+    {
+        settled_time++;
+    }
+    else
+    {
+        settled_time = 0;
+    }
+
+    if (settled_time > 500)
+    {
+        //左摇杆↖打出下一发飞镖
+        if (RC_held_continuous_return(LEFT_ROCKER_LEFT_TOP, 0) && syspoint()->active_dart_index < 4)
+        {
+            active_dart_index++;
+            has_index_added = 1;
+            loader_motor_point()->has_shoot_up_finished = 0;
+            loader_motor_point()->has_shoot_down_finished = 0;
+            rotary_motor_point()->has_move_to_next_finished = 0;
+        }
+        else
+        {
+            has_index_added = 0;
+        }
     }
 }

@@ -161,8 +161,6 @@ extern "C"
         loader_motor_t loader_motor;
         rotary_motor_t rotary_motor;
 
-        bool_t has_index_added;
-
         load_task_t();
         void data_update();
         void flag_update();
@@ -171,7 +169,6 @@ extern "C"
         void CALIBRATE_control();
         void SHOOT_control();
         void shooting();
-        void dart_index_add();
     };
 
     extern load_task_t *load_point();

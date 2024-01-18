@@ -411,61 +411,20 @@ void rotary_motor_t::shoot_init()
         return;
     }
 
-    if (RC_held_continuous_return(RIGHT_ROCKER_LEFT_TOP, 100))
+    //标志位被置一时开始初始化
+    if (has_shoot_init_started)
     {
-        //↗↖初始化为1号弹体位置
-        if (RC_held_continuous_return(LEFT_ROCKER_RIGHT_TOP, 100))
-        {
-            final_relative_angle_set = 0;
-            has_shoot_init_started = 1;
-            has_shoot_init_finished = 0;
-            loader_motor_point()->has_shoot_init_started = 1;
-            revolver_point()->yaw_motor.has_shoot_init_started = 1;
-            syspoint()->active_dart_index = 0;
-        }
-        //↖↖初始化为2号弹体位置
-        else if (RC_held_continuous_return(LEFT_ROCKER_LEFT_TOP, 100))
-        {
-            final_relative_angle_set = PI / 2;
-            has_shoot_init_started = 1;
-            has_shoot_init_finished = 0;
-            loader_motor_point()->has_shoot_init_started = 1;
-            revolver_point()->yaw_motor.has_shoot_init_started = 1;
-            syspoint()->active_dart_index = 1;
-        }
-        //↙↖初始化为3号弹体位置
-        else if (RC_held_continuous_return(LEFT_ROCKER_LEFT_BOTTOM, 100))
-        {
-            final_relative_angle_set = PI;
-            has_shoot_init_started = 1;
-            has_shoot_init_finished = 0;
-            loader_motor_point()->has_shoot_init_started = 1;
-            revolver_point()->yaw_motor.has_shoot_init_started = 1;
-            syspoint()->active_dart_index = 2;
-        }
-        //↘↖初始化为4号弹体位置
-        else if (RC_held_continuous_return(LEFT_ROCKER_RIGHT_BOTTOM, 100))
-        {
-            final_relative_angle_set = -PI / 2;
-            has_shoot_init_started = 1;
-            has_shoot_init_finished = 0;
-            loader_motor_point()->has_shoot_init_started = 1;
-            revolver_point()->yaw_motor.has_shoot_init_started = 1;
-            syspoint()->active_dart_index = 3;
-        }
+        final_relative_angle_set = rad_format((PI / 2) * syspoint()->active_dart_index);
+        has_shoot_init_finished = 0;
     }
 
-    //锁定时转盘不动
-    if (should_lock)
-    {
-        calculate_current();
-    }
-    //不锁定时设定值逐渐向final增加
-    else
+    //锁定时设定值不变化，不锁定时设定值逐渐向final增加
+    if (!should_lock)
     {
         relative_angle_set = RAMP_float_loop_constrain(final_relative_angle_set, relative_angle_set, ROTARY_SHOOT_INIT_RAMP_BUFF);
-        calculate_current();
     }
+
+    calculate_current();
 
     //角度差小于一定值时初始化结束
     if (fabs(final_relative_angle_set - relative_angle) < ROTARY_ANGLE_TOLERANCE && has_shoot_init_started == 1)
@@ -488,7 +447,7 @@ void loader_motor_t::shoot_init()
         return;
     }
 
-    //转盘初始化时装填电机一起初始化
+    //标志位被置一时开始初始化
     if (has_shoot_init_started)
     {
         ecd_set = zero_point_ecd;
@@ -526,8 +485,6 @@ void load_task_t::shooting()
     loader_motor.shoot_move_down();
     //转盘转到下一个位置
     rotary_motor.shoot_move_to_next();
-    //遥控器控制打下一发飞镖
-    dart_index_add();
 }
 
 /**
@@ -539,7 +496,7 @@ void loader_motor_t::shoot_move_up()
     if (!has_shoot_up_finished)
     {
         //索引增加时，设置目标位置为最大点
-        if (load_point()->has_index_added)
+        if (syspoint()->has_index_added)
         {
             ecd_set = max_point_ecd;
         }
@@ -599,41 +556,6 @@ void rotary_motor_t::shoot_move_to_next()
     if (fabs(final_relative_angle_set - relative_angle) < ROTARY_ANGLE_TOLERANCE)
     {
         has_move_to_next_finished = 1;
-    }
-}
-
-/**
- * @brief   打下一发飞镖
- */
-void load_task_t::dart_index_add()
-{
-    static uint16_t settled_time = 0;
-
-    //装填电机下移完毕且转盘电机转到位且yaw轴转到位一定时间后，可打下一发飞镖
-    if (loader_motor.has_shoot_down_finished && rotary_motor.has_move_to_next_finished && revolver_point()->yaw_motor.has_move_to_next_finished)
-    {
-        settled_time++;
-    }
-    else
-    {
-        settled_time = 0;
-    }
-
-    if (settled_time > 500)
-    {
-        //左摇杆↖打出下一发飞镖
-        if (RC_held_continuous_return(LEFT_ROCKER_LEFT_TOP, 0) && syspoint()->active_dart_index < 4)
-        {
-            syspoint()->active_dart_index++;
-            has_index_added = 1;
-            loader_motor.has_shoot_up_finished = 0;
-            loader_motor.has_shoot_down_finished = 0;
-            rotary_motor.has_move_to_next_finished = 0;
-        }
-        else
-        {
-            has_index_added = 0;
-        }
     }
 }
 

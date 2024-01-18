@@ -77,6 +77,7 @@ extern "C"
         system_mode_e sys_mode;
         system_mode_e last_sys_mode;
         uint8_t active_dart_index; //当前正在发射的飞镖编号，范围0~4
+        bool_t has_index_added;
 
         /*下面的东西都没用*/
         lpf_type_def yaw_lpf;
@@ -106,7 +107,12 @@ extern "C"
         system_t();
 
         void mode_set();
-        void Transit();
+        void mode_transit();
+        void control();
+        void SHOOT_control();
+        void shoot_init();
+        void dart_index_add();
+
         void Set_control();
 
         void Rc_vision();
