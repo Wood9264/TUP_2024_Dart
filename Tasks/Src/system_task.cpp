@@ -112,6 +112,7 @@ void system_t::mode_transit()
         load_point()->rotary_motor.final_relative_angle_set = load_point()->rotary_motor.relative_angle;
         load_point()->rotary_motor.relative_angle_set = load_point()->rotary_motor.relative_angle;
         load_point()->rotary_motor.has_shoot_init_finished = 0;
+        strike_target = OUTPOST;
     }
 }
 
@@ -140,6 +141,8 @@ void system_t::SHOOT_control()
     {
         //遥控器控制打下一发飞镖
         dart_index_add();
+        //切换打击目标
+        switch_strike_target();
     }
 }
 
@@ -217,5 +220,22 @@ void system_t::dart_index_add()
         {
             has_index_added = 0;
         }
+    }
+}
+
+/**
+ * @brief   切换打击目标
+*/
+void system_t::switch_strike_target()
+{
+    //↙↙切换打击目标为前哨站
+    if (RC_double_held_single_return(LEFT_ROCKER_LEFT_BOTTOM, RIGHT_ROCKER_LEFT_BOTTOM, 400))
+    {
+        strike_target = OUTPOST;
+    }
+    //↘↘切换打击目标为基地
+    else if (RC_double_held_single_return(LEFT_ROCKER_RIGHT_BOTTOM, RIGHT_ROCKER_RIGHT_BOTTOM, 400))
+    {
+        strike_target = BASE;
     }
 }

@@ -43,10 +43,10 @@ void screen_t::screen_data_init()
     TJCPrintf("t24.txt=\"%d\"", revolver_point()->outpost_speed_offset[3]);
 
     // 初始化yaw轴补偿
-    TJCPrintf("t29.txt=\"%.2f\"", revolver_point()->yaw_motor.offset_num[0]);
-    TJCPrintf("t30.txt=\"%.2f\"", revolver_point()->yaw_motor.offset_num[1]);
-    TJCPrintf("t31.txt=\"%.2f\"", revolver_point()->yaw_motor.offset_num[2]);
-    TJCPrintf("t32.txt=\"%.2f\"", revolver_point()->yaw_motor.offset_num[3]);
+    TJCPrintf("t29.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[0]);
+    TJCPrintf("t30.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[1]);
+    TJCPrintf("t31.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[2]);
+    TJCPrintf("t32.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[3]);
 }
 
 /**
@@ -79,10 +79,10 @@ void screen_t::send_data()
     TJCPrintf("t20.txt=\"%d\"", revolver_point()->outpost_speed_offset[3]);
 
     // 发送yaw轴补偿
-    TJCPrintf("t25.txt=\"%.2f\"", revolver_point()->yaw_motor.offset_num[0]);
-    TJCPrintf("t26.txt=\"%.2f\"", revolver_point()->yaw_motor.offset_num[1]);
-    TJCPrintf("t27.txt=\"%.2f\"", revolver_point()->yaw_motor.offset_num[2]);
-    TJCPrintf("t28.txt=\"%.2f\"", revolver_point()->yaw_motor.offset_num[3]);
+    TJCPrintf("t25.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[0]);
+    TJCPrintf("t26.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[1]);
+    TJCPrintf("t27.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[2]);
+    TJCPrintf("t28.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[3]);
 }
 
 /**

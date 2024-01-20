@@ -79,7 +79,8 @@ extern "C"
         int16_t give_current;
 
         int64_t calibrated_point;
-        fp32 offset_num[4];
+        fp32 outpost_offset_num[4];
+        fp32 base_offset_num[4];
 
         bool_t has_calibrated;
         bool_t has_shoot_init_started;

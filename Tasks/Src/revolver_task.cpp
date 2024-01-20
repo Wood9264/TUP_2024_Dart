@@ -68,10 +68,14 @@ revolver_task_t::revolver_task_t()
     fric_speed_offset = 0;
     yaw_motor.has_calibrated = 0;
 
-    yaw_motor.offset_num[0] = 30.3;
-    yaw_motor.offset_num[1] = 70.5;
-    yaw_motor.offset_num[2] = -0.5;
-    yaw_motor.offset_num[3] = -30.3;
+    yaw_motor.outpost_offset_num[0] = 30.3;
+    yaw_motor.outpost_offset_num[1] = 70.5;
+    yaw_motor.outpost_offset_num[2] = -0.5;
+    yaw_motor.outpost_offset_num[3] = -30.3;
+    yaw_motor.base_offset_num[0] = 120;
+    yaw_motor.base_offset_num[1] = 150;
+    yaw_motor.base_offset_num[2] = 100;
+    yaw_motor.base_offset_num[3] = 70;
 
     outpost_speed_offset[0] = 0;
     outpost_speed_offset[1] = 500;
@@ -322,7 +326,8 @@ void yaw_motor_t::init()
     //标志位被置一时开始初始化
     if (has_shoot_init_started)
     {
-        ecd_set = calibrated_point + offset_num[syspoint()->active_dart_index] * 8192;
+        //打击目标默认初始化为前哨站
+        ecd_set = calibrated_point + outpost_offset_num[syspoint()->active_dart_index] * 8192;
         has_shoot_init_finished = 0;
     }
 
@@ -384,7 +389,14 @@ void yaw_motor_t::shooting()
     //装填电机上移完毕且转盘电机不锁定且没打完飞镖时，改变设定值
     if (loader_motor_point()->has_shoot_up_finished && !rotary_motor_point()->should_lock && syspoint()->active_dart_index < 4)
     {
-        ecd_set = calibrated_point + offset_num[syspoint()->active_dart_index] * 8192;
+        if (syspoint()->strike_target == OUTPOST)
+        {
+            ecd_set = calibrated_point + outpost_offset_num[syspoint()->active_dart_index] * 8192;
+        }
+        else if (syspoint()->strike_target == BASE)
+        {
+            ecd_set = calibrated_point + base_offset_num[syspoint()->active_dart_index] * 8192;
+        }
     }
 
     //目标值和实际值之差小于一定值，可认为转到位

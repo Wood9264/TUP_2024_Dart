@@ -69,6 +69,12 @@ extern "C"
         SHOOT,
     };
 
+    enum strike_target_e
+    {
+        OUTPOST, //前哨站
+        BASE,    //基地
+    };
+
     class system_t
     {
     public:
@@ -78,6 +84,7 @@ extern "C"
         system_mode_e last_sys_mode;
         uint8_t active_dart_index; //当前正在发射的飞镖编号，范围0~4
         bool_t has_index_added;
+        bool_t strike_target; //打击目标
 
         /*下面的东西都没用*/
         lpf_type_def yaw_lpf;
@@ -112,6 +119,7 @@ extern "C"
         void SHOOT_control();
         void shoot_init();
         void dart_index_add();
+        void switch_strike_target();
 
         void Set_control();
 
