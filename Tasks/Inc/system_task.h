@@ -64,9 +64,18 @@ extern "C"
 #ifdef __cplusplus
     enum system_mode_e
     {
-        ZERO_FORCE,
-        CALIBRATE,
-        SHOOT,
+        ZERO_FORCE, //无力模式
+        CALIBRATE,  //校准模式
+        SHOOT,      //发射模式
+    };
+
+    enum sub_mode_e
+    {
+        CALIBRATE_ADJUST_POSITION, //调整位置
+        CALIBRATE_LOADER_AND_YAW,  //校准装填电机和yaw轴
+        CALIBRATE_CHECK,           //检查校准结果
+        SHOOT_INIT,                //发射初始化
+        SHOOT_MANUAL,              //手动发射
     };
 
     enum strike_target_e
@@ -80,11 +89,13 @@ extern "C"
     public:
         const RC_ctrl_t *system_rc_ctrl;
 
-        system_mode_e sys_mode;
+        system_mode_e sys_mode; //系统模式
         system_mode_e last_sys_mode;
-        uint8_t active_dart_index; //当前正在发射的飞镖编号，范围0~4
+        sub_mode_e sub_mode; //子模式
+        sub_mode_e last_sub_mode;
+        strike_target_e strike_target; //打击目标
+        uint8_t active_dart_index;     //当前正在发射的飞镖编号，范围0~4
         bool_t has_index_added;
-        bool_t strike_target; //打击目标
 
         /*下面的东西都没用*/
         lpf_type_def yaw_lpf;

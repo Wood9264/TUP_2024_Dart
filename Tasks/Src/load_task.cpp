@@ -226,12 +226,14 @@ void load_task_t::ZERO_FORCE_control()
  */
 void load_task_t::CALIBRATE_control()
 {
-    if (IF_RC_SW1_DOWN)
+    //左拨杆下，调整装填电机位置和转盘位置
+    if (syspoint()->sub_mode == CALIBRATE_ADJUST_POSITION)
     {
         loader_motor.adjust_position();
         rotary_motor.adjust_position();
     }
-    else if (IF_RC_SW1_MID || IF_RC_SW1_UP)
+    //左拨杆中上，校准装填电机
+    else if (syspoint()->sub_mode == CALIBRATE_LOADER_AND_YAW || syspoint()->sub_mode == CALIBRATE_CHECK)
     {
         loader_motor.calibrate();
         rotary_motor.calibrate();
@@ -376,7 +378,7 @@ void rotary_motor_t::adjust_position()
 }
 
 /**
- * @brief   校准模式下转盘电机不转动，但仍需计算电流
+ * @brief   校准时转盘电机不转动，但仍需计算电流
  */
 void rotary_motor_t::calibrate()
 {
@@ -388,12 +390,12 @@ void rotary_motor_t::calibrate()
  */
 void load_task_t::SHOOT_control()
 {
-    if (IF_RC_SW1_DOWN)
+    if (syspoint()->sub_mode == SHOOT_INIT)
     {
         rotary_motor.shoot_init();
         loader_motor.shoot_init();
     }
-    if (IF_RC_SW1_MID || IF_RC_SW1_UP)
+    if (syspoint()->sub_mode == SHOOT_MANUAL)
     {
         shooting();
     }

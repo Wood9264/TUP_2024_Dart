@@ -71,6 +71,7 @@ system_t::system_t()
 void system_t::mode_set()
 {
     last_sys_mode = sys_mode;
+    last_sub_mode = sub_mode;
 
     if (IF_RC_SW0_DOWN || toe_is_error(DBUS_TOE))
     {
@@ -79,10 +80,32 @@ void system_t::mode_set()
     else if (IF_RC_SW0_MID)
     {
         sys_mode = CALIBRATE;
+
+        if (IF_RC_SW1_DOWN)
+        {
+            sub_mode = CALIBRATE_ADJUST_POSITION;
+        }
+        else if (IF_RC_SW1_MID)
+        {
+            sub_mode = CALIBRATE_LOADER_AND_YAW;
+        }
+        else if (IF_RC_SW1_UP)
+        {
+            sub_mode = CALIBRATE_CHECK;
+        }
     }
     else if (IF_RC_SW0_UP)
     {
         sys_mode = SHOOT;
+
+        if (IF_RC_SW1_DOWN)
+        {
+            sub_mode = SHOOT_INIT;
+        }
+        else if (IF_RC_SW1_MID || IF_RC_SW1_UP)
+        {
+            sub_mode = SHOOT_MANUAL;
+        }
     }
 }
 
@@ -225,7 +248,7 @@ void system_t::dart_index_add()
 
 /**
  * @brief   切换打击目标
-*/
+ */
 void system_t::switch_strike_target()
 {
     //↙↙切换打击目标为前哨站

@@ -234,11 +234,13 @@ void revolver_task_t::CALIBRATE_control()
         fric_motor[i].current_calculate();
     }
 
-    if (IF_RC_SW1_DOWN)
+    //左拨杆下，调整yaw轴
+    if (syspoint()->sub_mode == CALIBRATE_ADJUST_POSITION)
     {
         yaw_motor.ecd_set += revolver_rc_ctrl->rc.ch[2] * RC_TO_YAW_ECD_SET;
     }
-    else if (IF_RC_SW1_MID)
+    //左拨杆中，校准yaw轴
+    else if (syspoint()->sub_mode == CALIBRATE_LOADER_AND_YAW)
     {
         yaw_motor.calibrate();
     }
@@ -265,14 +267,14 @@ void yaw_motor_t::calibrate()
  */
 void revolver_task_t::SHOOT_control()
 {
-    if (IF_RC_SW1_DOWN)
+    if (syspoint()->sub_mode == SHOOT_INIT)
     {
         // yaw电机发射初始化
         yaw_motor.init();
         //摩擦轮发射初始化
         fric_motor_init();
     }
-    else if (IF_RC_SW1_MID)
+    else if (syspoint()->sub_mode == SHOOT_MANUAL)
     {
         // yaw电机发射
         yaw_motor.shooting();
