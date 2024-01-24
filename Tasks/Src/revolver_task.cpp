@@ -35,14 +35,15 @@ void revolver_task(void const *pvParameters)
         //分任务控制
         revolver.control();
         //发送电流
-        CAN1_200_cmd_motor(revolver.fric_motor[0].give_current, revolver.fric_motor[1].give_current, revolver.fric_motor[2].give_current, revolver.fric_motor[3].give_current);
+        CAN1_200_cmd_motor(revolver.fric_wheel_group.fric_motor[0].give_current, revolver.fric_wheel_group.fric_motor[1].give_current,
+                           revolver.fric_wheel_group.fric_motor[2].give_current, revolver.fric_wheel_group.fric_motor[3].give_current);
         CAN2_200_cmd_motor(revolver.yaw_motor.give_current, 0, 0, 0);
         vTaskDelayUntil(&currentTime, 1);
 
         for (int i = 0; i < 4; i++)
         {
-            SPEED[i] = revolver.fric_motor[i].motor_measure->speed_rpm;
-            TEMP[i] = revolver.fric_motor[i].motor_measure->temperate;
+            SPEED[i] = revolver.fric_wheel_group.fric_motor[i].motor_measure->speed_rpm;
+            TEMP[i] = revolver.fric_wheel_group.fric_motor[i].motor_measure->temperate;
         }
     }
 }
@@ -62,10 +63,9 @@ revolver_task_t::revolver_task_t()
 
     for (int i = 0; i < 4; i++)
     {
-        fric_motor[i].speed_pid.init(PID_POSITION, Fric_speed_pid, FRIC_SPEED_PID_MAX_OUT, FRIC_SPEED_PID_MAX_IOUT);
+        fric_wheel_group.fric_motor[i].speed_pid.init(PID_POSITION, Fric_speed_pid, FRIC_SPEED_PID_MAX_OUT, FRIC_SPEED_PID_MAX_IOUT);
     }
 
-    fric_speed_offset = 0;
     yaw_motor.has_calibrated = 0;
 
     yaw_motor.outpost_offset_num[0] = 30.3;
@@ -77,16 +77,16 @@ revolver_task_t::revolver_task_t()
     yaw_motor.base_offset_num[2] = 100;
     yaw_motor.base_offset_num[3] = 70;
 
-    outpost_speed_offset[0] = 0;
-    outpost_speed_offset[1] = 500;
-    outpost_speed_offset[2] = 1000;
-    outpost_speed_offset[3] = -500;
+    fric_wheel_group.outpost_speed_offset[0] = 0;
+    fric_wheel_group.outpost_speed_offset[1] = 500;
+    fric_wheel_group.outpost_speed_offset[2] = 1000;
+    fric_wheel_group.outpost_speed_offset[3] = -500;
 
     //电机指针
-    fric_motor[0].motor_measure = get_motor_measure_class(FL);
-    fric_motor[1].motor_measure = get_motor_measure_class(FR);
-    fric_motor[2].motor_measure = get_motor_measure_class(BL);
-    fric_motor[3].motor_measure = get_motor_measure_class(BR);
+    fric_wheel_group.fric_motor[0].motor_measure = get_motor_measure_class(FL);
+    fric_wheel_group.fric_motor[1].motor_measure = get_motor_measure_class(FR);
+    fric_wheel_group.fric_motor[2].motor_measure = get_motor_measure_class(BL);
+    fric_wheel_group.fric_motor[3].motor_measure = get_motor_measure_class(BR);
     yaw_motor.motor_measure = get_motor_measure_class(YAW_MOTOR);
 
     revolver_rc_ctrl = get_remote_control_point();
@@ -125,12 +125,20 @@ void revolver_task_t::control()
  */
 void revolver_task_t::ZERO_FORCE_control()
 {
+    fric_wheel_group.slow_stop();
+    fric_wheel_group.current_calculate();
+    yaw_motor.give_current = 0;
+}
+
+/**
+ * @brief   摩擦轮缓停
+ */
+void fric_wheel_group_t::slow_stop()
+{
     for (int i = 0; i < 4; i++)
     {
         fric_motor[i].speed_set = RAMP_float(0, fric_motor[i].speed_set, FRIC_RAMP_BUFF);
-        fric_motor[i].current_calculate();
     }
-    yaw_motor.give_current = 0;
 }
 
 /**
@@ -228,11 +236,9 @@ void revolver_task_t::ZERO_FORCE_control()
  */
 void revolver_task_t::CALIBRATE_control()
 {
-    for (int i = 0; i < 4; i++)
-    {
-        fric_motor[i].speed_set = RAMP_float(0, fric_motor[i].speed_set, FRIC_RAMP_BUFF);
-        fric_motor[i].current_calculate();
-    }
+    //摩擦轮缓停
+    fric_wheel_group.slow_stop();
+    fric_wheel_group.current_calculate();
 
     //左拨杆下，调整yaw轴
     if (syspoint()->sub_mode == CALIBRATE_ADJUST_POSITION)
@@ -272,20 +278,20 @@ void revolver_task_t::SHOOT_control()
         // yaw电机发射初始化
         yaw_motor.init();
         //摩擦轮发射初始化
-        fric_motor_init();
+        fric_wheel_group.init();
     }
     else if (syspoint()->sub_mode == SHOOT_MANUAL)
     {
         // yaw电机发射
         yaw_motor.shooting();
-        fric_motor_shooting();
+        fric_wheel_group.shooting();
     }
 }
 
 /**
  * @brief	摩擦轮发射初始化
  */
-void revolver_task_t::fric_motor_init()
+void fric_wheel_group_t::init()
 {
     //遥控器↖↗，开启摩擦轮
     if (RC_double_held_single_return(LEFT_ROCKER_LEFT_TOP, RIGHT_ROCKER_RIGHT_TOP, 400))
@@ -302,16 +308,13 @@ void revolver_task_t::fric_motor_init()
     }
     else if (is_fric_wheel_on == 1)
     {
-        fric_motor[0].speed_set = RAMP_float(-(BASE_SPEED + fric_speed_offset), fric_motor[0].speed_set, FRIC_RAMP_BUFF);
-        fric_motor[1].speed_set = RAMP_float((BASE_SPEED + fric_speed_offset), fric_motor[1].speed_set, FRIC_RAMP_BUFF);
-        fric_motor[2].speed_set = RAMP_float(-(BASE_SPEED + fric_speed_offset), fric_motor[2].speed_set, FRIC_RAMP_BUFF);
-        fric_motor[3].speed_set = RAMP_float((BASE_SPEED + fric_speed_offset), fric_motor[3].speed_set, FRIC_RAMP_BUFF);
+        fric_motor[0].speed_set = RAMP_float(-BASE_SPEED, fric_motor[0].speed_set, FRIC_RAMP_BUFF);
+        fric_motor[1].speed_set = RAMP_float(BASE_SPEED, fric_motor[1].speed_set, FRIC_RAMP_BUFF);
+        fric_motor[2].speed_set = RAMP_float(-BASE_SPEED, fric_motor[2].speed_set, FRIC_RAMP_BUFF);
+        fric_motor[3].speed_set = RAMP_float(BASE_SPEED, fric_motor[3].speed_set, FRIC_RAMP_BUFF);
     }
 
-    for (int i = 0; i < 4; i++)
-    {
-        fric_motor[i].current_calculate();
-    }
+    current_calculate();
 }
 
 /**
@@ -347,7 +350,7 @@ void yaw_motor_t::init()
 /**
  * @brief	摩擦轮发射时的控制
  */
-void revolver_task_t::fric_motor_shooting()
+void fric_wheel_group_t::shooting()
 {
     //发射完最后一个飞镖后，摩擦轮停止转动
     if (syspoint()->active_dart_index == 4 && loader_motor_point()->has_shoot_down_finished)
@@ -371,10 +374,7 @@ void revolver_task_t::fric_motor_shooting()
         fric_motor[3].speed_set = (BASE_SPEED - (SPEED_DIFFERENCE / 2) + (loader_motor_point()->has_shoot_down_finished ? outpost_speed_offset[syspoint()->active_dart_index] : outpost_speed_offset[syspoint()->active_dart_index - 1]));
     }
 
-    for (int i = 0; i < 4; i++)
-    {
-        fric_motor[i].current_calculate();
-    }
+    current_calculate();
 }
 
 /**
@@ -414,9 +414,12 @@ void yaw_motor_t::shooting()
 /**
  * @brief	摩擦轮电流计算
  */
-void fric_motor_t::current_calculate()
+void fric_wheel_group_t::current_calculate()
 {
-    give_current = speed_pid.calc(motor_measure->speed_rpm, speed_set);
+    for (int i = 0; i < 4; i++)
+    {
+        fric_motor[i].give_current = fric_motor[i].speed_pid.calc(fric_motor[i].motor_measure->speed_rpm, fric_motor[i].speed_set);
+    }
 }
 
 /**

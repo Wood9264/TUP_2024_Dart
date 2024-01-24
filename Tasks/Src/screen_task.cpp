@@ -37,10 +37,10 @@ screen_t::screen_t()
 void screen_t::screen_data_init()
 {
     //初始化转速补偿
-    TJCPrintf("t21.txt=\"%d\"", revolver_point()->outpost_speed_offset[0]);
-    TJCPrintf("t22.txt=\"%d\"", revolver_point()->outpost_speed_offset[1]);
-    TJCPrintf("t23.txt=\"%d\"", revolver_point()->outpost_speed_offset[2]);
-    TJCPrintf("t24.txt=\"%d\"", revolver_point()->outpost_speed_offset[3]);
+    TJCPrintf("t21.txt=\"%d\"", revolver_point()->fric_wheel_group.outpost_speed_offset[0]);
+    TJCPrintf("t22.txt=\"%d\"", revolver_point()->fric_wheel_group.outpost_speed_offset[1]);
+    TJCPrintf("t23.txt=\"%d\"", revolver_point()->fric_wheel_group.outpost_speed_offset[2]);
+    TJCPrintf("t24.txt=\"%d\"", revolver_point()->fric_wheel_group.outpost_speed_offset[3]);
 
     // 初始化yaw轴补偿
     TJCPrintf("t29.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[0]);
@@ -55,28 +55,28 @@ void screen_t::screen_data_init()
 void screen_t::send_data()
 {
     //发送电机转速
-    TJCPrintf("t5.txt=\"%d\"", revolver_point()->fric_motor[0].motor_measure->speed_rpm);
-    TJCPrintf("t6.txt=\"%d\"", revolver_point()->fric_motor[1].motor_measure->speed_rpm);
-    TJCPrintf("t7.txt=\"%d\"", revolver_point()->fric_motor[2].motor_measure->speed_rpm);
-    TJCPrintf("t8.txt=\"%d\"", revolver_point()->fric_motor[3].motor_measure->speed_rpm);
+    TJCPrintf("t5.txt=\"%d\"", revolver_point()->fric_wheel_group.fric_motor[0].motor_measure->speed_rpm);
+    TJCPrintf("t6.txt=\"%d\"", revolver_point()->fric_wheel_group.fric_motor[1].motor_measure->speed_rpm);
+    TJCPrintf("t7.txt=\"%d\"", revolver_point()->fric_wheel_group.fric_motor[2].motor_measure->speed_rpm);
+    TJCPrintf("t8.txt=\"%d\"", revolver_point()->fric_wheel_group.fric_motor[3].motor_measure->speed_rpm);
 
     //发送电机温度
-    TJCPrintf("t9.txt=\"%d\"", revolver_point()->fric_motor[0].motor_measure->temperate);
-    TJCPrintf("t10.txt=\"%d\"", revolver_point()->fric_motor[1].motor_measure->temperate);
-    TJCPrintf("t11.txt=\"%d\"", revolver_point()->fric_motor[2].motor_measure->temperate);
-    TJCPrintf("t12.txt=\"%d\"", revolver_point()->fric_motor[3].motor_measure->temperate);
+    TJCPrintf("t9.txt=\"%d\"", revolver_point()->fric_wheel_group.fric_motor[0].motor_measure->temperate);
+    TJCPrintf("t10.txt=\"%d\"", revolver_point()->fric_wheel_group.fric_motor[1].motor_measure->temperate);
+    TJCPrintf("t11.txt=\"%d\"", revolver_point()->fric_wheel_group.fric_motor[2].motor_measure->temperate);
+    TJCPrintf("t12.txt=\"%d\"", revolver_point()->fric_wheel_group.fric_motor[3].motor_measure->temperate);
 
     //发送转速设定值
-    TJCPrintf("t13.txt=\"%d\"", BASE_SPEED + revolver_point()->outpost_speed_offset[0]);
-    TJCPrintf("t14.txt=\"%d\"", BASE_SPEED + revolver_point()->outpost_speed_offset[1]);
-    TJCPrintf("t15.txt=\"%d\"", BASE_SPEED + revolver_point()->outpost_speed_offset[2]);
-    TJCPrintf("t16.txt=\"%d\"", BASE_SPEED + revolver_point()->outpost_speed_offset[3]);
+    TJCPrintf("t13.txt=\"%d\"", BASE_SPEED + revolver_point()->fric_wheel_group.outpost_speed_offset[0]);
+    TJCPrintf("t14.txt=\"%d\"", BASE_SPEED + revolver_point()->fric_wheel_group.outpost_speed_offset[1]);
+    TJCPrintf("t15.txt=\"%d\"", BASE_SPEED + revolver_point()->fric_wheel_group.outpost_speed_offset[2]);
+    TJCPrintf("t16.txt=\"%d\"", BASE_SPEED + revolver_point()->fric_wheel_group.outpost_speed_offset[3]);
 
     //发送转速补偿
-    TJCPrintf("t17.txt=\"%d\"", revolver_point()->outpost_speed_offset[0]);
-    TJCPrintf("t18.txt=\"%d\"", revolver_point()->outpost_speed_offset[1]);
-    TJCPrintf("t19.txt=\"%d\"", revolver_point()->outpost_speed_offset[2]);
-    TJCPrintf("t20.txt=\"%d\"", revolver_point()->outpost_speed_offset[3]);
+    TJCPrintf("t17.txt=\"%d\"", revolver_point()->fric_wheel_group.outpost_speed_offset[0]);
+    TJCPrintf("t18.txt=\"%d\"", revolver_point()->fric_wheel_group.outpost_speed_offset[1]);
+    TJCPrintf("t19.txt=\"%d\"", revolver_point()->fric_wheel_group.outpost_speed_offset[2]);
+    TJCPrintf("t20.txt=\"%d\"", revolver_point()->fric_wheel_group.outpost_speed_offset[3]);
 
     // 发送yaw轴补偿
     TJCPrintf("t25.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[0]);

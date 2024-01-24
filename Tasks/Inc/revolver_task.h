@@ -60,8 +60,22 @@ extern "C"
         PID_t speed_pid;
         fp32 speed_set;
         int16_t give_current;
+    };
 
+    class fric_wheel_group_t
+    {
+    public:
+        fric_motor_t fric_motor[4];
+
+        int16_t outpost_speed_offset[4];
+        int16_t base_speed_offset[4];
+
+        bool_t is_fric_wheel_on;
+
+        void slow_stop();
         void current_calculate();
+        void init();
+        void shooting();
     };
 
     class yaw_motor_t
@@ -100,26 +114,16 @@ extern "C"
 
         const RC_ctrl_t *revolver_rc_ctrl;
 
-        fric_motor_t fric_motor[4];
+        fric_wheel_group_t fric_wheel_group;
         yaw_motor_t yaw_motor;
 
-        int16_t outpost_speed_offset[4];
-        int16_t base_speed_offset[4];
-
-        fp32 fric_speed_offset;
         bool_t is_fric_wheel_on;
 
         void data_update();
         void control();
         void ZERO_FORCE_control();
-        void fric_speed_offset_control();
         void CALIBRATE_control();
         void SHOOT_control();
-        void READY_control();
-        void SHOOTING_control();
-        void fric_motor_init();
-        void fric_motor_shooting();
-        void fric_speed_buzzer();
     };
 
     extern revolver_task_t revolver;
