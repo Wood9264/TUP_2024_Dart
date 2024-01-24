@@ -232,7 +232,7 @@ void fric_wheel_group_t::slow_stop()
 // }
 
 /**
- * @brief	调整模式，可以手动调整滑块的位置
+ * @brief	校准模式
  */
 void revolver_task_t::CALIBRATE_control()
 {
@@ -243,14 +243,27 @@ void revolver_task_t::CALIBRATE_control()
     //左拨杆下，调整yaw轴
     if (syspoint()->sub_mode == CALIBRATE_ADJUST_POSITION)
     {
-        yaw_motor.ecd_set += revolver_rc_ctrl->rc.ch[2] * RC_TO_YAW_ECD_SET;
+        yaw_motor.adjust_position();
     }
     //左拨杆中，校准yaw轴
     else if (syspoint()->sub_mode == CALIBRATE_LOADER_AND_YAW)
     {
         yaw_motor.calibrate();
     }
-    yaw_motor.current_calculate();
+    //左拨杆上，检查校准结果
+    else if (syspoint()->sub_mode == CALIBRATE_CHECK)
+    {
+        yaw_motor.check_calibrate_result();
+    }
+}
+
+/**
+ * @brief   调整yaw轴位置
+ */
+void yaw_motor_t::adjust_position()
+{
+    ecd_set += revolver.revolver_rc_ctrl->rc.ch[2] * RC_TO_YAW_ECD_SET;
+    current_calculate();
 }
 
 /**
@@ -265,6 +278,21 @@ void yaw_motor_t::calibrate()
         has_calibrated = 1;
         buzzer_warn(0, 0, 3, 10000);
     }
+    //电流设为0，可以用手转动电机调整位置
+    give_current = 0;
+}
+
+/**
+ * @brief	检查yaw轴校准结果
+ */
+void yaw_motor_t::check_calibrate_result()
+{
+    //遥控器↗↖回校准点，检查yaw轴校准结果
+    if (RC_double_held_single_return(LEFT_ROCKER_RIGHT_TOP, RIGHT_ROCKER_LEFT_TOP, 400))
+    {
+        ecd_set = calibrated_point;
+    }
+    current_calculate();
 }
 
 /**

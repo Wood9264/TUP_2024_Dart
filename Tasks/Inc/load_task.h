@@ -115,6 +115,7 @@ extern "C"
         void flag_update();
         void adjust_position();
         void calibrate();
+        void check_calibrate_result();
         void auto_calibrate();
         void manual_calibrate();
         void shoot_init();
@@ -149,6 +150,7 @@ extern "C"
         void flag_update();
         void adjust_position();
         void calibrate();
+        void check_calibrate_result();
         void shoot_init();
         void calculate_current();
         void shoot_move_to_next();

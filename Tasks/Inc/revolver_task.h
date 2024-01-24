@@ -103,6 +103,8 @@ extern "C"
         bool_t has_move_to_next_finished;
 
         void calibrate();
+        void adjust_position();
+        void check_calibrate_result();
         void init();
         void shooting();
         void current_calculate();

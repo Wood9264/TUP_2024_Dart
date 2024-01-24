@@ -232,11 +232,17 @@ void load_task_t::CALIBRATE_control()
         loader_motor.adjust_position();
         rotary_motor.adjust_position();
     }
-    //左拨杆中上，校准装填电机
-    else if (syspoint()->sub_mode == CALIBRATE_LOADER_AND_YAW || syspoint()->sub_mode == CALIBRATE_CHECK)
+    //左拨杆中，校准装填电机
+    else if (syspoint()->sub_mode == CALIBRATE_LOADER_AND_YAW)
     {
         loader_motor.calibrate();
         rotary_motor.calibrate();
+    }
+    //左拨杆上，检查校准结果
+    else if (syspoint()->sub_mode == CALIBRATE_CHECK)
+    {
+        loader_motor.check_calibrate_result();
+        rotary_motor.check_calibrate_result();
     }
 }
 
@@ -381,6 +387,23 @@ void rotary_motor_t::adjust_position()
  * @brief   校准时转盘电机不转动，但仍需计算电流
  */
 void rotary_motor_t::calibrate()
+{
+    calculate_current();
+}
+
+/**
+ * @brief   检查校准结果时装填电机不动，但仍需计算电流
+ */
+void loader_motor_t::check_calibrate_result()
+{
+    speed_set = position_pid.calc(accumulate_ecd, ecd_set);
+    give_current = speed_pid.calc(motor_speed, speed_set);
+}
+
+/**
+ * @brief   检查校准结果时转盘电机不转动，但仍需计算电流
+ */
+void rotary_motor_t::check_calibrate_result()
 {
     calculate_current();
 }
