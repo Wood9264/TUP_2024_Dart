@@ -250,8 +250,7 @@ void revolver_task_t::CALIBRATE_control()
     {
         yaw_motor.calibrate();
     }
-    yaw_motor.speed_set = yaw_motor.position_pid.calc(yaw_motor.accumulate_ecd, yaw_motor.ecd_set);
-    yaw_motor.give_current = yaw_motor.speed_pid.calc(yaw_motor.motor_measure->speed_rpm, yaw_motor.speed_set);
+    yaw_motor.current_calculate();
 }
 
 /**
@@ -343,8 +342,7 @@ void yaw_motor_t::init()
         has_shoot_init_finished = 1;
     }
 
-    speed_set = position_pid.calc(accumulate_ecd, ecd_set);
-    give_current = speed_pid.calc(motor_measure->speed_rpm, speed_set);
+    current_calculate();
 }
 
 /**
@@ -407,8 +405,7 @@ void yaw_motor_t::shooting()
         has_move_to_next_finished = 1;
     }
 
-    speed_set = position_pid.calc(accumulate_ecd, ecd_set);
-    give_current = speed_pid.calc(motor_measure->speed_rpm, speed_set);
+    current_calculate();
 }
 
 /**
@@ -420,6 +417,15 @@ void fric_wheel_group_t::current_calculate()
     {
         fric_motor[i].give_current = fric_motor[i].speed_pid.calc(fric_motor[i].motor_measure->speed_rpm, fric_motor[i].speed_set);
     }
+}
+
+/**
+ * @brief	yaw轴电流计算
+ */
+void yaw_motor_t::current_calculate()
+{
+    speed_set = position_pid.calc(accumulate_ecd, ecd_set);
+    give_current = speed_pid.calc(motor_measure->speed_rpm, speed_set);
 }
 
 /**

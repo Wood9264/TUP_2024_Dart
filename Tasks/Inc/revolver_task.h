@@ -105,6 +105,7 @@ extern "C"
         void calibrate();
         void init();
         void shooting();
+        void current_calculate();
     };
 
     class revolver_task_t
