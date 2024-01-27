@@ -120,8 +120,6 @@ extern "C"
         fric_wheel_group_t fric_wheel_group;
         yaw_motor_t yaw_motor;
 
-        bool_t is_fric_wheel_on;
-
         void data_update();
         void control();
         void ZERO_FORCE_control();

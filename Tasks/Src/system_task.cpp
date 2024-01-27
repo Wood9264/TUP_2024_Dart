@@ -127,7 +127,7 @@ void system_t::mode_transit()
     }
     if (sys_mode == SHOOT && last_sys_mode != SHOOT)
     {
-        revolver_point()->is_fric_wheel_on = 0;
+        revolver_point()->fric_wheel_group.is_fric_wheel_on = 0;
         revolver_point()->yaw_motor.ecd_set = revolver_point()->yaw_motor.accumulate_ecd;
         revolver_point()->yaw_motor.has_shoot_init_finished = 0;
         load_point()->loader_motor.ecd_set = load_point()->loader_motor.accumulate_ecd;
