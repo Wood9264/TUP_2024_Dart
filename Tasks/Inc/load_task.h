@@ -121,6 +121,7 @@ extern "C"
         void shoot_init();
         void shoot_move_up();
         void shoot_move_down();
+        void current_calculate(fp32 max_out);
     };
 
     class rotary_motor_t

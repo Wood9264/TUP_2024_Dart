@@ -254,8 +254,7 @@ void loader_motor_t::adjust_position()
     //未校准时不能调整位置
     if (!has_calibrated)
     {
-        speed_set = position_pid.calc(accumulate_ecd, ecd_set);
-        give_current = speed_pid.calc(motor_speed, speed_set);
+        current_calculate(NULL);
         return;
     }
 
@@ -274,8 +273,7 @@ void loader_motor_t::adjust_position()
         ecd_set = zero_point_ecd;
     }
 
-    speed_set = position_pid.calc(accumulate_ecd, ecd_set);
-    give_current = speed_pid.calc(motor_speed, speed_set);
+    current_calculate(NULL);
 }
 
 /**
@@ -299,11 +297,8 @@ void loader_motor_t::calibrate()
     {
         auto_calibrate();
     }
-    else
-    {
-        speed_set = position_pid.calc(accumulate_ecd, ecd_set);
-        give_current = speed_pid.calc(motor_speed, speed_set);
-    }
+
+    current_calculate(NULL);
 }
 
 /**
@@ -323,15 +318,11 @@ void loader_motor_t::auto_calibrate()
     if (found_zero_point == 0)
     {
         ecd_set -= LOADER_CALIBRATE_DOWN_PER_LENGTH;
-        speed_set = position_pid.calc(accumulate_ecd, ecd_set);
-        give_current = speed_pid.calc(motor_speed, speed_set);
     }
     //压下触点开关后上移
     else if (found_zero_point == 1 && bottom_tick == 1)
     {
         ecd_set += LOADER_CALIBRATE_UP_PER_LENGTH;
-        speed_set = position_pid.calc(accumulate_ecd, ecd_set);
-        give_current = speed_pid.calc(motor_speed, speed_set);
     }
     //滑块离开触点开关，校准完毕
     else if (found_zero_point == 1 && bottom_tick == 0)
@@ -395,8 +386,7 @@ void rotary_motor_t::calibrate()
  */
 void loader_motor_t::check_calibrate_result()
 {
-    speed_set = position_pid.calc(accumulate_ecd, ecd_set);
-    give_current = speed_pid.calc(motor_speed, speed_set);
+    current_calculate(NULL);
 }
 
 /**
@@ -466,8 +456,7 @@ void loader_motor_t::shoot_init()
     //装填电机未校准时不能初始化
     if (!has_calibrated)
     {
-        speed_set = position_pid.calc(accumulate_ecd, ecd_set);
-        give_current = speed_pid.calc(motor_speed, speed_set);
+        current_calculate(NULL);
         return;
     }
 
@@ -478,8 +467,7 @@ void loader_motor_t::shoot_init()
         has_shoot_init_finished = 0;
     }
 
-    speed_set = position_pid.DLcalc(accumulate_ecd, ecd_set, LOADER_SHOOT_INIT_SPEED);
-    give_current = speed_pid.calc(motor_speed, speed_set);
+    current_calculate(LOADER_SHOOT_INIT_SPEED);
 
     //装填电机初始化结束
     if (fabs(ecd_set - accumulate_ecd) < LOADER_ECD_TOLERANCE && has_shoot_init_started == 1)
@@ -497,8 +485,7 @@ void load_task_t::shooting()
     //装填电机未校准时或装填电机和转盘电机未初始化时不能发射
     if (!loader_motor.has_calibrated || !loader_motor.has_shoot_init_finished || !rotary_motor.has_shoot_init_finished)
     {
-        loader_motor.speed_set = loader_motor.position_pid.calc(loader_motor.accumulate_ecd, loader_motor.ecd_set);
-        loader_motor.give_current = loader_motor.speed_pid.calc(loader_motor.motor_speed, loader_motor.speed_set);
+        loader_motor.current_calculate(NULL);
         rotary_motor.current_calculate();
         return;
     }
@@ -525,8 +512,7 @@ void loader_motor_t::shoot_move_up()
             ecd_set = max_point_ecd;
         }
 
-        speed_set = position_pid.DLcalc(accumulate_ecd, ecd_set, LOADER_SHOOT_UP_SPEED);
-        give_current = speed_pid.calc(motor_speed, speed_set);
+        current_calculate(LOADER_SHOOT_UP_SPEED);
 
         //目标值和实际值之差小于一定值，可认为上移完毕
         if (fabs(ecd_set - accumulate_ecd) < LOADER_ECD_TOLERANCE)
@@ -546,8 +532,7 @@ void loader_motor_t::shoot_move_down()
     {
         ecd_set = zero_point_ecd;
 
-        speed_set = position_pid.DLcalc(accumulate_ecd, ecd_set, LOADER_SHOOT_DOWN_SPEED);
-        give_current = speed_pid.calc(motor_speed, speed_set);
+        current_calculate(LOADER_SHOOT_DOWN_SPEED);
 
         //目标值和实际值之差小于一定值，可认为下移完毕
         if (fabs(ecd_set - accumulate_ecd) < LOADER_ECD_TOLERANCE)
@@ -580,6 +565,24 @@ void rotary_motor_t::shoot_move_to_next()
     if (fabs(final_relative_angle_set - relative_angle) < ROTARY_ANGLE_TOLERANCE)
     {
         has_move_to_next_finished = 1;
+    }
+}
+
+/**
+ * @brief       计算电流
+ * @param[in]   max_out 速度环输出限幅，为NULL时使用初始化时的限幅
+ */
+void loader_motor_t::current_calculate(fp32 max_out)
+{
+    if (max_out == NULL)
+    {
+        speed_set = position_pid.calc(accumulate_ecd, ecd_set);
+        give_current = speed_pid.calc(motor_speed, speed_set);
+    }
+    else
+    {
+        speed_set = position_pid.DLcalc(accumulate_ecd, ecd_set, max_out);
+        give_current = speed_pid.calc(motor_speed, speed_set);
     }
 }
 
