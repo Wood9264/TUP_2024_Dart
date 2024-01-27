@@ -327,7 +327,6 @@ void loader_motor_t::auto_calibrate()
     //滑块离开触点开关，校准完毕
     else if (found_zero_point == 1 && bottom_tick == 0)
     {
-        speed_set = 0;
         has_calibrated = 1;
         found_zero_point = 0;
         has_auto_calibrate_begun = 0;
@@ -344,7 +343,6 @@ void loader_motor_t::auto_calibrate()
  */
 void loader_motor_t::manual_calibrate()
 {
-    speed_set = 0;
     has_calibrated = 1;
 
     //设置零点和最大点
