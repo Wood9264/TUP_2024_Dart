@@ -121,7 +121,7 @@ void system_t::mode_transit()
         revolver_point()->yaw_motor.ecd_set = revolver_point()->yaw_motor.accumulate_ecd;
         load_point()->loader_motor.ecd_set = load_point()->loader_motor.accumulate_ecd;
         load_point()->loader_motor.speed_set = 0;
-        load_point()->loader_motor.has_calibrate_begun = 0;
+        load_point()->loader_motor.has_auto_calibrate_begun = 0;
         load_point()->loader_motor.ecd_set = load_point()->loader_motor.accumulate_ecd;
         load_point()->rotary_motor.relative_angle_set = load_point()->rotary_motor.relative_angle;
     }

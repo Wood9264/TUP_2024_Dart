@@ -286,7 +286,7 @@ void loader_motor_t::calibrate()
     //遥控器↙↘开始自动校准
     if (RC_double_held_single_return(LEFT_ROCKER_LEFT_BOTTOM, RIGHT_ROCKER_RIGHT_BOTTOM, 400))
     {
-        has_calibrate_begun = 1;
+        has_auto_calibrate_begun = 1;
     }
 
     //遥控器↘↙手动校准，适用于触点开关失效的情况
@@ -295,7 +295,7 @@ void loader_motor_t::calibrate()
         manual_calibrate();
     }
 
-    if (has_calibrate_begun == 1)
+    if (has_auto_calibrate_begun == 1)
     {
         auto_calibrate();
     }
@@ -339,7 +339,7 @@ void loader_motor_t::auto_calibrate()
         speed_set = 0;
         has_calibrated = 1;
         found_zero_point = 0;
-        has_calibrate_begun = 0;
+        has_auto_calibrate_begun = 0;
 
         //设置零点、受限点和最大点
         zero_point_ecd = accumulate_ecd + ZERO_POINT_OFFSET;
@@ -355,7 +355,6 @@ void loader_motor_t::manual_calibrate()
 {
     speed_set = 0;
     has_calibrated = 1;
-    has_calibrate_begun = 0;
 
     //设置零点和最大点
     zero_point_ecd = accumulate_ecd + ZERO_POINT_OFFSET;
@@ -374,13 +373,13 @@ void rotary_motor_t::adjust_position()
     // 装填电机未校准时或转盘电机锁定时不能调整位置
     if (!loader_motor_point()->has_calibrated || should_lock)
     {
-        calculate_current();
+        current_calculate();
         return;
     }
 
     add_angle = load.load_rc_ctrl->rc.ch[0] * RC_TO_ROTARY_MOTOR_ANGLE_SET;
     relative_angle_set = rad_format(relative_angle_set + add_angle);
-    calculate_current();
+    current_calculate();
 }
 
 /**
@@ -388,7 +387,7 @@ void rotary_motor_t::adjust_position()
  */
 void rotary_motor_t::calibrate()
 {
-    calculate_current();
+    current_calculate();
 }
 
 /**
@@ -405,7 +404,7 @@ void loader_motor_t::check_calibrate_result()
  */
 void rotary_motor_t::check_calibrate_result()
 {
-    calculate_current();
+    current_calculate();
 }
 
 /**
@@ -432,7 +431,7 @@ void rotary_motor_t::shoot_init()
     //装填电机未校准时不能初始化
     if (!loader_motor_point()->has_calibrated)
     {
-        calculate_current();
+        current_calculate();
         return;
     }
 
@@ -449,7 +448,7 @@ void rotary_motor_t::shoot_init()
         relative_angle_set = RAMP_float_loop_constrain(final_relative_angle_set, relative_angle_set, ROTARY_SHOOT_INIT_RAMP_BUFF);
     }
 
-    calculate_current();
+    current_calculate();
 
     //角度差小于一定值时初始化结束
     if (fabs(final_relative_angle_set - relative_angle) < ROTARY_ANGLE_TOLERANCE && has_shoot_init_started == 1)
@@ -500,7 +499,7 @@ void load_task_t::shooting()
     {
         loader_motor.speed_set = loader_motor.position_pid.calc(loader_motor.accumulate_ecd, loader_motor.ecd_set);
         loader_motor.give_current = loader_motor.speed_pid.calc(loader_motor.motor_speed, loader_motor.speed_set);
-        rotary_motor.calculate_current();
+        rotary_motor.current_calculate();
         return;
     }
 
@@ -575,7 +574,7 @@ void rotary_motor_t::shoot_move_to_next()
         relative_angle_set = RAMP_float_loop_constrain(final_relative_angle_set, relative_angle_set, ROTARY_SHOOT_RAMP_BUFF);
     }
 
-    calculate_current();
+    current_calculate();
 
     //目标值和实际值之差小于一定值，可认为转到位
     if (fabs(final_relative_angle_set - relative_angle) < ROTARY_ANGLE_TOLERANCE)
@@ -587,7 +586,7 @@ void rotary_motor_t::shoot_move_to_next()
 /**
  * @brief   计算电流
  */
-void rotary_motor_t::calculate_current()
+void rotary_motor_t::current_calculate()
 {
     speed_set = position_pid.relative_angle_calc(relative_angle, relative_angle_set);
     give_current = speed_pid.calc(motor_measure->speed_rpm, speed_set);

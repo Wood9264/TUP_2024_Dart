@@ -103,7 +103,7 @@ extern "C"
         int64_t max_point_ecd;
         int64_t restrict_point_ecd;
 
-        bool_t has_calibrate_begun;
+        bool_t has_auto_calibrate_begun;
         bool_t has_calibrated;
         bool_t bottom_tick;
         bool_t is_restricted_state;
@@ -152,7 +152,7 @@ extern "C"
         void calibrate();
         void check_calibrate_result();
         void shoot_init();
-        void calculate_current();
+        void current_calculate();
         void shoot_move_to_next();
     };
 
