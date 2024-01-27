@@ -145,6 +145,29 @@ void system_t::mode_transit()
 
         strike_target = OUTPOST;
     }
+
+    if (sub_mode == CALIBRATE_ADJUST_POSITION && last_sub_mode != CALIBRATE_ADJUST_POSITION)
+    {
+        revolver_point()->yaw_motor.ecd_set = revolver_point()->yaw_motor.accumulate_ecd;
+        load_point()->loader_motor.has_auto_calibrate_begun = 0;
+    }
+    if (sub_mode == CALIBRATE_CHECK && last_sub_mode != CALIBRATE_CHECK)
+    {
+        revolver_point()->yaw_motor.ecd_set = revolver_point()->yaw_motor.accumulate_ecd;
+    }
+    if (sub_mode == SHOOT_INIT && last_sub_mode != SHOOT_INIT)
+    {
+        revolver_point()->fric_wheel_group.is_fric_wheel_on = 0;
+
+        revolver_point()->yaw_motor.has_shoot_init_started = 0;
+        revolver_point()->yaw_motor.has_shoot_init_finished = 0;
+
+        load_point()->loader_motor.has_shoot_init_started = 0;
+        load_point()->loader_motor.has_shoot_init_finished = 0;
+
+        load_point()->rotary_motor.has_shoot_init_started = 0;
+        load_point()->rotary_motor.has_shoot_init_finished = 0;
+    }
 }
 
 /**
