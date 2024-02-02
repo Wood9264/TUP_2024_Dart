@@ -9,7 +9,7 @@ screen_t screen;
 void screen_task(void const *pvParameters)
 {
     vTaskDelay(SCREEN_TASK_INIT_TIME);
-    //串口屏数据初始化
+    //串口屏显示数据初始化
     screen.screen_data_init();
 
     while (1)
@@ -29,10 +29,19 @@ void screen_task(void const *pvParameters)
 screen_t::screen_t()
 {
     initRingBuff();
+
+    speed_offset_1 = SPEED_INITIAL_OFFSET_1;
+    speed_offset_2 = SPEED_INITIAL_OFFSET_2;
+    speed_offset_3 = SPEED_INITIAL_OFFSET_3;
+    speed_offset_4 = SPEED_INITIAL_OFFSET_4;
+    yaw_offset_num_1 = YAW_INITIAL_OFFSET_NUM_1;
+    yaw_offset_num_2 = YAW_INITIAL_OFFSET_NUM_2;
+    yaw_offset_num_3 = YAW_INITIAL_OFFSET_NUM_3;
+    yaw_offset_num_4 = YAW_INITIAL_OFFSET_NUM_4;
 }
 
 /**
- * @brief   串口屏数据初始化
+ * @brief   串口屏显示数据初始化
  */
 void screen_t::screen_data_init()
 {
@@ -43,10 +52,10 @@ void screen_t::screen_data_init()
     TJCPrintf("t24.txt=\"%d\"", revolver_point()->fric_wheel_group.outpost_speed_offset[3]);
 
     // 初始化yaw轴补偿
-    TJCPrintf("t29.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[0]);
     TJCPrintf("t30.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[1]);
     TJCPrintf("t31.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[2]);
     TJCPrintf("t32.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[3]);
+    TJCPrintf("t29.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[0]);
 }
 
 /**
