@@ -1,10 +1,16 @@
 #include "screen_task.h"
+#include "screen_task_enum.h"
 #include "cmsis_os.h"
 #include "FreeRTOS.h"
 #include "tjc_usart_hmi.h"
 #include "revolver_task.h"
 
 screen_t screen;
+
+screen_t *screen_point(void)
+{
+    return &screen;
+}
 
 void screen_task(void const *pvParameters)
 {

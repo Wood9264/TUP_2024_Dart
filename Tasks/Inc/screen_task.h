@@ -26,18 +26,6 @@ extern "C"
 
 #ifdef __cplusplus
 
-    enum
-    {
-        ID_speed_offset_1 = 22,
-        ID_speed_offset_2 = 23,
-        ID_speed_offset_3 = 24,
-        ID_speed_offset_4 = 25,
-        ID_yaw_offset_num_1 = 30,
-        ID_yaw_offset_num_2 = 31,
-        ID_yaw_offset_num_3 = 32,
-        ID_yaw_offset_num_4 = 33,
-    } cmd_ID_e;
-
     class screen_t
     {
     public:
@@ -58,6 +46,8 @@ extern "C"
         int16_t ascii_to_int16_t(const uint8_t *str);
         fp32 ascii_to_fp32(const uint8_t *str);
     };
+
+    extern screen_t *screen_point(void);
 
 #endif
 
