@@ -119,6 +119,7 @@ int main(void)
   MX_TIM2_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+  __HAL_UART_ENABLE_IT(&huart1, UART_IT_RXNE);
 	can_filter_init();
 	remote_control_init();
 	HAL_TIM_Base_Start(&htim4);
