@@ -25,7 +25,7 @@ void screen_task(void const *pvParameters)
         //串口屏数据解析
         screen.data_analysis();
 
-        vTaskDelay(2000);
+        vTaskDelay(2);
     }
 }
 
@@ -58,10 +58,10 @@ void screen_t::screen_data_init()
     TJCPrintf("t24.txt=\"%d\"", revolver_point()->fric_wheel_group.outpost_speed_offset[3]);
 
     // 初始化yaw轴补偿
+    TJCPrintf("t29.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[0]);
     TJCPrintf("t30.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[1]);
     TJCPrintf("t31.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[2]);
     TJCPrintf("t32.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[3]);
-    TJCPrintf("t29.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[0]);
 }
 
 /**
@@ -106,47 +106,61 @@ void screen_t::send_data()
 void screen_t::data_analysis()
 {
     //帧内容
-    uint8_t frame_content[HMI_USART_RX_BUF_LENGHT] = {0};
+    uint8_t frame_content[MAX_FRAME_LENGTH] = {0};
     //单个字节数据
     uint8_t data;
 
-    //判断缓冲区中是否有数据
-    if (getRingBuffLenght() > 0)
+    //判断缓冲区中是否有足够的数据
+    if (getRingBuffLenght() >= MIN_FRAME_LENGTH)
     {
-        if (read1BFromRingBuff(0) == SCREEN_FRAME_HEADER)
+        //遍历缓冲区寻找帧头并删除帧头之前的错误数据
+        for (uint8_t i = 0; i < RINGBUFF_LEN; i++)
         {
-            deleteRingBuff(1);
+            data = read1BFromRingBuff(0);
 
-            //逐个读取数据并存入帧内容数组，直到读取到连续三个0xFF
-            for (uint8_t i = 0; i < HMI_USART_RX_BUF_LENGHT; i++)
+            if (data == SCREEN_FRAME_HEADER)
             {
-                data = read1BFromRingBuff(0);
-
-                if (data == SCREEN_FRAME_TAIL)
+                //遍历后续内容寻找连续三个0xFF
+                for (uint8_t j = 1; j < MAX_FRAME_LENGTH; j++)
                 {
-                    if (read1BFromRingBuff(1) == SCREEN_FRAME_TAIL && read1BFromRingBuff(2) == SCREEN_FRAME_TAIL)
+                    data = read1BFromRingBuff(j);
+
+                    if (data == SCREEN_FRAME_TAIL)
                     {
-                        deleteRingBuff(3);
-                        //解析帧内容
-                        frame_content_analysis(frame_content);
-                        break;
+                        if (read1BFromRingBuff(j + 1) == SCREEN_FRAME_TAIL && read1BFromRingBuff(j + 2) == SCREEN_FRAME_TAIL)
+                        {
+                            //解析帧内容
+                            frame_content_analysis(frame_content);
+                            //删除已解析的帧
+                            deleteRingBuff(j + 3);
+                            //递归调用，继续解析下一帧
+                            data_analysis();
+                            return;
+                        }
+                        else
+                        {
+                            frame_content[j - 1] = data;
+                        }
+                    }
+                    //如果读取到下一个帧头，说明本帧的帧尾丢失，删除本帧
+                    else if (data == SCREEN_FRAME_HEADER)
+                    {
+                        deleteRingBuff(j);
+                        return;
                     }
                     else
                     {
-                        frame_content[i] = data;
-                        deleteRingBuff(1);
+                        frame_content[j - 1] = data;
                     }
                 }
-                else
-                {
-                    frame_content[i] = data;
-                    deleteRingBuff(1);
-                }
+                //如果遍历完最大长度的帧内容后没有找到帧尾，说明帧内容错误，递归调用继续解析下一帧
+                data_analysis();
+                return;
             }
-        }
-        else
-        {
-            deleteRingBuff(1);
+            else
+            {
+                deleteRingBuff(1);
+            }
         }
     }
 }

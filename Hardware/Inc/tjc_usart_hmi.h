@@ -24,7 +24,7 @@ extern "C"
 	void USART1_printf(char *fmt, ...); //串口1的专用printf函数
 
 #define RINGBUFF_LEN (500)		   //环形缓冲区的长度
-#define HMI_USART_RX_BUF_LENGHT 9 //每次接收的数据长度
+// #define HMI_USART_RX_BUF_LENGHT 9 //每次接收的数据长度
 
 #define usize getRingBuffLenght()
 #define code_c() initRingBuff()
