@@ -11,15 +11,10 @@
 
 #define SCREEN_TASK_INIT_TIME 3000 //屏幕任务初始化时间
 
-#define YAW_INITIAL_OFFSET_NUM_1 30.3
-#define YAW_INITIAL_OFFSET_NUM_2 70.5
-#define YAW_INITIAL_OFFSET_NUM_3 -0.5
-#define YAW_INITIAL_OFFSET_NUM_4 -30.3
-
-#define SPEED_INITIAL_OFFSET_1 0
-#define SPEED_INITIAL_OFFSET_2 500
-#define SPEED_INITIAL_OFFSET_3 1000
-#define SPEED_INITIAL_OFFSET_4 -500
+#define INIT_OUTPOST_SPEED 2000       //初始化前哨站速度
+#define INIT_BASE_SPEED 4000          //初始化基地速度
+#define INIT_OUTPOST_YAW_OFFSET_NUM 0 //初始化前哨站YAW补偿量
+#define INIT_BASE_YAW_OFFSET_NUM 0    //初始化基地YAW补偿量
 
 #ifdef __cplusplus
 extern "C"
@@ -31,14 +26,10 @@ extern "C"
     class screen_t
     {
     public:
-        int16_t speed_offset_1;
-        int16_t speed_offset_2;
-        int16_t speed_offset_3;
-        int16_t speed_offset_4;
-        fp32 yaw_offset_num_1;
-        fp32 yaw_offset_num_2;
-        fp32 yaw_offset_num_3;
-        fp32 yaw_offset_num_4;
+        int16_t outpost_speed[4];
+        int16_t base_speed[4];
+        fp32 outpost_yaw_offset_num[4];
+        fp32 base_yaw_offset_num[4];
 
         screen_t();
         void screen_data_init();

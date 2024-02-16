@@ -36,14 +36,13 @@ screen_t::screen_t()
 {
     initRingBuff();
 
-    speed_offset_1 = SPEED_INITIAL_OFFSET_1;
-    speed_offset_2 = SPEED_INITIAL_OFFSET_2;
-    speed_offset_3 = SPEED_INITIAL_OFFSET_3;
-    speed_offset_4 = SPEED_INITIAL_OFFSET_4;
-    yaw_offset_num_1 = YAW_INITIAL_OFFSET_NUM_1;
-    yaw_offset_num_2 = YAW_INITIAL_OFFSET_NUM_2;
-    yaw_offset_num_3 = YAW_INITIAL_OFFSET_NUM_3;
-    yaw_offset_num_4 = YAW_INITIAL_OFFSET_NUM_4;
+    for (uint8_t i = 0; i < 4; i++)
+    {
+        outpost_speed[i] = INIT_OUTPOST_SPEED;
+        base_speed[i] = INIT_BASE_SPEED;
+        outpost_yaw_offset_num[i] = INIT_OUTPOST_YAW_OFFSET_NUM;
+        base_yaw_offset_num[i] = INIT_BASE_YAW_OFFSET_NUM;
+    }
 }
 
 /**
@@ -51,17 +50,17 @@ screen_t::screen_t()
  */
 void screen_t::screen_data_init()
 {
-    //初始化转速补偿
-    TJCPrintf("t21.txt=\"%d\"", revolver_point()->fric_wheel_group.outpost_speed_offset[0]);
-    TJCPrintf("t22.txt=\"%d\"", revolver_point()->fric_wheel_group.outpost_speed_offset[1]);
-    TJCPrintf("t23.txt=\"%d\"", revolver_point()->fric_wheel_group.outpost_speed_offset[2]);
-    TJCPrintf("t24.txt=\"%d\"", revolver_point()->fric_wheel_group.outpost_speed_offset[3]);
+    // //初始化转速补偿
+    // TJCPrintf("t21.txt=\"%d\"", revolver_point()->fric_wheel_group.outpost_speed_offset[0]);
+    // TJCPrintf("t22.txt=\"%d\"", revolver_point()->fric_wheel_group.outpost_speed_offset[1]);
+    // TJCPrintf("t23.txt=\"%d\"", revolver_point()->fric_wheel_group.outpost_speed_offset[2]);
+    // TJCPrintf("t24.txt=\"%d\"", revolver_point()->fric_wheel_group.outpost_speed_offset[3]);
 
-    // 初始化yaw轴补偿
-    TJCPrintf("t29.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[0]);
-    TJCPrintf("t30.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[1]);
-    TJCPrintf("t31.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[2]);
-    TJCPrintf("t32.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[3]);
+    // // 初始化yaw轴补偿
+    // TJCPrintf("t29.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[0]);
+    // TJCPrintf("t30.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[1]);
+    // TJCPrintf("t31.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[2]);
+    // TJCPrintf("t32.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[3]);
 }
 
 /**
@@ -178,29 +177,54 @@ void screen_t::frame_content_analysis(uint8_t *frame_content)
 
     switch (cmd_ID)
     {
-    case ID_speed_offset_1:
-        speed_offset_1 = ascii_to_int16_t(frame_content + CMD_ID_LENTH);
+    case ID_outpost_speed_1:
+        outpost_speed[0] = ascii_to_int16_t(frame_content + CMD_ID_LENTH);
         break;
-    case ID_speed_offset_2:
-        speed_offset_2 = ascii_to_int16_t(frame_content + CMD_ID_LENTH);
+    case ID_outpost_speed_2:
+        outpost_speed[1] = ascii_to_int16_t(frame_content + CMD_ID_LENTH);
         break;
-    case ID_speed_offset_3:
-        speed_offset_3 = ascii_to_int16_t(frame_content + CMD_ID_LENTH);
+    case ID_outpost_speed_3:
+        outpost_speed[2] = ascii_to_int16_t(frame_content + CMD_ID_LENTH);
         break;
-    case ID_speed_offset_4:
-        speed_offset_4 = ascii_to_int16_t(frame_content + CMD_ID_LENTH);
+    case ID_outpost_speed_4:
+        outpost_speed[3] = ascii_to_int16_t(frame_content + CMD_ID_LENTH);
         break;
-    case ID_yaw_offset_num_1:
-        yaw_offset_num_1 = ascii_to_fp32(frame_content + CMD_ID_LENTH);
+    case ID_base_speed_1:
+        base_speed[0] = ascii_to_int16_t(frame_content + CMD_ID_LENTH);
         break;
-    case ID_yaw_offset_num_2:
-        yaw_offset_num_2 = ascii_to_fp32(frame_content + CMD_ID_LENTH);
+    case ID_base_speed_2:
+        base_speed[1] = ascii_to_int16_t(frame_content + CMD_ID_LENTH);
         break;
-    case ID_yaw_offset_num_3:
-        yaw_offset_num_3 = ascii_to_fp32(frame_content + CMD_ID_LENTH);
+    case ID_base_speed_3:
+        base_speed[2] = ascii_to_int16_t(frame_content + CMD_ID_LENTH);
         break;
-    case ID_yaw_offset_num_4:
-        yaw_offset_num_4 = ascii_to_fp32(frame_content + CMD_ID_LENTH);
+    case ID_base_speed_4:
+        base_speed[3] = ascii_to_int16_t(frame_content + CMD_ID_LENTH);
+        break;
+
+    case ID_outpost_yaw_offset_num_1:
+        outpost_yaw_offset_num[0] = ascii_to_fp32(frame_content + CMD_ID_LENTH);
+        break;
+    case ID_outpost_yaw_offset_num_2:
+        outpost_yaw_offset_num[1] = ascii_to_fp32(frame_content + CMD_ID_LENTH);
+        break;
+    case ID_outpost_yaw_offset_num_3:
+        outpost_yaw_offset_num[2] = ascii_to_fp32(frame_content + CMD_ID_LENTH);
+        break;
+    case ID_outpost_yaw_offset_num_4:
+        outpost_yaw_offset_num[3] = ascii_to_fp32(frame_content + CMD_ID_LENTH);
+        break;
+    case ID_base_yaw_offset_num_1:
+        base_yaw_offset_num[0] = ascii_to_fp32(frame_content + CMD_ID_LENTH);
+        break;
+    case ID_base_yaw_offset_num_2:
+        base_yaw_offset_num[1] = ascii_to_fp32(frame_content + CMD_ID_LENTH);
+        break;
+    case ID_base_yaw_offset_num_3:
+        base_yaw_offset_num[2] = ascii_to_fp32(frame_content + CMD_ID_LENTH);
+        break;
+    case ID_base_yaw_offset_num_4:
+        base_yaw_offset_num[3] = ascii_to_fp32(frame_content + CMD_ID_LENTH);
         break;
     }
 }
