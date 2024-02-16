@@ -4,6 +4,7 @@
 #include "FreeRTOS.h"
 #include "tjc_usart_hmi.h"
 #include "revolver_task.h"
+#include "usart.h"
 
 screen_t screen;
 
@@ -50,6 +51,11 @@ screen_t::screen_t()
  */
 void screen_t::screen_data_init()
 {
+    //清空屏幕串口缓冲区里的无关数据，消除上电过程中引脚杂波的影响
+    uint8_t init_data[] = {0x00, 0xff, 0xff, 0xff};
+    HAL_UART_Transmit(&huart1, init_data, 4, 100);
+    while (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_TXE) == RESET)
+        ;
     // //初始化转速补偿
     // TJCPrintf("t21.txt=\"%d\"", revolver_point()->fric_wheel_group.outpost_speed_offset[0]);
     // TJCPrintf("t22.txt=\"%d\"", revolver_point()->fric_wheel_group.outpost_speed_offset[1]);
