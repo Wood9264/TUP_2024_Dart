@@ -232,7 +232,33 @@ void screen_t::frame_content_analysis(uint8_t *frame_content)
     case ID_base_yaw_offset_num_4:
         base_yaw_offset_num[3] = ascii_to_fp32(frame_content + CMD_ID_LENTH);
         break;
+    case ID_refresh:
+        refresh_data();
+        break;
     }
+}
+
+/**
+ * @brief   刷新串口屏数据
+ */
+void screen_t::refresh_data()
+{
+    TJCPrintf("t6.txt=\"%d\"", outpost_speed[0]);
+    TJCPrintf("t7.txt=\"%d\"", outpost_speed[1]);
+    TJCPrintf("t8.txt=\"%d\"", outpost_speed[2]);
+    TJCPrintf("t9.txt=\"%d\"", outpost_speed[3]);
+    TJCPrintf("t10.txt=\"%d\"", base_speed[0]);
+    TJCPrintf("t11.txt=\"%d\"", base_speed[1]);
+    TJCPrintf("t12.txt=\"%d\"", base_speed[2]);
+    TJCPrintf("t13.txt=\"%d\"", base_speed[3]);
+    TJCPrintf("t14.txt=\"%.2f\"", outpost_yaw_offset_num[0]);
+    TJCPrintf("t15.txt=\"%.2f\"", outpost_yaw_offset_num[1]);
+    TJCPrintf("t16.txt=\"%.2f\"", outpost_yaw_offset_num[2]);
+    TJCPrintf("t17.txt=\"%.2f\"", outpost_yaw_offset_num[3]);
+    TJCPrintf("t18.txt=\"%.2f\"", base_yaw_offset_num[0]);
+    TJCPrintf("t19.txt=\"%.2f\"", base_yaw_offset_num[1]);
+    TJCPrintf("t20.txt=\"%.2f\"", base_yaw_offset_num[2]);
+    TJCPrintf("t21.txt=\"%.2f\"", base_yaw_offset_num[3]);
 }
 
 /**
