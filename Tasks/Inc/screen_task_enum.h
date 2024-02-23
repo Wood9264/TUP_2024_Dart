@@ -25,6 +25,8 @@ enum
     ID_base_yaw_offset_num_4 = 22,
 
     ID_refresh = 100,
+    ID_fric_monitor = 101,
+    ID_other_monitor = 102,
 } cmd_ID_e;
 
 #endif

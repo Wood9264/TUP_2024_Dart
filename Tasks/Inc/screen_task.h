@@ -37,6 +37,8 @@ extern "C"
         void data_analysis();
         void frame_content_analysis(uint8_t *frame_content);
         void refresh_data();
+        void fric_monitor(uint8_t *options_data);
+        void other_monitor(uint8_t *options_data);
         int16_t ascii_to_int16_t(const uint8_t *str);
         fp32 ascii_to_fp32(const uint8_t *str);
     };
