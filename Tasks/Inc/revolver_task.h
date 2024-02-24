@@ -29,8 +29,6 @@
 #define YAW_POSITION_PID_MAX_OUT 6000.0f
 #define YAW_POSITION_PID_MAX_IOUT 10.0f
 
-//四个摩擦轮的基础转速
-#define BASE_SPEED 1000
 //前后摩擦轮的转速差，正数为前轮快，负数为后轮快
 #define SPEED_DIFFERENCE 1000
 
@@ -67,8 +65,8 @@ extern "C"
     public:
         fric_motor_t fric_motor[4];
 
-        int16_t outpost_speed_offset[4];
-        int16_t base_speed_offset[4];
+        int16_t outpost_speed[4];
+        int16_t base_speed[4];
 
         bool_t is_fric_wheel_on;
 

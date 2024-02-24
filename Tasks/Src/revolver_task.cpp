@@ -69,20 +69,6 @@ revolver_task_t::revolver_task_t()
 
     yaw_motor.has_calibrated = 0;
 
-    yaw_motor.outpost_offset_num[0] = 30.3;
-    yaw_motor.outpost_offset_num[1] = 70.5;
-    yaw_motor.outpost_offset_num[2] = -0.5;
-    yaw_motor.outpost_offset_num[3] = -30.3;
-    yaw_motor.base_offset_num[0] = 120;
-    yaw_motor.base_offset_num[1] = 150;
-    yaw_motor.base_offset_num[2] = 100;
-    yaw_motor.base_offset_num[3] = 70;
-
-    fric_wheel_group.outpost_speed_offset[0] = 0;
-    fric_wheel_group.outpost_speed_offset[1] = 500;
-    fric_wheel_group.outpost_speed_offset[2] = 1000;
-    fric_wheel_group.outpost_speed_offset[3] = -500;
-
     //电机指针
     fric_wheel_group.fric_motor[0].motor_measure = get_motor_measure_class(FL);
     fric_wheel_group.fric_motor[1].motor_measure = get_motor_measure_class(FR);
@@ -100,6 +86,14 @@ revolver_task_t::revolver_task_t()
 void revolver_task_t::data_update()
 {
     yaw_motor.accumulate_ecd = yaw_motor.motor_measure->num * 8192 + yaw_motor.motor_measure->ecd;
+
+    for (uint8_t i = 0; i < 4; i++)
+    {
+        yaw_motor.outpost_offset_num[i] = screen_point()->outpost_yaw_offset_num[i];
+        yaw_motor.base_offset_num[i] = screen_point()->base_yaw_offset_num[i];
+        fric_wheel_group.outpost_speed[i] = screen_point()->outpost_speed[i];
+        fric_wheel_group.base_speed[i] = screen_point()->base_speed[i];
+    }
 }
 
 /**
@@ -336,10 +330,10 @@ void fric_wheel_group_t::init()
     }
     else if (is_fric_wheel_on == 1)
     {
-        fric_motor[0].speed_set = RAMP_float(-BASE_SPEED, fric_motor[0].speed_set, FRIC_RAMP_BUFF);
-        fric_motor[1].speed_set = RAMP_float(BASE_SPEED, fric_motor[1].speed_set, FRIC_RAMP_BUFF);
-        fric_motor[2].speed_set = RAMP_float(-BASE_SPEED, fric_motor[2].speed_set, FRIC_RAMP_BUFF);
-        fric_motor[3].speed_set = RAMP_float(BASE_SPEED, fric_motor[3].speed_set, FRIC_RAMP_BUFF);
+        fric_motor[0].speed_set = RAMP_float(-(outpost_speed[syspoint()->active_dart_index] + (SPEED_DIFFERENCE / 2)), fric_motor[0].speed_set, FRIC_RAMP_BUFF);
+        fric_motor[1].speed_set = RAMP_float((outpost_speed[syspoint()->active_dart_index] + (SPEED_DIFFERENCE / 2)), fric_motor[1].speed_set, FRIC_RAMP_BUFF);
+        fric_motor[2].speed_set = RAMP_float(-(outpost_speed[syspoint()->active_dart_index] - (SPEED_DIFFERENCE / 2)), fric_motor[2].speed_set, FRIC_RAMP_BUFF);
+        fric_motor[3].speed_set = RAMP_float((outpost_speed[syspoint()->active_dart_index] - (SPEED_DIFFERENCE / 2)), fric_motor[3].speed_set, FRIC_RAMP_BUFF);
     }
 
     current_calculate();
@@ -395,10 +389,10 @@ void fric_wheel_group_t::shooting()
     }
     else if (is_fric_wheel_on == 1)
     {
-        fric_motor[0].speed_set = -(BASE_SPEED + (SPEED_DIFFERENCE / 2) + (loader_motor_point()->has_shoot_down_finished ? outpost_speed_offset[syspoint()->active_dart_index] : outpost_speed_offset[syspoint()->active_dart_index - 1]));
-        fric_motor[1].speed_set = (BASE_SPEED + (SPEED_DIFFERENCE / 2) + (loader_motor_point()->has_shoot_down_finished ? outpost_speed_offset[syspoint()->active_dart_index] : outpost_speed_offset[syspoint()->active_dart_index - 1]));
-        fric_motor[2].speed_set = -(BASE_SPEED - (SPEED_DIFFERENCE / 2) + (loader_motor_point()->has_shoot_down_finished ? outpost_speed_offset[syspoint()->active_dart_index] : outpost_speed_offset[syspoint()->active_dart_index - 1]));
-        fric_motor[3].speed_set = (BASE_SPEED - (SPEED_DIFFERENCE / 2) + (loader_motor_point()->has_shoot_down_finished ? outpost_speed_offset[syspoint()->active_dart_index] : outpost_speed_offset[syspoint()->active_dart_index - 1]));
+        fric_motor[0].speed_set = -((loader_motor_point()->has_shoot_down_finished ? outpost_speed[syspoint()->active_dart_index] : outpost_speed[syspoint()->active_dart_index - 1]) + (SPEED_DIFFERENCE / 2));
+        fric_motor[1].speed_set = ((loader_motor_point()->has_shoot_down_finished ? outpost_speed[syspoint()->active_dart_index] : outpost_speed[syspoint()->active_dart_index - 1]) + (SPEED_DIFFERENCE / 2));
+        fric_motor[2].speed_set = -((loader_motor_point()->has_shoot_down_finished ? outpost_speed[syspoint()->active_dart_index] : outpost_speed[syspoint()->active_dart_index - 1]) - (SPEED_DIFFERENCE / 2));
+        fric_motor[3].speed_set = ((loader_motor_point()->has_shoot_down_finished ? outpost_speed[syspoint()->active_dart_index] : outpost_speed[syspoint()->active_dart_index - 1]) - (SPEED_DIFFERENCE / 2));
     }
 
     current_calculate();
