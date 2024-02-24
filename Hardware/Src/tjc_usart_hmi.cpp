@@ -14,7 +14,7 @@
 extern DMA_HandleTypeDef hdma_usart1_rx;
 
 RingBuff_t ringBuff; //创建一个ringBuff的缓冲区
-uint8_t RxBuff[HMI_USART_RX_BUF_LENGHT] = {0};
+uint8_t RxBuff[1] = {0};
 
 /********************************************************
 函数名：  	TJCPrintf
@@ -74,39 +74,45 @@ void TJCPrintf(const char *str, ...)
 返回值： 		void
 修改记录：
 **********************************************************/
-// void USART1_IRQHandler(void)
-// {
-//     if (USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)
-//     {
-//         USART_ClearITPendingBit(USART1, USART_IT_RXNE);
-//         RxBuff[0] = USART_ReceiveData(USART1);
-//         writeRingBuff(RxBuff[0]);
-//     }
-// }
+extern "C"
+{
+    /**
+     * @brief   串口1接收中断
+     * @note    先后读取SR和DR寄存器后，中断标志位会自动清除
+     */
+    void USART1_IRQHandler(void)
+    {
+        if (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_RXNE) == SET)
+        {
+            RxBuff[0] = USART1->DR;
+            writeRingBuff(RxBuff[0]);
+        }
+    }
+}
 
 extern "C"
 {
-    //串口1接收中断
-    void USART1_IRQHandler(void)
-    {
-        if (USART1->SR & UART_FLAG_IDLE)
-        {
-            __HAL_UART_CLEAR_PEFLAG(&huart1);
-        }
-        __HAL_DMA_DISABLE(huart1.hdmarx);
+    // //串口1接收中断
+    // void USART1_IRQHandler(void)
+    // {
+    //     if (USART1->SR & UART_FLAG_IDLE)
+    //     {
+    //         __HAL_UART_CLEAR_PEFLAG(&huart1);
+    //     }
+    //     __HAL_DMA_DISABLE(huart1.hdmarx);
 
-        __HAL_DMA_CLEAR_FLAG(&hdma_usart1_rx, DMA_FLAG_TCIF1_5 | DMA_FLAG_HTIF1_5);
+    //     __HAL_DMA_CLEAR_FLAG(&hdma_usart1_rx, DMA_FLAG_TCIF1_5 | DMA_FLAG_HTIF1_5);
 
-        __HAL_DMA_SET_COUNTER(&hdma_usart1_rx, HMI_USART_RX_BUF_LENGHT);
+    //     __HAL_DMA_SET_COUNTER(&hdma_usart1_rx, HMI_USART_RX_BUF_LENGHT);
 
-        __HAL_DMA_ENABLE(huart1.hdmarx);
-        HAL_UART_Receive_DMA(&huart1, RxBuff, HMI_USART_RX_BUF_LENGHT);
+    //     __HAL_DMA_ENABLE(huart1.hdmarx);
+    //     HAL_UART_Receive_DMA(&huart1, RxBuff, HMI_USART_RX_BUF_LENGHT);
 
-        for (int i = 0; i < HMI_USART_RX_BUF_LENGHT; i++)
-        {
-            writeRingBuff(RxBuff[i]);
-        }
-    }
+    //     for (int i = 0; i < HMI_USART_RX_BUF_LENGHT && RxBuff[i] != '\0'; i++)
+    //     {
+    //         writeRingBuff(RxBuff[i]);
+    //     }
+    // }
 }
 /********************************************************
 函数名：  	initRingBuff

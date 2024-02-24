@@ -6,6 +6,7 @@
 #include "BSP_buzzer.h"
 #include "monitor_task.h"
 #include "load_task.h"
+#include "screen_task.h"
 
 revolver_task_t revolver;
 
