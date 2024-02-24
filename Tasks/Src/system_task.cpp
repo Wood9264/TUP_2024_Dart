@@ -214,6 +214,8 @@ void system_t::shoot_init()
             loader_motor_point()->has_shoot_init_started = 1;
             revolver_point()->yaw_motor.has_shoot_init_started = 1;
             syspoint()->active_dart_index = 0;
+            //下移标志位置一，防止三元运算符中读取转速补偿时数组越界
+            loader_motor_point()->has_shoot_down_finished = 1;
         }
         //↖↖初始化为2号弹体位置
         else if (RC_held_continuous_return(LEFT_ROCKER_LEFT_TOP, 100))
@@ -222,6 +224,8 @@ void system_t::shoot_init()
             loader_motor_point()->has_shoot_init_started = 1;
             revolver_point()->yaw_motor.has_shoot_init_started = 1;
             syspoint()->active_dart_index = 1;
+            //下移标志位置一，防止三元运算符中读取转速补偿时数组越界
+            loader_motor_point()->has_shoot_down_finished = 1;
         }
         //↙↖初始化为3号弹体位置
         else if (RC_held_continuous_return(LEFT_ROCKER_LEFT_BOTTOM, 100))
@@ -230,6 +234,8 @@ void system_t::shoot_init()
             loader_motor_point()->has_shoot_init_started = 1;
             revolver_point()->yaw_motor.has_shoot_init_started = 1;
             syspoint()->active_dart_index = 2;
+            //下移标志位置一，防止三元运算符中读取转速补偿时数组越界
+            loader_motor_point()->has_shoot_down_finished = 1;
         }
         //↘↖初始化为4号弹体位置
         else if (RC_held_continuous_return(LEFT_ROCKER_RIGHT_BOTTOM, 100))
@@ -238,6 +244,8 @@ void system_t::shoot_init()
             loader_motor_point()->has_shoot_init_started = 1;
             revolver_point()->yaw_motor.has_shoot_init_started = 1;
             syspoint()->active_dart_index = 3;
+            //下移标志位置一，防止三元运算符中读取转速补偿时数组越界
+            loader_motor_point()->has_shoot_down_finished = 1;
         }
     }
 }
