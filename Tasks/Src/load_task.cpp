@@ -285,6 +285,7 @@ void loader_motor_t::calibrate()
     if (RC_double_held_single_return(LEFT_ROCKER_LEFT_BOTTOM, RIGHT_ROCKER_RIGHT_BOTTOM, 400))
     {
         has_auto_calibrate_begun = 1;
+        ecd_set = accumulate_ecd;
     }
 
     //遥控器↘↙手动校准，适用于触点开关失效的情况
@@ -296,9 +297,8 @@ void loader_motor_t::calibrate()
     if (has_auto_calibrate_begun == 1)
     {
         auto_calibrate();
+        current_calculate(NULL);
     }
-
-    current_calculate(NULL);
 }
 
 /**
