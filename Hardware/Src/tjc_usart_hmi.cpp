@@ -196,6 +196,20 @@ uint8_t read1BFromRingBuff(uint16_t position)
     return ringBuff.Ring_data[realPosition];
 }
 
+/**
+ * @brief       从串口缓冲区读取n字节数据
+ * @param[out]  data 读取的数据
+ * @param[in]   position 读取的位置
+ * @param[in]   n 读取的长度
+ */
+void readNBFromRingBuff(uint8_t *data, uint16_t position, uint16_t n)
+{
+    for (uint16_t i = 0; i < n; i++)
+    {
+        data[i] = read1BFromRingBuff(position + i);
+    }
+}
+
 /********************************************************
 函数名：  	getRingBuffLenght
 作者：

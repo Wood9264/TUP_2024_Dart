@@ -6,6 +6,7 @@
 #include "revolver_task.h"
 #include "usart.h"
 #include "load_task.h"
+#include "CRC8_CRC16.h"
 
 screen_t screen;
 
@@ -113,8 +114,12 @@ void screen_t::data_analysis()
 {
     //帧内容
     uint8_t frame_content[MAX_FRAME_LENGTH] = {0};
+    //有效数据
+    uint8_t vavid_data[MAX_FRAME_LENGTH] = {0};
     //单个字节数据
-    uint8_t data;
+    uint8_t single_byte;
+    //帧长度
+    uint8_t frame_length = 0;
 
     //判断缓冲区中是否有足够的数据
     if (getRingBuffLenght() >= MIN_FRAME_LENGTH)
@@ -122,46 +127,43 @@ void screen_t::data_analysis()
         //遍历缓冲区寻找帧头并删除帧头之前的错误数据
         for (uint8_t i = 0; i < RINGBUFF_LEN; i++)
         {
-            data = read1BFromRingBuff(0);
+            single_byte = read1BFromRingBuff(0);
 
-            if (data == SCREEN_FRAME_HEADER)
+            if (single_byte == SCREEN_FRAME_HEADER)
             {
-                //遍历后续内容寻找连续三个0xFF
-                for (uint8_t j = 1; j < MAX_FRAME_LENGTH; j++)
+                //读取最大长度的帧内容
+                readNBFromRingBuff(frame_content, 0, MAX_FRAME_LENGTH);
+                //统计帧长度，用于CRC16校验
+                frame_length = SCREEN_FRAME_HEADER_LENTH + CMD_ID_LENTH + frame_content[1] + SCREEN_FRAME_TAIL_LENTH;
+                //检查缓冲区的数据是否足够解析一帧
+                if (getRingBuffLenght() >= frame_length)
                 {
-                    data = read1BFromRingBuff(j);
-
-                    if (data == SCREEN_FRAME_TAIL)
+                    // CRC16校验
+                    if (verify_CRC16_MODBUS_check_sum(frame_content, frame_length))
                     {
-                        if (read1BFromRingBuff(j + 1) == SCREEN_FRAME_TAIL && read1BFromRingBuff(j + 2) == SCREEN_FRAME_TAIL)
+                        //切分有效数据
+                        for (uint8_t j = 0; j < frame_content[1]; j++)
                         {
-                            //解析帧内容
-                            frame_content_analysis(frame_content);
-                            //删除已解析的帧
-                            deleteRingBuff(j + 3);
-                            //递归调用，继续解析下一帧
-                            data_analysis();
-                            return;
+                            vavid_data[j] = frame_content[j + SCREEN_FRAME_HEADER_LENTH + CMD_ID_LENTH];
                         }
-                        else
-                        {
-                            frame_content[j - 1] = data;
-                        }
-                    }
-                    //如果读取到下一个帧头，说明本帧的帧尾丢失，删除本帧
-                    else if (data == SCREEN_FRAME_HEADER)
-                    {
-                        deleteRingBuff(j);
+                        //解析有效数据
+                        vavid_data_analysis(vavid_data, frame_content[SCREEN_FRAME_HEADER_LENTH]);
+                        //删除已解析的帧
+                        deleteRingBuff(frame_length);
+                        //递归调用，继续解析下一帧
+                        data_analysis();
                         return;
                     }
                     else
                     {
-                        frame_content[j - 1] = data;
+                        //如果CRC16校验失败，删除帧头
+                        deleteRingBuff(1);
                     }
                 }
-                //如果遍历完最大长度的帧内容后没有找到帧尾，说明帧内容错误，递归调用继续解析下一帧
-                data_analysis();
-                return;
+                else
+                {
+                    return;
+                }
             }
             else
             {
@@ -172,76 +174,72 @@ void screen_t::data_analysis()
 }
 
 /**
- * @brief   帧内容解析
- * @param   frame_content 帧内容
+ * @brief   有效数据解析
+ * @param   vavid_data 有效数据
+ * @param   cmd_ID 命令ID
  */
-void screen_t::frame_content_analysis(uint8_t *frame_content)
+void screen_t::vavid_data_analysis(uint8_t *vavid_data, uint8_t cmd_ID)
 {
-    uint8_t cmd_ID = 0;
-
-    //获取命令ID
-    cmd_ID = frame_content[0];
-
     switch (cmd_ID)
     {
     case ID_outpost_speed_1:
-        outpost_speed[0] = ascii_to_int16_t(frame_content + CMD_ID_LENTH);
+        outpost_speed[0] = ascii_to_int16_t(vavid_data);
         break;
     case ID_outpost_speed_2:
-        outpost_speed[1] = ascii_to_int16_t(frame_content + CMD_ID_LENTH);
+        outpost_speed[1] = ascii_to_int16_t(vavid_data);
         break;
     case ID_outpost_speed_3:
-        outpost_speed[2] = ascii_to_int16_t(frame_content + CMD_ID_LENTH);
+        outpost_speed[2] = ascii_to_int16_t(vavid_data);
         break;
     case ID_outpost_speed_4:
-        outpost_speed[3] = ascii_to_int16_t(frame_content + CMD_ID_LENTH);
+        outpost_speed[3] = ascii_to_int16_t(vavid_data);
         break;
     case ID_base_speed_1:
-        base_speed[0] = ascii_to_int16_t(frame_content + CMD_ID_LENTH);
+        base_speed[0] = ascii_to_int16_t(vavid_data);
         break;
     case ID_base_speed_2:
-        base_speed[1] = ascii_to_int16_t(frame_content + CMD_ID_LENTH);
+        base_speed[1] = ascii_to_int16_t(vavid_data);
         break;
     case ID_base_speed_3:
-        base_speed[2] = ascii_to_int16_t(frame_content + CMD_ID_LENTH);
+        base_speed[2] = ascii_to_int16_t(vavid_data);
         break;
     case ID_base_speed_4:
-        base_speed[3] = ascii_to_int16_t(frame_content + CMD_ID_LENTH);
+        base_speed[3] = ascii_to_int16_t(vavid_data);
         break;
 
     case ID_outpost_yaw_offset_num_1:
-        outpost_yaw_offset_num[0] = ascii_to_fp32(frame_content + CMD_ID_LENTH);
+        outpost_yaw_offset_num[0] = ascii_to_fp32(vavid_data);
         break;
     case ID_outpost_yaw_offset_num_2:
-        outpost_yaw_offset_num[1] = ascii_to_fp32(frame_content + CMD_ID_LENTH);
+        outpost_yaw_offset_num[1] = ascii_to_fp32(vavid_data);
         break;
     case ID_outpost_yaw_offset_num_3:
-        outpost_yaw_offset_num[2] = ascii_to_fp32(frame_content + CMD_ID_LENTH);
+        outpost_yaw_offset_num[2] = ascii_to_fp32(vavid_data);
         break;
     case ID_outpost_yaw_offset_num_4:
-        outpost_yaw_offset_num[3] = ascii_to_fp32(frame_content + CMD_ID_LENTH);
+        outpost_yaw_offset_num[3] = ascii_to_fp32(vavid_data);
         break;
     case ID_base_yaw_offset_num_1:
-        base_yaw_offset_num[0] = ascii_to_fp32(frame_content + CMD_ID_LENTH);
+        base_yaw_offset_num[0] = ascii_to_fp32(vavid_data);
         break;
     case ID_base_yaw_offset_num_2:
-        base_yaw_offset_num[1] = ascii_to_fp32(frame_content + CMD_ID_LENTH);
+        base_yaw_offset_num[1] = ascii_to_fp32(vavid_data);
         break;
     case ID_base_yaw_offset_num_3:
-        base_yaw_offset_num[2] = ascii_to_fp32(frame_content + CMD_ID_LENTH);
+        base_yaw_offset_num[2] = ascii_to_fp32(vavid_data);
         break;
     case ID_base_yaw_offset_num_4:
-        base_yaw_offset_num[3] = ascii_to_fp32(frame_content + CMD_ID_LENTH);
+        base_yaw_offset_num[3] = ascii_to_fp32(vavid_data);
         break;
 
     case ID_refresh:
         refresh_data();
         break;
     case ID_fric_monitor:
-        fric_monitor(frame_content + CMD_ID_LENTH);
+        fric_monitor(vavid_data);
         break;
     case ID_other_monitor:
-        other_monitor(frame_content + CMD_ID_LENTH);
+        other_monitor(vavid_data);
         break;
     }
 }

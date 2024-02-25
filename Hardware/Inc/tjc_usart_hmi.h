@@ -20,6 +20,7 @@ extern "C"
 	void deleteRingBuff(uint16_t size);
 	uint16_t getRingBuffLenght(void);
 	uint8_t read1BFromRingBuff(uint16_t position);
+	void readNBFromRingBuff(uint8_t *data, uint16_t position, uint16_t n);
 	void USART1_Init(uint32_t bound);
 	void USART1_printf(char *fmt, ...); //串口1的专用printf函数
 
