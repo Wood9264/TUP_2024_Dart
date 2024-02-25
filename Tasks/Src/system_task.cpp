@@ -145,6 +145,7 @@ void system_t::mode_transit()
 
         has_index_added = 0;
         strike_target = OUTPOST;
+        active_dart_index = 0;
     }
 
     if (sub_mode == CALIBRATE_ADJUST_POSITION && last_sub_mode != CALIBRATE_ADJUST_POSITION)
@@ -175,6 +176,7 @@ void system_t::mode_transit()
 
         has_index_added = 0;
         strike_target = OUTPOST;
+        active_dart_index = 0;
     }
 }
 
