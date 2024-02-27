@@ -241,6 +241,9 @@ void screen_t::vavid_data_analysis(uint8_t *vavid_data, uint8_t cmd_ID)
     case ID_other_monitor:
         other_monitor(vavid_data);
         break;
+    case ID_warning_message:
+        warning_message();
+        break;
     }
 }
 
@@ -354,6 +357,67 @@ void screen_t::other_monitor(uint8_t *options_data)
         TJCPrintf("t21.txt=\"%d\"", load_point()->rotary_motor.motor_measure->given_current);
     if (should_send_data[14])
         TJCPrintf("t22.txt=\"%.2f\"", load_point()->rotary_motor.relative_angle);
+}
+
+/**
+ * @brief   警告信息
+ */
+void screen_t::warning_message()
+{
+    //装填电机未校准警告
+    if (!load_point()->loader_motor.has_calibrated)
+    {
+        TJCPrintf("vis t0,1");
+    }
+    else
+    {
+        TJCPrintf("vis t0,0");
+    }
+    // yaw轴未校准警告
+    if (!revolver_point()->yaw_motor.has_calibrated)
+    {
+        TJCPrintf("vis t1,1");
+    }
+    else
+    {
+        TJCPrintf("vis t1,0");
+    }
+    //装填电机受限警告
+    if (load_point()->loader_motor.is_restricted_state)
+    {
+        TJCPrintf("vis t2,1");
+    }
+    else
+    {
+        TJCPrintf("vis t2,0");
+    }
+    //装填电机未初始化警告
+    if (!load_point()->loader_motor.has_shoot_init_finished)
+    {
+        TJCPrintf("vis t3,1");
+    }
+    else
+    {
+        TJCPrintf("vis t3,0");
+    }
+    //转盘未初始化警告
+    if (!load_point()->rotary_motor.has_shoot_init_finished)
+    {
+        TJCPrintf("vis t4,1");
+    }
+    else
+    {
+        TJCPrintf("vis t4,0");
+    }
+    // yaw轴未初始化警告
+    if (!revolver_point()->yaw_motor.has_shoot_init_finished)
+    {
+        TJCPrintf("vis t5,1");
+    }
+    else
+    {
+        TJCPrintf("vis t5,0");
+    }
 }
 
 /**
