@@ -126,7 +126,7 @@ void system_t::mode_transit()
 
         load_point()->rotary_motor.relative_angle_set = load_point()->rotary_motor.relative_angle;
     }
-    if (sys_mode == SHOOT && last_sys_mode != SHOOT)
+    else if (sys_mode == SHOOT && last_sys_mode != SHOOT)
     {
         revolver_point()->fric_wheel_group.is_fric_wheel_on = 0;
 
@@ -154,12 +154,12 @@ void system_t::mode_transit()
         load_point()->loader_motor.ecd_set = load_point()->loader_motor.accumulate_ecd;
         load_point()->loader_motor.has_auto_calibrate_begun = 0;
     }
-    if (sub_mode == CALIBRATE_CHECK && last_sub_mode != CALIBRATE_CHECK)
+    else if (sub_mode == CALIBRATE_CHECK && last_sub_mode != CALIBRATE_CHECK)
     {
         revolver_point()->yaw_motor.ecd_set = revolver_point()->yaw_motor.accumulate_ecd;
         load_point()->loader_motor.ecd_set = load_point()->loader_motor.accumulate_ecd;
     }
-    if (sub_mode == SHOOT_INIT && last_sub_mode != SHOOT_INIT)
+    else if (sub_mode == SHOOT_INIT && last_sub_mode != SHOOT_INIT)
     {
         revolver_point()->fric_wheel_group.is_fric_wheel_on = 0;
 
