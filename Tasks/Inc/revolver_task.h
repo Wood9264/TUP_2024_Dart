@@ -6,6 +6,7 @@
 #include "BSP_can.h"
 #include "tim.h"
 
+//任务初始化延时时间
 #define REVOLVER_TASK_INIT_TIME 200
 
 //摩擦轮速度环PID
@@ -51,6 +52,7 @@ extern "C"
 {
 #endif
 
+    //摩擦轮电机类
     class fric_motor_t
     {
     public:
@@ -60,22 +62,24 @@ extern "C"
         int16_t give_current;
     };
 
+    //摩擦轮组类
     class fric_wheel_group_t
     {
     public:
-        fric_motor_t fric_motor[4];
+        fric_motor_t fric_motor[4]; //四个摩擦轮电机
 
-        int16_t outpost_speed[4];
-        int16_t base_speed[4];
+        int16_t outpost_speed[4]; //打击前哨站时的转速
+        int16_t base_speed[4];    //打击基地时的转速
 
-        bool_t is_fric_wheel_on;
+        bool_t is_fric_wheel_on; //摩擦轮启动标志位
 
         void slow_stop();
         void current_calculate();
-        void init();
+        void shoot_init();
         void shooting();
     };
 
+    // yaw轴电机类
     class yaw_motor_t
     {
     public:
@@ -83,40 +87,39 @@ extern "C"
         PID_t speed_pid;
         PID_t position_pid;
 
-        int64_t accumulate_ecd;
-        fp32 ecd_set;
+        int64_t accumulate_ecd; //累计编码值
+        fp32 ecd_set;           //设定编码值
         fp32 speed_set;
-        fp32 final_ecd_set;
 
         int16_t give_current;
 
-        int64_t calibrated_point;
-        fp32 outpost_offset_num[4];
-        fp32 base_offset_num[4];
+        int64_t calibrated_point;   //校准点编码值
+        fp32 outpost_offset_num[4]; //打击前哨站时相对校准点的偏移量
+        fp32 base_offset_num[4];    //打击基地时相对校准点的偏移量
 
-        bool_t has_calibrated;
-        bool_t has_shoot_init_started;
-        bool_t has_shoot_init_finished;
-        bool_t has_shoot_move_finished;
-        bool_t has_move_to_next_finished;
+        bool_t has_calibrated;            //已校准标志位
+        bool_t has_shoot_init_started;    //开始发射初始化标志位
+        bool_t has_shoot_init_finished;   //发射初始化完成标志位
+        bool_t has_move_to_next_finished; //移动到下一个位置完成标志位
 
         void calibrate();
         void adjust_position();
         void check_calibrate_result();
-        void init();
+        void shoot_init();
         void shooting();
         void current_calculate();
     };
 
+    //发射机构类
     class revolver_task_t
     {
     public:
         revolver_task_t();
 
-        const RC_ctrl_t *revolver_rc_ctrl;
+        const RC_ctrl_t *revolver_rc_ctrl; //遥控器信息
 
-        fric_wheel_group_t fric_wheel_group;
-        yaw_motor_t yaw_motor;
+        fric_wheel_group_t fric_wheel_group; //摩擦轮组
+        yaw_motor_t yaw_motor;               // yaw轴电机
 
         void data_update();
         void control();

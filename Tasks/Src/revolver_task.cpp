@@ -1,3 +1,8 @@
+/**
+ * @file    revolver_task.cpp
+ * @author  Yang Maolin (1831051389@qq.com)
+ * @brief   发射机构相关代码。发射机构包括四个摩擦轮和yaw轴电机，摩擦轮用于发射飞镖，yaw轴用于瞄准目标，没有pitch轴。
+ */
 #include "system_task.h"
 #include "FreeRTOS.h"
 #include "task.h"
@@ -10,6 +15,10 @@
 
 revolver_task_t revolver;
 
+/**
+ * @brief   返回发射机构任务指针
+ * @retval  发射机构任务指针
+ */
 revolver_task_t *revolver_point(void)
 {
     return &revolver;
@@ -19,12 +28,12 @@ fp32 SPEED[4];
 fp32 TEMP[4];
 
 /**
- * @brief          发射机构任务
- * @param[in]      null
+ * @brief   发射机构任务
+ * @param   pvParameters
  */
 void revolver_task(void const *pvParameters)
 {
-    //延时
+    //初始化延时
     vTaskDelay(REVOLVER_TASK_INIT_TIME);
     uint32_t currentTime;
     while (1)
@@ -33,12 +42,13 @@ void revolver_task(void const *pvParameters)
         currentTime = xTaskGetTickCount();
         //数据更新
         revolver.data_update();
-        //分任务控制
+        //发射机构控制
         revolver.control();
         //发送电流
         CAN1_200_cmd_motor(revolver.fric_wheel_group.fric_motor[0].give_current, revolver.fric_wheel_group.fric_motor[1].give_current,
                            revolver.fric_wheel_group.fric_motor[2].give_current, revolver.fric_wheel_group.fric_motor[3].give_current);
         CAN2_200_cmd_motor(revolver.yaw_motor.give_current, 0, 0, 0);
+        //绝对延时1ms
         vTaskDelayUntil(&currentTime, 1);
 
         for (int i = 0; i < 4; i++)
@@ -50,38 +60,35 @@ void revolver_task(void const *pvParameters)
 }
 
 /**
- * @brief          发射机构任务初始化
- * @param[in]      null
+ * @brief   发射机构任务初始化
  */
 revolver_task_t::revolver_task_t()
 {
+    // yaw轴初始化
     fp32 yaw_speed_pid[3] = {YAW_SPEED_PID_KP, YAW_SPEED_PID_KI, YAW_SPEED_PID_KD};
     fp32 yaw_position_pid[3] = {YAW_POSITION_PID_KP, YAW_POSITION_PID_KI, YAW_POSITION_PID_KD};
-    fp32 Fric_speed_pid[3] = {FRIC_SPEED_PID_KP, FRIC_SPEED_PID_KI, FRIC_SPEED_PID_KD};
-
     yaw_motor.speed_pid.init(PID_POSITION, yaw_speed_pid, YAW_SPEED_PID_MAX_OUT, YAW_SPEED_PID_MAX_IOUT);
     yaw_motor.position_pid.init(PID_POSITION, yaw_position_pid, YAW_POSITION_PID_MAX_OUT, YAW_POSITION_PID_MAX_IOUT);
+    yaw_motor.has_calibrated = 0;
+    yaw_motor.motor_measure = get_motor_measure_class(YAW_MOTOR);
 
-    for (int i = 0; i < 4; i++)
+    //摩擦轮初始化
+    fp32 Fric_speed_pid[3] = {FRIC_SPEED_PID_KP, FRIC_SPEED_PID_KI, FRIC_SPEED_PID_KD};
+    for (uint8_t i = 0; i < 4; i++)
     {
         fric_wheel_group.fric_motor[i].speed_pid.init(PID_POSITION, Fric_speed_pid, FRIC_SPEED_PID_MAX_OUT, FRIC_SPEED_PID_MAX_IOUT);
     }
-
-    yaw_motor.has_calibrated = 0;
-
-    //电机指针
     fric_wheel_group.fric_motor[0].motor_measure = get_motor_measure_class(FL);
     fric_wheel_group.fric_motor[1].motor_measure = get_motor_measure_class(FR);
     fric_wheel_group.fric_motor[2].motor_measure = get_motor_measure_class(BL);
     fric_wheel_group.fric_motor[3].motor_measure = get_motor_measure_class(BR);
-    yaw_motor.motor_measure = get_motor_measure_class(YAW_MOTOR);
 
+    //遥控器数据初始化
     revolver_rc_ctrl = get_remote_control_point();
 }
 
 /**
  * @brief          发射机构数据更新
- * @param[in]      null
  */
 void revolver_task_t::data_update()
 {
@@ -97,18 +104,21 @@ void revolver_task_t::data_update()
 }
 
 /**
- * @brief	分任务控制
+ * @brief	发射机构控制
  */
 void revolver_task_t::control()
 {
+    //右拨杆下，无力模式
     if (syspoint()->sys_mode == ZERO_FORCE)
     {
         ZERO_FORCE_control();
     }
+    //右拨杆中，校准模式
     else if (syspoint()->sys_mode == CALIBRATE)
     {
         CALIBRATE_control();
     }
+    //右拨杆上，发射模式
     else if (syspoint()->sys_mode == SHOOT)
     {
         SHOOT_control();
@@ -120,6 +130,7 @@ void revolver_task_t::control()
  */
 void revolver_task_t::ZERO_FORCE_control()
 {
+    //摩擦轮转动惯量大，需要主动停转
     fric_wheel_group.slow_stop();
     fric_wheel_group.current_calculate();
     yaw_motor.give_current = 0;
@@ -257,12 +268,13 @@ void revolver_task_t::CALIBRATE_control()
  */
 void yaw_motor_t::adjust_position()
 {
+    //遥控器左摇杆左右调整yaw轴位置
     ecd_set += revolver.revolver_rc_ctrl->rc.ch[2] * RC_TO_YAW_ECD_SET;
     current_calculate();
 }
 
 /**
- * @brief	校准yaw轴电机
+ * @brief	校准yaw轴电机零点
  */
 void yaw_motor_t::calibrate()
 {
@@ -295,25 +307,25 @@ void yaw_motor_t::check_calibrate_result()
  */
 void revolver_task_t::SHOOT_control()
 {
+    //左拨杆下，发射初始化
     if (syspoint()->sub_mode == SHOOT_INIT)
     {
-        // yaw电机发射初始化
-        yaw_motor.init();
-        //摩擦轮发射初始化
-        fric_wheel_group.init();
+        yaw_motor.shoot_init();
+        fric_wheel_group.shoot_init();
     }
+    //左拨杆中，手动发射
     else if (syspoint()->sub_mode == SHOOT_MANUAL)
     {
-        // yaw电机发射
         yaw_motor.shooting();
         fric_wheel_group.shooting();
     }
 }
 
 /**
- * @brief	摩擦轮发射初始化
+ * @brief	    摩擦轮发射初始化
+ * @attention   为方便调试，本函数没有做初始化保护，yaw轴和装填电机未校准时摩擦轮也能转动
  */
-void fric_wheel_group_t::init()
+void fric_wheel_group_t::shoot_init()
 {
     //遥控器↖↗，开启摩擦轮
     if (RC_double_held_single_return(LEFT_ROCKER_LEFT_TOP, RIGHT_ROCKER_RIGHT_TOP, 400))
@@ -342,7 +354,7 @@ void fric_wheel_group_t::init()
 /**
  * @brief	yaw电机发射初始化
  */
-void yaw_motor_t::init()
+void yaw_motor_t::shoot_init()
 {
     // yaw轴未校准时不能初始化
     if (has_calibrated == 0)
@@ -409,7 +421,7 @@ void yaw_motor_t::shooting()
         return;
     }
 
-    //装填电机上移完毕且转盘电机不锁定且没打完飞镖时，改变设定值
+    //装填电机已经下移出锁定区且没打完飞镖时，改变设定值
     if (loader_motor_point()->has_shoot_up_finished && !rotary_motor_point()->should_lock && syspoint()->active_dart_index < 4)
     {
         if (syspoint()->strike_target == OUTPOST)
