@@ -1,3 +1,9 @@
+/**
+ * @file system_task.cpp
+ * @author Yang Maolin (1831051389@qq.com)
+ * @brief 系统任务相关代码。包含系统模式和子模式的设定、转换，以及发射任务和装填任务共用数据的控制。
+ * @attention 本文件中包含了少量与飞镖系统无关的代码，因与其他模块耦合度较高难以清理，暂时保留。无关代码已做标注。
+ */
 #include "system_task.h"
 #include "cmsis_os.h"
 #include "main.h"
@@ -10,7 +16,7 @@
 
 system_t sys;
 
-/*****************全局变量*************************/
+/*****************无用代码*************************/
 int steering_mode = 1; //弹舱盖模式 0为关闭，1为打开
 int vision_mode = 1;   //打弹模式1：1v1 自动开火  3：3v3 手动开火
 int spin_mode = 0;     //是否开启小陀螺
@@ -20,12 +26,14 @@ fp32 pre_x_coordinate, pre_y_coordinate; //自瞄预测位置ui
 fp32 follow_radius, pre_radius;          //自瞄装甲板半径
 
 /***************************************************/
+
 /**
- * @brief          系统主任务
- * @param[in]      none
+ * @brief 系统任务
+ * @param pvParameters
  */
 void system_task(void const *pvParameters)
 {
+    //初始化延时
     vTaskDelay(201);
     uint32_t currentTime;
     while (1)
@@ -36,16 +44,15 @@ void system_task(void const *pvParameters)
         sys.mode_set();
         //模式转换
         sys.mode_transit();
-        //分任务控制
+        //系统任务控制
         sys.control();
-
+        //绝对延时1ms
         vTaskDelayUntil(&currentTime, 1);
     }
 }
 
 /**
- * @brief 		取系统类指针
- * @retval   系统对象
+ * @brief   返回系统类指针
  */
 system_t *syspoint(void)
 {
@@ -54,7 +61,6 @@ system_t *syspoint(void)
 
 /**
  * @brief          构造函数初始化
- * @param[in]      null
  */
 system_t::system_t()
 {
@@ -64,9 +70,7 @@ system_t::system_t()
 }
 
 /**
- * @brief          模式设置
- * @param[in]      null
- * @retval         null
+ * @brief   系统模式及子模式设定。右拨杆设置系统模式，左拨杆设置子模式
  */
 void system_t::mode_set()
 {
@@ -110,19 +114,17 @@ void system_t::mode_set()
 }
 
 /**
- * @brief          模式转换
- * @param[in]      null
- * @retval         null
+ * @brief   模式转换时的数据初始化
  */
 void system_t::mode_transit()
 {
+    //主模式转换时的数据初始化
     if (sys_mode == CALIBRATE && last_sys_mode != CALIBRATE)
     {
         revolver_point()->yaw_motor.ecd_set = revolver_point()->yaw_motor.accumulate_ecd;
 
         load_point()->loader_motor.ecd_set = load_point()->loader_motor.accumulate_ecd;
         load_point()->loader_motor.has_auto_calibrate_begun = 0;
-        
 
         load_point()->rotary_motor.relative_angle_set = load_point()->rotary_motor.relative_angle;
     }
@@ -148,6 +150,7 @@ void system_t::mode_transit()
         active_dart_index = 0;
     }
 
+    //子模式转换时的数据初始化
     if (sub_mode == CALIBRATE_ADJUST_POSITION && last_sub_mode != CALIBRATE_ADJUST_POSITION)
     {
         revolver_point()->yaw_motor.ecd_set = revolver_point()->yaw_motor.accumulate_ecd;
@@ -183,7 +186,7 @@ void system_t::mode_transit()
 }
 
 /**
- * @brief   分任务控制
+ * @brief   系统任务控制
  */
 void system_t::control()
 {
@@ -281,7 +284,7 @@ void system_t::dart_index_add()
 
     if (settled_time > 500)
     {
-        //左摇杆↖打出下一发飞镖
+        //左摇杆↖开始打下一发飞镖
         if (RC_held_continuous_return(LEFT_ROCKER_LEFT_TOP, 0) && syspoint()->active_dart_index < 4)
         {
             active_dart_index++;

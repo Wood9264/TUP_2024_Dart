@@ -1,3 +1,9 @@
+/**
+ * @file        system_task.h
+ * @author      Yang Maolin (1831051389@qq.com)
+ * @attention   本文件中包含了大量与飞镖系统无关的代码，因与其他模块耦合度较高难以清理，暂时保留。
+ *              与飞镖系统有关的部分为：从系统模式枚举开始到system_t类定义结束（不包括system_t类中特别注明的部分）。
+ */
 #ifndef __SYSTEM_TASK_H
 #define __SYSTEM_TASK_H
 
@@ -62,6 +68,8 @@ extern "C"
 #endif
 
 #ifdef __cplusplus
+
+    //系统模式
     enum system_mode_e
     {
         ZERO_FORCE, //无力模式
@@ -69,6 +77,7 @@ extern "C"
         SHOOT,      //发射模式
     };
 
+    //子模式
     enum sub_mode_e
     {
         CALIBRATE_ADJUST_POSITION, //调整位置
@@ -78,12 +87,14 @@ extern "C"
         SHOOT_MANUAL,              //手动发射
     };
 
+    //打击目标
     enum strike_target_e
     {
         OUTPOST, //前哨站
         BASE,    //基地
     };
 
+    //系统类
     class system_t
     {
     public:
@@ -97,7 +108,7 @@ extern "C"
         uint8_t active_dart_index;     //当前正在发射的飞镖编号，范围0~4
         bool_t has_index_added;
 
-        /*下面的东西都没用*/
+        /*下面的变量都没用*/
         lpf_type_def yaw_lpf;
         lpf_type_def pitch_lpf;
 
@@ -132,6 +143,7 @@ extern "C"
         void dart_index_add();
         void switch_strike_target();
 
+        /*下面的方法都没用*/
         void Set_control();
 
         void Rc_vision();
