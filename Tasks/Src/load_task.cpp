@@ -1,3 +1,8 @@
+/**
+ * @file load_task.cpp
+ * @author Yang Maolin (1831051389@qq.com)
+ * @brief 装填机构相关代码。装填机构包括装填电机和转盘电机，装填电机负责推弹，转盘电机负责转动弹仓
+ */
 #include "load_task.h"
 #include "FreeRTOS.h"
 #include "task.h"
@@ -9,16 +14,25 @@
 
 load_task_t load;
 
+/**
+ * @brief   返回装填任务指针
+ */
 load_task_t *load_point()
 {
     return &load;
 }
 
+/**
+ * @brief   返回装填电机指针
+ */
 loader_motor_t *loader_motor_point()
 {
     return &load.loader_motor;
 }
 
+/**
+ * @brief   返回转盘电机指针
+ */
 rotary_motor_t *rotary_motor_point()
 {
     return &load.rotary_motor;
@@ -28,9 +42,14 @@ rotary_motor_t *rotary_motor_point()
  * @brief   装填任务
  * @param[in]   none
  */
+
+/**
+ * @brief   装填机构任务
+ * @param   pvParameters
+ */
 void load_task(void const *pvParameters)
 {
-    //延时
+    //初始化延时
     vTaskDelay(LOAD_TASK_INIT_TIME);
     uint32_t currentTime;
     while (1)
@@ -41,10 +60,11 @@ void load_task(void const *pvParameters)
         load.data_update();
         //装填任务标志位更新
         load.flag_update();
-        //分任务控制
+        //装填机构控制
         load.control();
         //发送电流
         CAN2_1FF_cmd_motor(load.rotary_motor.give_current, load.loader_motor.give_current, 0, 0);
+        //绝对延时1ms
         vTaskDelayUntil(&currentTime, 1);
     }
 }
@@ -85,12 +105,12 @@ void load_task_t::data_update()
     static fp32 speed_fliter_1 = 0.0f;
     static fp32 speed_fliter_2 = 0.0f;
     static fp32 speed_fliter_3 = 0.0f;
-    //装填电机转速二阶低通滤波
+    //装填电机转速滤波
     static const fp32 fliter_num[3] = {1.725709860247969f, -0.75594777109163436f, 0.030237910843665373f};
     speed_fliter_1 = speed_fliter_2;
     speed_fliter_2 = speed_fliter_3;
     speed_fliter_3 = speed_fliter_2 * fliter_num[0] + speed_fliter_1 * fliter_num[1] + (loader_motor.motor_measure->speed_rpm * LOADER_MOTOR_RMP_TO_FILTER_SPEED) * fliter_num[2];
-    loader_motor.motor_speed = speed_fliter_3;
+    loader_motor.filtered_speed = speed_fliter_3;
     //累计编码值
     loader_motor.accumulate_ecd = loader_motor.motor_measure->num * 8192 + loader_motor.motor_measure->ecd;
 
@@ -148,7 +168,7 @@ void loader_motor_t::flag_update()
     bottom_tick = HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_11);
 
     static int16_t recali_time = 0;
-    //除了校准的时候，其它时候滑块不会碰到底部触点开关；如果碰到说明校准出错了，要重新校准
+    //除了校准的时候，其它时候装填电机不会碰到底部触点开关；如果碰到说明校准出错了，要重新校准
     if (has_calibrated == 1 && bottom_tick == 1)
     {
         recali_time++;
@@ -163,7 +183,7 @@ void loader_motor_t::flag_update()
         recali_time = 0;
     }
 
-    //转盘电机处在四个角度区间时，装填电机受限
+    //转盘电机处在四个角度区间时，装填电机前进会撞到载弹架，装填电机受限
     if ((rotary_motor_point()->relative_angle > ROTARY_HALF_MOVABLE_ANGLE && rotary_motor_point()->relative_angle < PI / 2 - ROTARY_HALF_MOVABLE_ANGLE) ||
         (rotary_motor_point()->relative_angle > PI / 2 + ROTARY_HALF_MOVABLE_ANGLE && rotary_motor_point()->relative_angle < PI - ROTARY_HALF_MOVABLE_ANGLE) ||
         (rotary_motor_point()->relative_angle > -PI + ROTARY_HALF_MOVABLE_ANGLE && rotary_motor_point()->relative_angle < -PI / 2 - ROTARY_HALF_MOVABLE_ANGLE) ||
@@ -182,7 +202,7 @@ void loader_motor_t::flag_update()
  */
 void rotary_motor_t::flag_update()
 {
-    //更新转盘电机锁定状态
+    //装填电机位于载弹架中时，转盘电机锁定不能转动
     if (loader_motor_point()->accumulate_ecd > loader_motor_point()->restrict_point_ecd)
     {
         should_lock = 1;
@@ -194,18 +214,21 @@ void rotary_motor_t::flag_update()
 }
 
 /**
- * @brief   分任务控制
+ * @brief   装填机构控制
  */
 void load_task_t::control()
 {
+    //右拨杆下，无力模式
     if (syspoint()->sys_mode == ZERO_FORCE)
     {
         ZERO_FORCE_control();
     }
+    //右拨杆中，校准模式
     else if (syspoint()->sys_mode == CALIBRATE)
     {
         CALIBRATE_control();
     }
+    //右拨杆上，发射模式
     else if (syspoint()->sys_mode == SHOOT)
     {
         SHOOT_control();
@@ -258,6 +281,7 @@ void loader_motor_t::adjust_position()
         return;
     }
 
+    //右摇杆前后控制装填电机前进后退
     ecd_set += load.load_rc_ctrl->rc.ch[1] * RC_TO_LOADER_MOTOR_ECD_SET;
     //限位
     if (ecd_set > max_point_ecd)
@@ -319,7 +343,7 @@ void loader_motor_t::auto_calibrate()
         found_zero_point = 1;
     }
 
-    //滑块下移
+    //装填电机下移
     if (found_zero_point == 0)
     {
         ecd_set -= LOADER_CALIBRATE_DOWN_PER_LENGTH;
@@ -329,7 +353,7 @@ void loader_motor_t::auto_calibrate()
     {
         ecd_set += LOADER_CALIBRATE_UP_PER_LENGTH;
     }
-    //滑块离开触点开关，校准完毕
+    //装填电机离开触点开关，校准完毕
     else if (found_zero_point == 1 && bottom_tick == 0)
     {
         has_calibrated = 1;
@@ -371,6 +395,7 @@ void rotary_motor_t::adjust_position()
         return;
     }
 
+    //右摇杆左右控制转盘电机角度
     add_angle = load.load_rc_ctrl->rc.ch[0] * RC_TO_ROTARY_MOTOR_ANGLE_SET;
     relative_angle_set = rad_format(relative_angle_set + add_angle);
     current_calculate();
@@ -405,11 +430,13 @@ void rotary_motor_t::check_calibrate_result()
  */
 void load_task_t::SHOOT_control()
 {
+    //左拨杆下，发射初始化
     if (syspoint()->sub_mode == SHOOT_INIT)
     {
         rotary_motor.shoot_init();
         loader_motor.shoot_init();
     }
+    //左拨杆中，手动发射
     if (syspoint()->sub_mode == SHOOT_MANUAL)
     {
         shooting();
@@ -485,7 +512,7 @@ void loader_motor_t::shoot_init()
  */
 void load_task_t::shooting()
 {
-    //装填电机未校准时或装填电机和转盘电机未初始化时不能发射
+    //装填电机未校准或装填电机和转盘电机未初始化时不能发射
     if (!loader_motor.has_calibrated || !loader_motor.has_shoot_init_finished || !rotary_motor.has_shoot_init_finished)
     {
         loader_motor.current_calculate(NULL);
@@ -580,12 +607,12 @@ void loader_motor_t::current_calculate(fp32 max_out)
     if (max_out == NULL)
     {
         speed_set = position_pid.calc(accumulate_ecd, ecd_set);
-        give_current = speed_pid.calc(motor_speed, speed_set);
+        give_current = speed_pid.calc(filtered_speed, speed_set);
     }
     else
     {
         speed_set = position_pid.DLcalc(accumulate_ecd, ecd_set, max_out);
-        give_current = speed_pid.calc(motor_speed, speed_set);
+        give_current = speed_pid.calc(filtered_speed, speed_set);
     }
 }
 

@@ -7,6 +7,7 @@
 #include "arm_math.h"
 #include "remote_control.h"
 
+//任务初始化延时时间
 #define LOAD_TASK_INIT_TIME 200
 
 //装填电机速度环PID参数
@@ -51,7 +52,7 @@
 #define LOADER_FORWARD_ECD 535283
 //装填电机受限时最大前进距离的编码值
 #define LOADER_RESTRICT_FORWARD_ECD 16385
-//校准时零点编码值的补偿量。防止滑块回退时因为超调碰到触点开关
+//校准时零点编码值的补偿量。防止装填电机回退时因为超调碰到触点开关
 #define ZERO_POINT_OFFSET 16384
 
 //校准时装填电机下移的单位编码值
@@ -84,11 +85,12 @@ extern "C"
 
 #ifdef __cplusplus
 
+    //装填电机类
     class loader_motor_t
     {
     public:
         const motor_t *motor_measure;
-        fp32 motor_speed;
+        fp32 filtered_speed; //滤波后的速度
         int64_t accumulate_ecd;
 
         fp32 speed_set;
@@ -101,12 +103,12 @@ extern "C"
 
         int64_t zero_point_ecd;
         int64_t max_point_ecd;
-        int64_t restrict_point_ecd;
+        int64_t restrict_point_ecd; //受限点编码值
 
         bool_t has_auto_calibrate_begun;
         bool_t has_calibrated;
-        bool_t bottom_tick;
-        bool_t is_restricted_state;
+        bool_t bottom_tick;         //底部限位开关状态
+        bool_t is_restricted_state; //装填电机受限状态
         bool_t has_shoot_init_started;
         bool_t has_shoot_init_finished;
         bool_t has_shoot_up_finished;
@@ -124,6 +126,7 @@ extern "C"
         void current_calculate(fp32 max_out);
     };
 
+    //转盘电机类
     class rotary_motor_t
     {
     public:
@@ -133,7 +136,7 @@ extern "C"
         fp32 last_relative_angle;
 
         fp32 relative_angle_set;
-        fp32 final_relative_angle_set;
+        fp32 final_relative_angle_set; //最终角度设定值，用于给斜坡函数设定最终值
         fp32 speed_set;
 
         PID_t speed_pid;
@@ -141,7 +144,7 @@ extern "C"
 
         int16_t give_current;
 
-        bool_t should_lock;
+        bool_t should_lock; //锁定状态。装填电机位于载弹架中时，转盘电机锁定不能转动
         bool_t has_shoot_init_started;
         bool_t has_shoot_init_finished;
         bool_t has_move_to_next_finished;
@@ -157,12 +160,13 @@ extern "C"
         void shoot_move_to_next();
     };
 
+    //装填任务类
     class load_task_t
     {
     public:
         const RC_ctrl_t *load_rc_ctrl;
-        loader_motor_t loader_motor;
-        rotary_motor_t rotary_motor;
+        loader_motor_t loader_motor; //装填电机
+        rotary_motor_t rotary_motor; //转盘电机
 
         load_task_t();
         void data_update();
