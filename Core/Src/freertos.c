@@ -172,8 +172,8 @@ void MX_FREERTOS_Init(void) {
   // osThreadDef(ui, ui_task, osPriorityNormal, 0, 256);
 	// ui_handle = osThreadCreate(osThread(ui), NULL);
   
-  osThreadDef(oledTask, OLED_task, osPriorityNormal, 0, 256);
-  oledTaskHandle = osThreadCreate(osThread(oledTask), NULL);
+  // osThreadDef(oledTask, OLED_task, osPriorityNormal, 0, 256);
+  // oledTaskHandle = osThreadCreate(osThread(oledTask), NULL);
 
   osThreadDef(screenTask, screen_task, osPriorityNormal, 0, 256);
   screenTaskHandle = osThreadCreate(osThread(screenTask), NULL);

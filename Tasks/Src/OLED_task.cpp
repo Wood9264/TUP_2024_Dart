@@ -1,3 +1,8 @@
+/**
+ * @file OLED_task.cpp
+ * @author Yang Maolin (1831051389@qq.com)
+ * @brief OLED显示任务相关代码。原用于OLED显示电机速度、温度等信息，因为使用了串口屏，现已废弃。
+ */
 #include "OLED_task.h"
 #include "OLED.h"
 #include "cmsis_os.h"
