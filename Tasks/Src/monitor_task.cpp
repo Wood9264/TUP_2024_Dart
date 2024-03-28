@@ -164,11 +164,11 @@ static void buzzer_monitor(void)
 }
 
 /**
-  * @brief          蜂鸣器报警
+  * @brief          蜂鸣器报警。需要报警时持续调用此函数，停止调用后报警会自动停止
   * @param[in]      num_set: 设置报警次数，0为一直报警，1为报警一次，2为报警两次，以此类推
-  * @param[in]      interval: 设置报警间隔，单位为ms；num_set为0时，该参数无效
-  * @param[in]      psc: 蜂鸣器分频系数，越大频率越低
-  * @param[in]      pwm: 蜂鸣器重载值，一般为10000
+  * @param[in]      interval: 设置报警间隔，单位为ms；达到报警次数后停止2倍的间隔时间再次报警；num_set为0时，该参数无效
+  * @param[in]      psc: 蜂鸣器分频系数，越大音调越低。0-15较为常用
+  * @param[in]      pwm: 蜂鸣器重载值，影响声音的音色和大小，一般为设10000
   * @retval         none
   */
 void buzzer_warn(uint8_t num_set, uint16_t interval, uint16_t psc, uint16_t pwm)
