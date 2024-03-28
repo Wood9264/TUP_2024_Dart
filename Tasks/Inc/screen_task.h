@@ -28,14 +28,13 @@ extern "C"
     class screen_t
     {
     public:
-        int16_t outpost_speed[4];
-        int16_t base_speed[4];
-        fp32 outpost_yaw_offset_num[4];
-        fp32 base_yaw_offset_num[4];
+        int16_t outpost_speed[4];       //前哨站转速
+        int16_t base_speed[4];          //基地转速
+        fp32 outpost_yaw_offset_num[4]; //前哨站YAW补偿量
+        fp32 base_yaw_offset_num[4];    //基地YAW补偿量
 
         screen_t();
-        void screen_data_init();
-        void send_data();
+        void screen_init();
         void data_analysis();
         void vavid_data_analysis(uint8_t *vavid_data, uint8_t cmd_ID);
         void refresh_data();

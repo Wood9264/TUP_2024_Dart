@@ -1,3 +1,8 @@
+/**
+ * @file screen_task.cpp
+ * @author Yang Maolin (1831051389@qq.com)
+ * @brief 串口屏任务相关代码。包含串口屏数据的解析和交互。
+ */
 #include "screen_task.h"
 #include "screen_task_enum.h"
 #include "cmsis_os.h"
@@ -15,16 +20,18 @@ screen_t *screen_point(void)
     return &screen;
 }
 
+/**
+ * @brief 串口屏任务
+ * @param pvParameters
+ */
 void screen_task(void const *pvParameters)
 {
     vTaskDelay(SCREEN_TASK_INIT_TIME);
-    //串口屏显示数据初始化
-    screen.screen_data_init();
+    //串口屏初始化
+    screen.screen_init();
 
     while (1)
     {
-        //向串口屏发送数据
-        screen.send_data();
         //串口屏数据解析
         screen.data_analysis();
 
@@ -49,62 +56,16 @@ screen_t::screen_t()
 }
 
 /**
- * @brief   串口屏显示数据初始化
+ * @brief   串口屏初始化
+ * @note    需要先等待串口屏启动完成，所以不能使用构造函数来初始化
  */
-void screen_t::screen_data_init()
+void screen_t::screen_init()
 {
     //清空屏幕串口缓冲区里的无关数据，消除上电过程中引脚杂波的影响
     uint8_t init_data[] = {0x00, 0xff, 0xff, 0xff};
     HAL_UART_Transmit(&huart1, init_data, 4, 100);
     while (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_TXE) == RESET)
         ;
-    // //初始化转速补偿
-    // TJCPrintf("t21.txt=\"%d\"", revolver_point()->fric_wheel_group.outpost_speed_offset[0]);
-    // TJCPrintf("t22.txt=\"%d\"", revolver_point()->fric_wheel_group.outpost_speed_offset[1]);
-    // TJCPrintf("t23.txt=\"%d\"", revolver_point()->fric_wheel_group.outpost_speed_offset[2]);
-    // TJCPrintf("t24.txt=\"%d\"", revolver_point()->fric_wheel_group.outpost_speed_offset[3]);
-
-    // // 初始化yaw轴补偿
-    // TJCPrintf("t29.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[0]);
-    // TJCPrintf("t30.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[1]);
-    // TJCPrintf("t31.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[2]);
-    // TJCPrintf("t32.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[3]);
-}
-
-/**
- * @brief   向串口屏发送数据
- */
-void screen_t::send_data()
-{
-    // //发送电机转速
-    // TJCPrintf("t5.txt=\"%d\"", revolver_point()->fric_wheel_group.fric_motor[0].motor_measure->speed_rpm);
-    // TJCPrintf("t6.txt=\"%d\"", revolver_point()->fric_wheel_group.fric_motor[1].motor_measure->speed_rpm);
-    // TJCPrintf("t7.txt=\"%d\"", revolver_point()->fric_wheel_group.fric_motor[2].motor_measure->speed_rpm);
-    // TJCPrintf("t8.txt=\"%d\"", revolver_point()->fric_wheel_group.fric_motor[3].motor_measure->speed_rpm);
-
-    // //发送电机温度
-    // TJCPrintf("t9.txt=\"%d\"", revolver_point()->fric_wheel_group.fric_motor[0].motor_measure->temperate);
-    // TJCPrintf("t10.txt=\"%d\"", revolver_point()->fric_wheel_group.fric_motor[1].motor_measure->temperate);
-    // TJCPrintf("t11.txt=\"%d\"", revolver_point()->fric_wheel_group.fric_motor[2].motor_measure->temperate);
-    // TJCPrintf("t12.txt=\"%d\"", revolver_point()->fric_wheel_group.fric_motor[3].motor_measure->temperate);
-
-    // //发送转速设定值
-    // TJCPrintf("t13.txt=\"%d\"", BASE_SPEED + revolver_point()->fric_wheel_group.outpost_speed_offset[0]);
-    // TJCPrintf("t14.txt=\"%d\"", BASE_SPEED + revolver_point()->fric_wheel_group.outpost_speed_offset[1]);
-    // TJCPrintf("t15.txt=\"%d\"", BASE_SPEED + revolver_point()->fric_wheel_group.outpost_speed_offset[2]);
-    // TJCPrintf("t16.txt=\"%d\"", BASE_SPEED + revolver_point()->fric_wheel_group.outpost_speed_offset[3]);
-
-    // //发送转速补偿
-    // TJCPrintf("t17.txt=\"%d\"", revolver_point()->fric_wheel_group.outpost_speed_offset[0]);
-    // TJCPrintf("t18.txt=\"%d\"", revolver_point()->fric_wheel_group.outpost_speed_offset[1]);
-    // TJCPrintf("t19.txt=\"%d\"", revolver_point()->fric_wheel_group.outpost_speed_offset[2]);
-    // TJCPrintf("t20.txt=\"%d\"", revolver_point()->fric_wheel_group.outpost_speed_offset[3]);
-
-    // // 发送yaw轴补偿
-    // TJCPrintf("t25.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[0]);
-    // TJCPrintf("t26.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[1]);
-    // TJCPrintf("t27.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[2]);
-    // TJCPrintf("t28.txt=\"%.2f\"", revolver_point()->yaw_motor.outpost_offset_num[3]);
 }
 
 /**
