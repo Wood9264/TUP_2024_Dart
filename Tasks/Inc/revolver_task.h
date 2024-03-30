@@ -33,7 +33,7 @@
 //前后摩擦轮的转速差，正数为前轮快，负数为后轮快
 #define SPEED_DIFFERENCE 1000
 
-//摩擦轮启停时的斜坡增加量
+//摩擦轮改变转速时的斜坡增加量
 #define FRIC_RAMP_BUFF 5
 // yaw轴移动时的斜坡增加量
 #define YAW_RAMP_BUFF 90
