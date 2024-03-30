@@ -366,7 +366,7 @@ void yaw_motor_t::shoot_init()
     if (has_shoot_init_started)
     {
         //打击目标默认初始化为前哨站
-        ecd_set = calibrated_point + outpost_offset_num[syspoint()->active_dart_index] * 8192;
+        ecd_set = RAMP_float(calibrated_point + outpost_offset_num[syspoint()->active_dart_index] * 8192, ecd_set, YAW_RAMP_BUFF);
         has_shoot_init_finished = 0;
     }
 
@@ -426,11 +426,11 @@ void yaw_motor_t::shooting()
     {
         if (syspoint()->strike_target == OUTPOST)
         {
-            ecd_set = calibrated_point + outpost_offset_num[syspoint()->active_dart_index] * 8192;
+            ecd_set = RAMP_float(calibrated_point + outpost_offset_num[syspoint()->active_dart_index] * 8192, ecd_set, YAW_RAMP_BUFF);
         }
         else if (syspoint()->strike_target == BASE)
         {
-            ecd_set = calibrated_point + base_offset_num[syspoint()->active_dart_index] * 8192;
+            ecd_set = RAMP_float(calibrated_point + base_offset_num[syspoint()->active_dart_index] * 8192, ecd_set, YAW_RAMP_BUFF);
         }
     }
 

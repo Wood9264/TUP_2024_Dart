@@ -35,6 +35,8 @@
 
 //摩擦轮启停时的斜坡增加量
 #define FRIC_RAMP_BUFF 5
+//yaw轴移动时的斜坡增加量
+#define YAW_RAMP_BUFF 70
 
 //发射初始化时yaw轴电机的转速
 #define YAW_SHOOT_INIT_SPEED 1000
