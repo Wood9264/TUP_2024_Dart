@@ -87,7 +87,9 @@ load_task_t::load_task_t()
     fp32 rotary_speed_pid[3] = {ROTARY_SPEED_PID_KP, ROTARY_SPEED_PID_KI, ROTARY_SPEED_PID_KD};
     fp32 rotary_position_pid[3] = {ROTARY_POSITION_PID_KP, ROTARY_POSITION_PID_KI, ROTARY_POSITION_PID_KD};
     rotary_motor.speed_pid.init(PID_POSITION, rotary_speed_pid, ROTARY_SPEED_PID_MAX_OUT, ROTARY_SPEED_PID_MAX_IOUT);
+    rotary_motor.speed_pid.differ_init(ROTARY_SPEED_PID_BANDWIDTH, ROTARY_POSITION_PID_TIME_CONS);
     rotary_motor.position_pid.init(PID_POSITION, rotary_position_pid, ROTARY_POSITION_PID_MAX_OUT, ROTARY_POSITION_PID_MAX_IOUT);
+    rotary_motor.position_pid.differ_init(ROTARY_POSITION_PID_BANDWIDTH, ROTARY_POSITION_PID_TIME_CONS);
     rotary_motor.relative_angle = 0;
     rotary_motor.last_relative_angle = 0;
     rotary_motor.give_current = 0;
@@ -621,6 +623,6 @@ void loader_motor_t::current_calculate(fp32 max_out)
  */
 void rotary_motor_t::current_calculate()
 {
-    speed_set = position_pid.relative_angle_calc(relative_angle, relative_angle_set);
-    give_current = speed_pid.calc(motor_measure->speed_rpm, speed_set);
+    speed_set = position_pid.relative_angle_use_differ_calc(relative_angle, relative_angle_set);
+    give_current = speed_pid.use_differ_calc(motor_measure->speed_rpm, speed_set);
 }
