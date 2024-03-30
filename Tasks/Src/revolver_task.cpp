@@ -294,6 +294,13 @@ void yaw_motor_t::calibrate()
  */
 void yaw_motor_t::check_calibrate_result()
 {
+    //未校准时不进行检查
+    if (has_calibrated == 0)
+    {
+        current_calculate();
+        return;
+    }
+
     //遥控器↗↖回校准点，检查yaw轴校准结果
     if (RC_double_held_single_return(LEFT_ROCKER_RIGHT_TOP, RIGHT_ROCKER_LEFT_TOP, 400))
     {
