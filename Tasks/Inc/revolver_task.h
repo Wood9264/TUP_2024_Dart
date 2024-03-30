@@ -35,8 +35,8 @@
 
 //摩擦轮启停时的斜坡增加量
 #define FRIC_RAMP_BUFF 5
-//yaw轴移动时的斜坡增加量
-#define YAW_RAMP_BUFF 70
+// yaw轴移动时的斜坡增加量
+#define YAW_RAMP_BUFF 90
 
 //发射初始化时yaw轴电机的转速
 #define YAW_SHOOT_INIT_SPEED 1000
@@ -100,6 +100,7 @@ extern "C"
         fp32 base_offset_num[4];    //打击基地时相对校准点的偏移量
 
         bool_t has_calibrated;            //已校准标志位
+        bool_t has_back_to_zero_started;  //开始返回零点标志位
         bool_t has_shoot_init_started;    //开始发射初始化标志位
         bool_t has_shoot_init_finished;   //发射初始化完成标志位
         bool_t has_move_to_next_finished; //移动到下一个位置完成标志位

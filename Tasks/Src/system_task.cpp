@@ -160,6 +160,7 @@ void system_t::mode_transit()
     else if (sub_mode == CALIBRATE_CHECK && last_sub_mode != CALIBRATE_CHECK)
     {
         revolver_point()->yaw_motor.ecd_set = revolver_point()->yaw_motor.accumulate_ecd;
+        revolver_point()->yaw_motor.has_back_to_zero_started = 0;
         load_point()->loader_motor.ecd_set = load_point()->loader_motor.accumulate_ecd;
     }
     else if (sub_mode == SHOOT_INIT && last_sub_mode != SHOOT_INIT)

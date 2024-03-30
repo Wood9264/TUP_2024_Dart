@@ -304,7 +304,11 @@ void yaw_motor_t::check_calibrate_result()
     //遥控器↗↖回校准点，检查yaw轴校准结果
     if (RC_double_held_single_return(LEFT_ROCKER_RIGHT_TOP, RIGHT_ROCKER_LEFT_TOP, 400))
     {
-        ecd_set = calibrated_point;
+        has_back_to_zero_started = 1;
+    }
+    if (has_back_to_zero_started)
+    {
+        ecd_set = RAMP_float(calibrated_point, ecd_set, YAW_RAMP_BUFF);
     }
     current_calculate();
 }
