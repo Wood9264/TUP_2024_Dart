@@ -47,7 +47,7 @@
 #define YAW_ECD_TOLERANCE 100
 
 //遥控器通道到yaw轴位置增量的比例
-#define RC_TO_YAW_ECD_SET 1
+#define RC_TO_YAW_ECD_SET 0.5f
 
 #ifdef __cplusplus
 extern "C"

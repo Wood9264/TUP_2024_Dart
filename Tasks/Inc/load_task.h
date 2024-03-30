@@ -45,15 +45,15 @@
 #define ROTARY_SHOOT_RAMP_BUFF 0.0008f
 
 //转盘电机零点编码值
-#define ROTARY_ZERO_POINT_ECD 1252
+#define ROTARY_ZERO_POINT_ECD 6683
 //装填机构处在载弹架中时转盘电机可转动角度的一半，单位为弧度
-#define ROTARY_HALF_MOVABLE_ANGLE 0.146495f
+#define ROTARY_HALF_MOVABLE_ANGLE 0.166f
 //装填电机最大前进距离的编码值
-#define LOADER_FORWARD_ECD 535283
+#define LOADER_FORWARD_ECD 328256
 //装填电机受限时最大前进距离的编码值
 #define LOADER_RESTRICT_FORWARD_ECD 16385
 //校准时零点编码值的补偿量。防止装填电机回退时因为超调碰到触点开关
-#define ZERO_POINT_OFFSET 16384
+#define ZERO_POINT_OFFSET 2048
 
 //校准时装填电机下移的单位编码值
 #define LOADER_CALIBRATE_DOWN_PER_LENGTH 300
@@ -64,7 +64,7 @@
 //发射时装填电机上移的速度
 #define LOADER_SHOOT_UP_SPEED 5
 //发射时装填电机下移的速度
-#define LOADER_SHOOT_DOWN_SPEED 10
+#define LOADER_SHOOT_DOWN_SPEED 8
 
 //转盘电机运动到指定位置时允许的角度误差，单位为弧度
 #define ROTARY_ANGLE_TOLERANCE 0.01f
