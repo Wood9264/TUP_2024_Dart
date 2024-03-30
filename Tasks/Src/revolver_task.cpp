@@ -366,6 +366,7 @@ void yaw_motor_t::shoot_init()
     // yaw轴未校准时不能初始化
     if (has_calibrated == 0)
     {
+        current_calculate();
         return;
     }
 
@@ -425,6 +426,7 @@ void yaw_motor_t::shooting()
     // yaw轴未初始化时不能发射
     if (has_shoot_init_finished == 0)
     {
+        current_calculate();
         return;
     }
 
