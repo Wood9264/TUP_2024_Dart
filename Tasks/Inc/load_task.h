@@ -46,9 +46,9 @@
 #define LOADER_MOTOR_RMP_TO_FILTER_SPEED 0.00290888208665721596153948461415f
 
 //转盘电机发射初始化时角度的斜坡增加量
-#define ROTARY_SHOOT_INIT_RAMP_BUFF 0.0008f
+#define ROTARY_SHOOT_INIT_RAMP_BUFF 0.003f
 //转盘电机发射时角度的斜坡增加量
-#define ROTARY_SHOOT_RAMP_BUFF 0.0008f
+#define ROTARY_SHOOT_RAMP_BUFF 0.003f
 
 //转盘电机零点编码值
 #define ROTARY_ZERO_POINT_ECD 6683
@@ -59,16 +59,16 @@
 //装填电机受限时最大前进距离的编码值
 #define LOADER_RESTRICT_FORWARD_ECD 16385
 //校准时零点编码值的补偿量。防止装填电机回退时因为超调碰到触点开关
-#define ZERO_POINT_OFFSET 2048
+#define ZERO_POINT_OFFSET 0
 
 //校准时装填电机下移的单位编码值
 #define LOADER_CALIBRATE_DOWN_PER_LENGTH 300
 //校准时装填电机上移的单位编码值
 #define LOADER_CALIBRATE_UP_PER_LENGTH 300
 //发射初始化时装填电机下移的速度
-#define LOADER_SHOOT_INIT_SPEED 5
+#define LOADER_SHOOT_INIT_SPEED 8
 //发射时装填电机上移的速度
-#define LOADER_SHOOT_UP_SPEED 5
+#define LOADER_SHOOT_UP_SPEED 8
 //发射时装填电机下移的速度
 #define LOADER_SHOOT_DOWN_SPEED 8
 
