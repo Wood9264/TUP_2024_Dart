@@ -188,51 +188,52 @@ fp32 theta_format(fp32 Ang)
     return loop_fp32_constrain(Ang, -180.0f, 180.0f);
 }
 
-
 /**
-  * @brief  斜坡函数,使目标输出值缓慢等于期望值
-  * @param  期望最终输出,当前输出,变化速度(越大越快)
-  * @retval 当前输出
-  * @attention  
-  */
-float RAMP_float( float final, float now, float ramp )
+ * @brief       斜坡函数，使目标输出值缓慢等于期望值
+ * @param[in]   final 期望最终输出
+ * @param[in]   now 当前值
+ * @param[in]   ramp 变化速度(越大越快)，必须为正数
+ * @retval      当前输出
+ */
+float RAMP_float(float final, float now, float ramp)
 {
-	  fp32 buffer = 0;
+    fp32 buffer = 0;
 
-	  buffer = final - now;
+    buffer = final - now;
 
-		if(buffer>0)
-		{       
-			if (buffer > ramp)
-				{  
-						now += ramp;
-				}   
-				else
-				{
-						now += buffer;//now=final
-				}	
-		}
+    if (buffer > 0)
+    {
+        if (buffer > ramp)
+        {
+            now += ramp;
+        }
         else
         {
-            if (buffer < -ramp)
-				{
-						now += -ramp;
-				}
-				else
-				{
-						now += -buffer;
-				}
+            now = final;
         }
-		
-		return now;
+    }
+    else
+    {
+        if (buffer < -ramp)
+        {
+            now += -ramp;
+        }
+        else
+        {
+            now = final;
+        }
+    }
+
+    return now;
 }
 
 /**
-  * @brief  带循环限幅的斜坡函数,使目标输出值缓慢等于期望值
-  * @param  期望最终输出,当前输出,变化速度(越大越快)
-  * @retval 当前输出
-  * @attention  
-  */
+ * @brief       带循环限幅的斜坡函数,使目标输出值缓慢等于期望值
+ * @param[in]   final 期望最终输出
+ * @param[in]   now 当前值
+ * @param[in]   ramp 变化速度(越大越快)，必须为正数
+ * @retval      当前输出
+ */
 fp32 RAMP_float_loop_constrain(float final, float now, float ramp)
 {
     fp32 buffer = 0;
@@ -247,7 +248,7 @@ fp32 RAMP_float_loop_constrain(float final, float now, float ramp)
         }
         else
         {
-            now += buffer; // now=final
+            now = final;
         }
     }
     else
@@ -258,7 +259,7 @@ fp32 RAMP_float_loop_constrain(float final, float now, float ramp)
         }
         else
         {
-            now += buffer;
+            now = final;
         }
     }
 

@@ -38,6 +38,7 @@ class	LADRC_FDW_t:public LADRC_t
 	  fp32 FDW_calc(fp32 ref, fp32 set, fp32 gyro);
 };
 	
+extern fp32 differentiator(differ_type_def *differ ,fp32 bandwidth,fp32 time_cons,fp32 input);
 extern fp32 LPF(lpf_type_def *lpf ,fp32 time_cons,fp32 input,fp32 w);
 #endif
 

@@ -20,11 +20,12 @@ extern "C"
 	void deleteRingBuff(uint16_t size);
 	uint16_t getRingBuffLenght(void);
 	uint8_t read1BFromRingBuff(uint16_t position);
+	void readNBFromRingBuff(uint8_t *data, uint16_t position, uint16_t n);
 	void USART1_Init(uint32_t bound);
 	void USART1_printf(char *fmt, ...); //串口1的专用printf函数
 
 #define RINGBUFF_LEN (500)		   //环形缓冲区的长度
-#define HMI_USART_RX_BUF_LENGHT 16 //每次接收的数据长度
+// #define HMI_USART_RX_BUF_LENGHT 9 //每次接收的数据长度
 
 #define usize getRingBuffLenght()
 #define code_c() initRingBuff()
@@ -39,7 +40,7 @@ extern "C"
 		uint8_t Ring_data[RINGBUFF_LEN];
 	} RingBuff_t;
 
-	extern uint8_t RxBuff[HMI_USART_RX_BUF_LENGHT];
+	extern uint8_t RxBuff[1];
 
 #endif
 #ifdef __cplusplus

@@ -5,32 +5,9 @@
 #include "pid.h"
 #include "BSP_can.h"
 #include "tim.h"
-//单发双环PID 注意抖动
-#define SLIPPER_SPEED_PID_KP 700.0f // 780.0f
-#define SLIPPER_SPEED_PID_KI 0.0f
-#define SLIPPER_SPEED_PID_KD 3000.0f // 2
-#define SLIPPER_SPEED_PID_MAX_OUT 9000.0f
-#define SLIPPER_SPEED_PID_MAX_IOUT 5000.0f
 
-#define SLIPPER_POSITION_PID_KP 0.001f   //0.025f // 0.040f //0.00080f//0.00072f//0.025
-#define SLIPPER_POSITION_PID_KI 0
-#define SLIPPER_POSITION_PID_KD 0.01f		// 0.060f//0.000001f//0.08
-#define SLIPPER_POSITION_PID_MAX_OUT 10.0f // 45.0f
-#define SLIPPER_POSITION_PID_MAX_IOUT 10.0f
-
-//yaw轴速度环PID
-#define YAW_SPEED_PID_KP 8.0f
-#define YAW_SPEED_PID_KI 0.0f
-#define YAW_SPEED_PID_KD 5.0f
-#define YAW_SPEED_PID_MAX_OUT 9000.0f
-#define YAW_SPEED_PID_MAX_IOUT 5000.0f
-
-//yaw轴位置环PID
-#define YAW_POSITION_PID_KP 1.0f
-#define YAW_POSITION_PID_KI 0
-#define YAW_POSITION_PID_KD 11.5f
-#define YAW_POSITION_PID_MAX_OUT 6000.0f
-#define YAW_POSITION_PID_MAX_IOUT 10.0f
+//任务初始化延时时间
+#define REVOLVER_TASK_INIT_TIME 200
 
 //摩擦轮速度环PID
 #define FRIC_SPEED_PID_KP 30.0f
@@ -39,160 +16,125 @@
 #define FRIC_SPEED_PID_MAX_OUT 12000.0f
 #define FRIC_SPEED_PID_MAX_IOUT 5000.0f
 
-#define FRIC_RAMP_BUFF 5	//摩擦轮启动时的斜坡增加量
+// yaw轴速度环PID
+#define YAW_SPEED_PID_KP 8.0f
+#define YAW_SPEED_PID_KI 0.0f
+#define YAW_SPEED_PID_KD 5.0f
+#define YAW_SPEED_PID_MAX_OUT 9000.0f
+#define YAW_SPEED_PID_MAX_IOUT 5000.0f
 
-#define BASE_SPEED 1000 //四个摩擦轮的基础转速
-#define SPEED_DIFFERENCE 1000 //前后摩擦轮的转速差，正数为前轮快，负数为后轮快
+// yaw轴位置环PID
+#define YAW_POSITION_PID_KP 1.0f
+#define YAW_POSITION_PID_KI 0
+#define YAW_POSITION_PID_KD 11.5f
+#define YAW_POSITION_PID_MAX_OUT 6000.0f
+#define YAW_POSITION_PID_MAX_IOUT 10.0f
 
-#define ONE_DART_ECD 134985 //每发飞镖的滑块电机编码值增加量
-#define MAX_DART_NUM 2 //发射架可装填的最大飞镖数量
-#define CALIBRATE_OFFSET 8192	//校准时编码值的补偿量。防止滑块回退时因为超调碰到触点开关
+//前后摩擦轮的转速差，正数为前轮快，负数为后轮快
+#define SPEED_DIFFERENCE 1000
 
-#define RC_TO_SLIPPER_SEPPD_SET (7.0f / 660) //遥控器通道到滑块速度设定值的比例
-#define SLIPPER_LOCK_SPEED 0.1 //滑块电机速度设定为0，且实际速度低于这个值时，电机用角度环锁定位置
+//摩擦轮改变转速时的斜坡增加量
+#define FRIC_RAMP_BUFF 5
+// yaw轴移动时的斜坡增加量
+#define YAW_RAMP_BUFF 90
 
-#define Motor_RMP_TO_SPEED 0.00290888208665721596153948461415f
+//发射初始化时yaw轴电机的转速
+#define YAW_SHOOT_INIT_SPEED 1000
+//发射时yaw轴电机的转速
+#define YAW_SHOOT_SPEED 1000
 
-#define POSITION_LIMIT_BUFFER_DISTANCE (8192 * 36 / 36) //滑块接近限位开始减速缓冲时与限位的距离
-#define ANGLE_LOOP_SWITCH_DISTANCE (8192) //速度环切换到角度环时，设定编码值与实际编码值的距离
-
-// YAW轴电机运动到指定位置时允许的编码值误差
+// yaw轴电机运动到指定位置时允许的编码值误差
 #define YAW_ECD_TOLERANCE 100
 
-#define YAW_SHOOT_INIT_SPEED 1000 //发射初始化时YAW轴电机的转速
-#define YAW_SHOOT_SPEED 1000 //发射时YAW轴电机的转速
+//遥控器通道到yaw轴位置增量的比例
+#define RC_TO_YAW_ECD_SET 0.5f
 
-// #define CALIBRATE_DOWN_SPEED (-5) //校准时滑块下移的速度
-// #define CALIBRATE_UP_SPEED 5 //校准时滑块上移的速度
-// #define SLIPPER_SHOOTING_SPEED 10 //发射时滑块上移的速度
-// #define SLIPPER_BACK_SPEED 5 //滑块自动返回零点时的速度
-
-#define RC_TO_YAW_ECD_SET 1 //遥控器通道到yaw轴位置增量的比例
-
-#define REVOLVER_TASK_INIT_TIME 200
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-class fric_motor_t
-	{
-		public:
-		const motor_t *motor_measure;
-		PID_t speed_pid;
-		fp32 speed_set;		
-		int16_t give_current;
+    //摩擦轮电机类
+    class fric_motor_t
+    {
+    public:
+        const motor_t *motor_measure;
+        PID_t speed_pid;
+        fp32 speed_set;
+        int16_t give_current;
+    };
 
-		
+    //摩擦轮组类
+    class fric_wheel_group_t
+    {
+    public:
+        fric_motor_t fric_motor[4]; //四个摩擦轮电机
 
-		void current_calculate();
-	};
+        int16_t outpost_speed[4]; //打击前哨站时的转速
+        int16_t base_speed[4];    //打击基地时的转速
 
-class yaw_motor_t
-	{
-		public:
-		const motor_t *motor_measure;
-		PID_t speed_pid;
-		PID_t position_pid;
+        bool_t is_fric_wheel_on; //摩擦轮启动标志位
 
-		int64_t accumulate_ecd;
-		fp32 ecd_set;
-		fp32 speed_set;
-		fp32 final_ecd_set;
+        void slow_stop();
+        void current_calculate();
+        void shoot_init();
+        void shooting();
+    };
 
-		int16_t give_current;
+    // yaw轴电机类
+    class yaw_motor_t
+    {
+    public:
+        const motor_t *motor_measure;
+        PID_t speed_pid;
+        PID_t position_pid;
 
-		int64_t calibrated_point;
-		fp32 offset_num[4];
+        int64_t accumulate_ecd; //累计编码值
+        fp32 ecd_set;           //设定编码值
+        fp32 speed_set;
 
-		bool_t has_calibrated;
-		bool_t has_shoot_init_started;
-		bool_t has_shoot_init_finished;
-		bool_t has_shoot_move_finished;
-		bool_t has_move_to_next_finished;
+        int16_t give_current;
 
-		void calibrate();
-		void init();
-		void shooting();
-	};
+        int64_t calibrated_point;   //校准点编码值
+        fp32 outpost_offset_num[4]; //打击前哨站时相对校准点的偏移量
+        fp32 base_offset_num[4];    //打击基地时相对校准点的偏移量
 
-	class slipper_motor_t
-	{
-		public:
-		const motor_t *motor_measure;
-		fp32 motor_speed;
-		fp32 speed_set;
-		int64_t accumulate_ecd;
-		uint16_t bullet_num;	//已经打出的飞镖数量
-		uint16_t bullet_num_set;
+        bool_t has_calibrated;            //已校准标志位
+        bool_t has_back_to_zero_started;  //开始返回零点标志位
+        bool_t has_shoot_init_started;    //开始发射初始化标志位
+        bool_t has_shoot_init_finished;   //发射初始化完成标志位
+        bool_t has_move_to_next_finished; //移动到下一个位置完成标志位
 
-		fp32 ecd_set;
-		fp32 slipper_position_ecd[MAX_DART_NUM + 1]; //飞镖发射时滑块每次停留的位置
-		
-		PID_t speed_pid;
-		PID_t position_pid;
+        void calibrate();
+        void adjust_position();
+        void check_calibrate_result();
+        void shoot_init();
+        void shooting();
+        void current_calculate();
+    };
 
-		int16_t give_current;
+    //发射机构类
+    class revolver_task_t
+    {
+    public:
+        revolver_task_t();
 
-		bool_t calibrate_begin;
-		bool_t has_calibrated;
-		bool_t bottom_tick;
-		bool_t if_shoot_begin;	//开始发射标志位
-		bool_t should_lock;
+        const RC_ctrl_t *revolver_rc_ctrl; //遥控器信息
 
-		void SLIPPER_control();
-		void position_limit_buffer(fp32 limit_point);
-		void CALIBRATE_control();
-		void auto_calibrate();
-		void manual_calibrate();
-		void bullet_num_cal();
-		void SHOOTING_slipper_control();
-	};
-	
-	class revolver_task_t
-	{
-	public:
-		revolver_task_t();
+        fric_wheel_group_t fric_wheel_group; //摩擦轮组
+        yaw_motor_t yaw_motor;               // yaw轴电机
 
-		const RC_ctrl_t *revolver_rc_ctrl;
+        void data_update();
+        void control();
+        void ZERO_FORCE_control();
+        void CALIBRATE_control();
+        void SHOOT_control();
+    };
 
-		fric_motor_t fric_motor[4];
-		yaw_motor_t yaw_motor;
-		
-
-		int16_t outpost_speed_offset[4];
-		int16_t base_speed_offset[4];
-
-		fp32 fric_speed_offset;
-		bool_t is_fric_wheel_on;
-
-		void data_update();
-		void control();
-		void ZERO_FORCE_control();
-		void fric_speed_offset_control();
-		void CALIBRATE_control();
-		void SHOOT_control();
-		void READY_control();
-		void SHOOTING_control();
-		void fric_motor_init();
-		void fric_motor_shooting();
-		void fric_speed_buzzer(); 
-
-		
-
-
-
-		
-		//将要移除的内容
-		slipper_motor_t slipper_motor;
-	};
-
-	
-
-	extern revolver_task_t revolver;
-	extern revolver_task_t* revolver_point(void);
+    extern revolver_task_t revolver;
+    extern revolver_task_t *revolver_point(void);
 #endif
-	extern void revolver_task(void const *pvParameters);
+    extern void revolver_task(void const *pvParameters);
 
 #ifdef __cplusplus
 }

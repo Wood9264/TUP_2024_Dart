@@ -4,10 +4,19 @@
 #include "tjc_usart_hmi.h"
 
 #define SCREEN_FRAME_HEADER 0xA5 //帧头0xA5
-#define SCREEN_FRAME_TAIL 0xFF   //帧尾连续三个0xFF
-#define CMD_ID_LENTH 1           //命令ID长度
+
+#define SCREEN_FRAME_HEADER_LENTH 2 //帧头长度
+#define CMD_ID_LENTH 1              //命令ID长度
+#define SCREEN_FRAME_TAIL_LENTH 2   //帧尾长度
+#define MIN_FRAME_LENGTH 5          //最小帧长度
+#define MAX_FRAME_LENGTH 11         //最大帧长度
 
 #define SCREEN_TASK_INIT_TIME 3000 //屏幕任务初始化时间
+
+#define INIT_OUTPOST_SPEED 2000       //初始化前哨站速度
+#define INIT_BASE_SPEED 4000          //初始化基地速度
+#define INIT_OUTPOST_YAW_OFFSET_NUM 0 //初始化前哨站YAW补偿量
+#define INIT_BASE_YAW_OFFSET_NUM 0    //初始化基地YAW补偿量
 
 #ifdef __cplusplus
 extern "C"
@@ -16,38 +25,27 @@ extern "C"
 
 #ifdef __cplusplus
 
-    enum
-    {
-        ID_speed_offset_1 = 22,
-        ID_speed_offset_2 = 23,
-        ID_speed_offset_3 = 24,
-        ID_speed_offset_4 = 25,
-        ID_yaw_offset_num_1 = 30,
-        ID_yaw_offset_num_2 = 31,
-        ID_yaw_offset_num_3 = 32,
-        ID_yaw_offset_num_4 = 33,
-    } cmd_ID_e;
-
     class screen_t
     {
     public:
-        int16_t speed_offset_1;
-        int16_t speed_offset_2;
-        int16_t speed_offset_3;
-        int16_t speed_offset_4;
-        fp32 yaw_offset_num_1;
-        fp32 yaw_offset_num_2;
-        fp32 yaw_offset_num_3;
-        fp32 yaw_offset_num_4;
+        int16_t outpost_speed[4];       //前哨站转速
+        int16_t base_speed[4];          //基地转速
+        fp32 outpost_yaw_offset_num[4]; //前哨站YAW补偿量
+        fp32 base_yaw_offset_num[4];    //基地YAW补偿量
 
         screen_t();
-        void screen_data_init();
-        void send_data();
+        void screen_init();
         void data_analysis();
-        void frame_content_analysis(uint8_t *frame_content);
+        void vavid_data_analysis(uint8_t *vavid_data, uint8_t cmd_ID);
+        void refresh_data();
+        void fric_monitor(uint8_t *options_data);
+        void other_monitor(uint8_t *options_data);
+        void warning_message();
         int16_t ascii_to_int16_t(const uint8_t *str);
         fp32 ascii_to_fp32(const uint8_t *str);
     };
+
+    extern screen_t *screen_point(void);
 
 #endif
 
