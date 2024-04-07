@@ -266,7 +266,7 @@ static void detect_init(uint32_t time)
             {10, 10, 10},   //motor2
             {10, 10, 9},    //motor3
             {10, 10, 8},    //motor4
-            {2, 3, 14},     //yaw
+            {2, 3, 14},     //yaw gimbal
             {2, 3, 13},     //pitch
             {10, 10, 12},   //trigger
             {2, 3, 7},      //board gyro
@@ -275,6 +275,13 @@ static void detect_init(uint32_t time)
             {100, 100, 5},  //referee
             {10, 10, 7},    //rm imu
             {100, 100, 1},  //oled
+            {10, 10, 2},    //摩擦轮1
+            {10, 10, 2},    //摩擦轮2
+            {10, 10, 2},    //摩擦轮3
+            {10, 10, 2},    //摩擦轮4
+            {10, 10, 2},    //yaw轴电机
+            {10, 10, 2},    //装填电机
+            {10, 10, 2},    //转盘电机
         };
 
     for (uint8_t i = 0; i < ERROR_LIST_LENGHT; i++)

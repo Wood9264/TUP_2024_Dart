@@ -66,24 +66,28 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 		case CAN1_3508_BL_ID:
 		{
 			get_motor_measure(BL, rx_data1);
+			detect_hook(FRIC_3_TOE);
 			rate3++;
 			break;
 		}
 		case CAN1_3508_BR_ID:
 		{
 			get_motor_measure(BR, rx_data1);
+			detect_hook(FRIC_4_TOE);
 			rate4++;
 			break;
 		}
 		case CAN1_3508_FR_ID:
 		{
 			get_motor_measure(FR, rx_data1);
+			detect_hook(FRIC_2_TOE);
 			rate2++;
 			break;
 		}
 		case CAN1_3508_FL_ID:
 		{
 			get_motor_measure(FL, rx_data1);
+			detect_hook(FRIC_1_TOE);
 			rate1++;
 			break;
 		}
@@ -99,16 +103,19 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 		case CAN2_YAW_MOTOR_ID:
 		{
 			get_motor_measure(YAW_MOTOR, rx_data2);
+			detect_hook(YAW_MOTOR_TOE);
 			break;
 		}
 		case CAN2_ROTARY_MOTOR_ID:
 		{
 			get_motor_measure(ROTARY_MOTOR, rx_data2);
+			detect_hook(ROTARY_MOTOR_TOE);
 			break;
 		}
 		case CAN2_LOEADER_MOTOR_ID:
 		{
 			get_motor_measure(LOADER_MOTOR, rx_data2);
+			detect_hook(LOADER_MOTOR_TOE);
 			break;
 		}
 		}

@@ -79,6 +79,13 @@ enum errorList
     REFEREE_TOE,
     RM_IMU_TOE,
     OLED_TOE,
+    FRIC_1_TOE,       //摩擦轮1
+    FRIC_2_TOE,       //摩擦轮2
+    FRIC_3_TOE,       //摩擦轮3
+    FRIC_4_TOE,       //摩擦轮4
+    YAW_MOTOR_TOE,    //yaw轴电机
+    LOADER_MOTOR_TOE, //装填电机
+    ROTARY_MOTOR_TOE, //转盘电机
     ERROR_LIST_LENGHT,
 };
 

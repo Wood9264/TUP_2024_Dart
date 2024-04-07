@@ -428,6 +428,78 @@ void screen_t::warning_message()
     {
         TJCPrintf("vis t5,0");
     }
+    //遥控器离线警告
+    if(toe_is_error(DBUS_TOE))
+    {
+        TJCPrintf("vis t6,1");
+    }
+    else
+    {
+        TJCPrintf("vis t6,0");
+    }
+    //摩擦轮电机1离线警告
+    if(toe_is_error(FRIC_1_TOE))
+    {
+        TJCPrintf("vis t7,1");
+    }
+    else
+    {
+        TJCPrintf("vis t7,0");
+    }
+    //摩擦轮电机2离线警告
+    if(toe_is_error(FRIC_2_TOE))
+    {
+        TJCPrintf("vis t8,1");
+    }
+    else
+    {
+        TJCPrintf("vis t8,0");
+    }
+    //摩擦轮电机3离线警告
+    if(toe_is_error(FRIC_3_TOE))
+    {
+        TJCPrintf("vis t9,1");
+    }
+    else
+    {
+        TJCPrintf("vis t9,0");
+    }
+    //摩擦轮电机4离线警告
+    if(toe_is_error(FRIC_4_TOE))
+    {
+        TJCPrintf("vis t10,1");
+    }
+    else
+    {
+        TJCPrintf("vis t10,0");
+    }
+    //yaw轴电机离线警告
+    if(toe_is_error(YAW_MOTOR_TOE))
+    {
+        TJCPrintf("vis t11,1");
+    }
+    else
+    {
+        TJCPrintf("vis t11,0");
+    }
+    //装填电机离线警告
+    if(toe_is_error(LOADER_MOTOR_TOE))
+    {
+        TJCPrintf("vis t12,1");
+    }
+    else
+    {
+        TJCPrintf("vis t12,0");
+    }
+    //转盘电机离线警告
+    if(toe_is_error(ROTARY_MOTOR_TOE))
+    {
+        TJCPrintf("vis t13,1");
+    }
+    else
+    {
+        TJCPrintf("vis t13,0");
+    }
 }
 
 /**
