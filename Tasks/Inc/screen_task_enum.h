@@ -27,7 +27,8 @@ enum
     ID_refresh = 100,
     ID_fric_monitor = 101,
     ID_other_monitor = 102,
-    ID_warning_message = 103,
+    ID_main_page_message = 103,
+    ID_warning_message = 104,
 } cmd_ID_e;
 
 #endif

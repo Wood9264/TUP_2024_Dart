@@ -40,6 +40,7 @@ extern "C"
         void refresh_data();
         void fric_monitor(uint8_t *options_data);
         void other_monitor(uint8_t *options_data);
+        void main_page_message();
         void warning_message();
         int16_t ascii_to_int16_t(const uint8_t *str);
         fp32 ascii_to_fp32(const uint8_t *str);

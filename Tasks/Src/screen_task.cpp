@@ -202,6 +202,9 @@ void screen_t::vavid_data_analysis(uint8_t *vavid_data, uint8_t cmd_ID)
     case ID_other_monitor:
         other_monitor(vavid_data);
         break;
+    case ID_main_page_message:
+        main_page_message();
+        break;
     case ID_warning_message:
         warning_message();
         break;
@@ -318,6 +321,52 @@ void screen_t::other_monitor(uint8_t *options_data)
         TJCPrintf("t21.txt=\"%d\"", load_point()->rotary_motor.motor_measure->given_current);
     if (should_send_data[14])
         TJCPrintf("t22.txt=\"%.2f\"", load_point()->rotary_motor.relative_angle);
+}
+
+/**
+ * @brief   主页信息
+ * @note    因存在字符编码转换问题，主页信息使用英文字符
+ */
+void screen_t::main_page_message()
+{
+    TJCPrintf("t0.txt=\"Dart index: %d\"", syspoint()->active_dart_index);
+
+    if (load_point()->loader_motor.has_shoot_init_finished && load_point()->rotary_motor.has_shoot_init_finished && revolver_point()->yaw_motor.has_shoot_init_finished)
+    {
+        TJCPrintf("t1.txt=\"Initialized\"");
+        //字符颜色设为白色
+        TJCPrintf("t1.pco=65535");
+    }
+    else
+    {
+        TJCPrintf("t1.txt=\"Uninitialized\"");
+        //字符颜色设为红色
+        TJCPrintf("t1.pco=63488");
+    }
+
+    if (syspoint()->strike_target == OUTPOST)
+    {
+        TJCPrintf("t2.txt=\"Target: outpost\"");
+    }
+    else
+    {
+        TJCPrintf("t2.txt=\"Target: base\"");
+    }
+
+    if (syspoint()->sys_mode == ZERO_FORCE)
+    {
+        TJCPrintf("t3.txt=\"ZERO FORCE\"");
+    }
+    else if (syspoint()->sys_mode == CALIBRATE)
+    {
+        TJCPrintf("t3.txt=\"CALIBRATE\"");
+    }
+    else if (syspoint()->sys_mode == SHOOT)
+    {
+        TJCPrintf("t3.txt=\"SHOOT\"");
+    }
+
+    TJCPrintf("t4.txt=\"Auto: OFF\"");
 }
 
 /**
