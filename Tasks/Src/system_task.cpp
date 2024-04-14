@@ -173,8 +173,6 @@ void system_t::mode_transit()
         load_point()->loader_motor.ecd_set = load_point()->loader_motor.accumulate_ecd;
         load_point()->loader_motor.has_shoot_init_started = 0;
         load_point()->loader_motor.has_shoot_init_finished = 0;
-        //下移标志位置一，防止三元运算符中读取转速补偿时数组越界
-        load_point()->loader_motor.has_shoot_down_finished = 1;
 
         load_point()->rotary_motor.final_relative_angle_set = load_point()->rotary_motor.relative_angle;
         load_point()->rotary_motor.relative_angle_set = load_point()->rotary_motor.relative_angle;
