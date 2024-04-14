@@ -79,6 +79,9 @@ void PID_t::clear(void)
 	Dbuf[0] = Dbuf[1] = Dbuf[2] = 0.0f;
 	out = Pout = Iout = Dout =0.0f;
 	own_fdb = own_set = 0.0f;
+
+	differ.u[0] = differ.u[1] = 0.0f;
+	differ.y[0] = differ.y[1] = 0.0f;
 }
 
 /**

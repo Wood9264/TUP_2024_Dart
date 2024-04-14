@@ -134,6 +134,8 @@ void revolver_task_t::ZERO_FORCE_control()
     fric_wheel_group.slow_stop();
     fric_wheel_group.current_calculate();
     yaw_motor.give_current = 0;
+    yaw_motor.speed_pid.clear();
+    yaw_motor.position_pid.clear();
 }
 
 /**
