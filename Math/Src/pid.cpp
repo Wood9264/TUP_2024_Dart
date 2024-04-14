@@ -136,7 +136,7 @@ fp32 PID_t::relative_angle_calc(fp32 ref, fp32 set)
 	error[1] = error[0];
 	own_set = set;
 	own_fdb = ref;
-	error[0] = rad_format(set - ref);
+	error[0] =  set - ref;
 	if(own_mode == PID_POSITION)
 	{
 		Pout = own_Kp * error[0];
@@ -218,7 +218,7 @@ fp32 PID_t::relative_angle_use_differ_calc(fp32 ref,fp32 set)
 	error[1] = error[0];
 	own_set = set;
 	own_fdb = ref;
-	error[0] = rad_format(set - ref);
+	error[0] =  set - ref;
 	if(own_mode == PID_POSITION)
 	{
 		Pout = own_Kp * error[0];
