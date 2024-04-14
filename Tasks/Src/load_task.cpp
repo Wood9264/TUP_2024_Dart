@@ -320,16 +320,12 @@ void loader_motor_t::calibrate()
         manual_calibrate();
     }
 
-    //自动校准时才计算电流，否则重复进行手动校准时会无法推动电机
+    //自动校准计算电流
     if (has_auto_calibrate_begun == 1)
     {
         auto_calibrate();
-        current_calculate(NULL);
     }
-    else
-    {
-        give_current = 0;
-    }
+    current_calculate(NULL);
 }
 
 /**
