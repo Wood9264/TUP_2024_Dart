@@ -620,5 +620,5 @@ void loader_motor_t::current_calculate(fp32 max_out)
 void rotary_motor_t::current_calculate()
 {
     speed_set = position_pid.relative_angle_use_differ_calc(relative_angle, relative_angle_set);
-    give_current = speed_pid.use_differ_calc(motor_measure->speed_rpm, speed_set);
+    give_current = speed_pid.relative_angle_use_differ_calc(motor_measure->speed_rpm, speed_set);
 }
