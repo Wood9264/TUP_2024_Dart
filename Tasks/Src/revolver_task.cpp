@@ -82,9 +82,6 @@ revolver_task_t::revolver_task_t()
     fric_wheel_group.fric_motor[1].motor_measure = get_motor_measure_class(FR);
     fric_wheel_group.fric_motor[2].motor_measure = get_motor_measure_class(BL);
     fric_wheel_group.fric_motor[3].motor_measure = get_motor_measure_class(BR);
-
-    //遥控器数据初始化
-    revolver_rc_ctrl = get_remote_control_point();
 }
 
 /**
