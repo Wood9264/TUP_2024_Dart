@@ -209,7 +209,7 @@ float RAMP_float(float final, float now, float ramp)
         }
         else
         {
-            now = final;
+            now += buffer;
         }
     }
     else
@@ -220,7 +220,7 @@ float RAMP_float(float final, float now, float ramp)
         }
         else
         {
-            now = final;
+            now += buffer;
         }
     }
 
@@ -248,7 +248,7 @@ fp32 RAMP_float_loop_constrain(float final, float now, float ramp)
         }
         else
         {
-            now = final;
+            now += buffer;
         }
     }
     else
@@ -259,7 +259,7 @@ fp32 RAMP_float_loop_constrain(float final, float now, float ramp)
         }
         else
         {
-            now = final;
+            now += buffer;
         }
     }
 
