@@ -60,9 +60,6 @@ void TJCPrintf(const char *str, ...)
         while (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_TXE) == RESET)
             ;
     }
-    HAL_UART_Transmit(&huart1, frame_tail, 3, 100);
-    while (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_TXE) == RESET)
-        ;
 }
 
 /********************************************************
