@@ -408,7 +408,7 @@ void fric_wheel_group_t::shooting()
     {
         if (syspoint()->strike_target == OUTPOST)
         {
-            fric_motor[0].speed_set = RAMP_float(-((loader_motor_point()->has_shoot_down_finished ? outpost_speed[syspoint()->active_dart_index] : outpost_speed[syspoint()->active_dart_index - 1]) + (SPEED_DIFFERENCE / 2)),
+            fric_motor[0].speed_set = RAMP_float(((loader_motor_point()->has_shoot_down_finished ? outpost_speed[syspoint()->active_dart_index] : outpost_speed[syspoint()->active_dart_index - 1]) + (SPEED_DIFFERENCE / 2)),
                                                  fric_motor[0].speed_set, FRIC_RAMP_BUFF);
             fric_motor[1].speed_set = RAMP_float(((loader_motor_point()->has_shoot_down_finished ? outpost_speed[syspoint()->active_dart_index] : outpost_speed[syspoint()->active_dart_index - 1]) + (SPEED_DIFFERENCE / 2)),
                                                  fric_motor[1].speed_set, FRIC_RAMP_BUFF);
@@ -419,7 +419,7 @@ void fric_wheel_group_t::shooting()
         }
         else if (syspoint()->strike_target == BASE)
         {
-            fric_motor[0].speed_set = RAMP_float(-((loader_motor_point()->has_shoot_down_finished ? base_speed[syspoint()->active_dart_index] : base_speed[syspoint()->active_dart_index - 1]) + (SPEED_DIFFERENCE / 2)),
+            fric_motor[0].speed_set = RAMP_float(((loader_motor_point()->has_shoot_down_finished ? base_speed[syspoint()->active_dart_index] : base_speed[syspoint()->active_dart_index - 1]) + (SPEED_DIFFERENCE / 2)),
                                                  fric_motor[0].speed_set, FRIC_RAMP_BUFF);
             fric_motor[1].speed_set = RAMP_float(((loader_motor_point()->has_shoot_down_finished ? base_speed[syspoint()->active_dart_index] : base_speed[syspoint()->active_dart_index - 1]) + (SPEED_DIFFERENCE / 2)),
                                                  fric_motor[1].speed_set, FRIC_RAMP_BUFF);
