@@ -64,7 +64,6 @@ system_t *syspoint(void)
  */
 system_t::system_t()
 {
-    system_rc_ctrl = get_remote_control_point();
     sys_mode = ZERO_FORCE;
     last_sys_mode = ZERO_FORCE;
 }
