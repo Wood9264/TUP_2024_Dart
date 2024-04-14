@@ -277,7 +277,7 @@ void system_t::dart_index_add()
     if (settled_time > 500)
     {
         //左摇杆↖开始打下一发飞镖
-        if (RC_held_continuous_return(LEFT_ROCKER_LEFT_TOP, 0) && syspoint()->active_dart_index < 4)
+        if (RC_held_continuous_return(LEFT_ROCKER_LEFT_TOP, 0) && syspoint()->active_dart_index <= 4)
         {
             active_dart_index++;
             has_index_added = 1;
