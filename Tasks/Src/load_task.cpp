@@ -63,7 +63,7 @@ void load_task(void const *pvParameters)
         //装填机构控制
         load.control();
         //发送电流
-        CAN2_1FF_cmd_motor(load.rotary_motor.give_current, load.loader_motor.give_current, 0, 0);
+        CAN2_1FF_cmd_motor(load.rotary_motor.give_current, 0, 0, 0);
         //绝对延时1ms
         vTaskDelayUntil(&currentTime, 1);
     }
