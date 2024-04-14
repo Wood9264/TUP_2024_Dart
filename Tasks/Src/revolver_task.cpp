@@ -127,9 +127,10 @@ void revolver_task_t::control()
  */
 void revolver_task_t::ZERO_FORCE_control()
 {
-    //摩擦轮转动惯量大，需要主动停转
-    fric_wheel_group.slow_stop();
-    fric_wheel_group.current_calculate();
+    for(uint8_t i = 0; i < 4; i++)
+    {
+        fric_wheel_group.fric_motor[i].give_current = 0;
+    }
     yaw_motor.give_current = 0;
 }
 
@@ -239,9 +240,10 @@ void fric_wheel_group_t::slow_stop()
  */
 void revolver_task_t::CALIBRATE_control()
 {
-    //摩擦轮缓停
-    fric_wheel_group.slow_stop();
-    fric_wheel_group.current_calculate();
+    for(uint8_t i = 0; i < 4; i++)
+    {
+        fric_wheel_group.fric_motor[i].give_current = 0;
+    }
 
     //左拨杆下，调整yaw轴
     if (syspoint()->sub_mode == CALIBRATE_ADJUST_POSITION)
