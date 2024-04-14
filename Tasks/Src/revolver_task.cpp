@@ -127,7 +127,7 @@ void revolver_task_t::control()
  */
 void revolver_task_t::ZERO_FORCE_control()
 {
-    for(uint8_t i = 0; i < 4; i++)
+    for (uint8_t i = 0; i < 4; i++)
     {
         fric_wheel_group.fric_motor[i].give_current = 0;
     }
@@ -240,7 +240,7 @@ void fric_wheel_group_t::slow_stop()
  */
 void revolver_task_t::CALIBRATE_control()
 {
-    for(uint8_t i = 0; i < 4; i++)
+    for (uint8_t i = 0; i < 4; i++)
     {
         fric_wheel_group.fric_motor[i].give_current = 0;
     }
