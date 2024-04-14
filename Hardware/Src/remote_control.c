@@ -115,7 +115,6 @@ void USART3_IRQHandler(void)
 			if (this_time_rx_len == RC_FRAME_LENGTH)
 			{
 				sbus_to_rc(sbus_rx_buf[0], &rc_ctrl);
-				detect_hook(DBUS_TOE);
 			}
 		}
 		else
@@ -145,7 +144,6 @@ void USART3_IRQHandler(void)
 			{
 				//处理遥控器数据
 				sbus_to_rc(sbus_rx_buf[1], &rc_ctrl);
-				detect_hook(DBUS_TOE);
 			}
 		}
 	}
