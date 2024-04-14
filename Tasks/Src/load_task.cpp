@@ -244,11 +244,6 @@ void load_task_t::ZERO_FORCE_control()
 {
     loader_motor.give_current = 0;
     rotary_motor.give_current = 0;
-
-    loader_motor.speed_pid.clear();
-    loader_motor.position_pid.clear();
-    rotary_motor.speed_pid.clear();
-    rotary_motor.position_pid.clear();
 }
 
 /**
