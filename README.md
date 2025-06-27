@@ -22,13 +22,13 @@ RoboMaster C型开发板
 
 本项目的目录结构存在少量缺陷，例如将滤波和控制器算法归类到了Math中，将AHRS、Mahony归类到了Algorithm中，但更好的归类方式是Control用于存放控制器，Algorithm用于存放数学算法。为便于理解程序结构，架构图中对此进行了优化。
 
-![image-20250613205030327](C:/Users/Wood/AppData/Roaming/Typora/typora-user-images/image-20250613205030327.png)
+![image-20250613205030327](.img/image-20250613205030327.png)
 
 # 数据流
 
 数据流如下图所示。程序运行时监测任务将实时检测各模块是否离线，并存储离线信息至内存中。用户在串口屏上设定参数后，参数会发送到开发板中，如果在串口屏上开启监视数据，则开发板会向串口屏发送各机构的数据以及离线信息并显示在串口屏上。用户在遥控器上执行操作后，程序将根据当前主模式、子模式、输入的指令及设定好的参数信息决定各电机的动作，并通过控制算法计算出各电机所需的电流值发送给电机执行相应动作。
 
-![image-20250613205128468](C:/Users/Wood/AppData/Roaming/Typora/typora-user-images/image-20250613205128468.png)
+![image-20250613205128468](.img/image-20250613205128468.png)
 
 # 操作说明
 
@@ -254,7 +254,7 @@ RoboMaster C型开发板
 
   - 自动发射：发射架处于自动发射状态（↑↑）时显示Auto: ON，否则显示Auto: OFF
 
-<img src="image/img_main_page.png" alt="主页" width="80%">
+<img src=".img/img_main_page-1751045221805-1.png" alt="主页" width="80%">
 
 ### 补偿量调整
 
@@ -262,25 +262,25 @@ RoboMaster C型开发板
 
 点击想要更改的数据可使用弹出的小键盘进行更改，摩擦轮转速必须为整数，yaw轴补偿可以为小数。输入完数据按OK后，检查本页面显示的数据是否与在小键盘中输入的相同，如果不相同说明C板没有成功接收到输入的数据，需要重新输入。输入完所有数据后，点击几次刷新键检查本页面显示的数据是否都与预期的一致，出现不一致的数据需要重新输入。
 
-<img src="image/img_offset_page.png" alt="补偿量调整页面" width="80%">
+<img src=".img/img_offset_page-1751045221805-2.png" alt="补偿量调整页面" width="80%">
 
 ### 警告信息
 
 本页面左半部分显示发射架各模块的初始化及校准警告，其中装填电机受限表示载弹架的空位没有正对装填推块，推块受限无法前移。右半部分显示各模块的离线警告。出现警告时本页面显示对应的文字提示，警告消除时文字消失。在完成发射初始化准备发射时，应确保本页面不显示任何警告信息。
 
-<img src="image/img_warning_page.png" alt="警告信息页面" width="80%">
+<img src=".img/img_warning_page-1751045221805-3.png" alt="警告信息页面" width="80%">
 
 ### 摩擦轮监视
 
 本页面可监视四个摩擦轮电机的各项数据，右下角为跳转至补偿量调整页面的快捷按键。RPM为电机转速，TEMP为电机温度，ECD为电机编码器值，CURRENT为电机反馈电流。被复选框勾选的数据将以1.25Hz的频率进行更新，勾选的数量不会影响数据的刷新率，但串口屏性能有限，勾选过多的数据可能导致爆栈白屏。爆栈后将串口屏断电重启即可恢复。
 
-<img src="image/img_fric_monitor_page.png" alt="摩擦轮监视页面" width="80%">
+<img src=".img/img_fric_monitor_page-1751045221805-5.png" alt="摩擦轮监视页面" width="80%">
 
 ### 其它监视
 
 本页面可监视yaw轴、装填、转盘电机的各项数据，操作逻辑和注意事项与摩擦轮监视页面相同。ANGLE为电机编码值相对于零点编码值的角度。yaw轴电机和装填电机的ANGLE为无效数据，即使勾选也不会刷新。
 
-<img src="image/img_other_monitor_page.png" alt="其它监视页面" width="80%">
+<img src=".img/img_other_monitor_page-1751045221805-4.png" alt="其它监视页面" width="80%">
 
 ## 操作流程
 
